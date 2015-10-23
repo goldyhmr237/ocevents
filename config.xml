@@ -13,9 +13,9 @@
     <gap:plugin name="org.apache.cordova.camera" source="plugins.cordova.io" />
     <gap:plugin name="org.apache.cordova.file" source="plugins.cordova.io" />
     <gap:plugin name="org.apache.cordova.file-transfer" source="plugins.cordova.io" />
-    <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.9.0">
-     <param name="APP_ID" value="1419525454987223" />
-     <param name="APP_NAME" value="EVENTMANAGER" />
+    <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.8.0">
+     <param name="APP_ID" value="1480315715605034" />
+     <param name="APP_NAME" value="Ocevents" />
      </gap:plugin>
      
 </widget>
