@@ -13,6 +13,6 @@
     <gap:plugin name="org.apache.cordova.camera" source="plugins.cordova.io" />
     <gap:plugin name="org.apache.cordova.file" source="plugins.cordova.io" />
     <gap:plugin name="org.apache.cordova.file-transfer" source="plugins.cordova.io" />
-    <gap:plugin name="phonegap-facebook-plugin" /> 
+    <gap:plugin name="phonegap-facebook-plugin" source="plugins.cordova.io" /> 
 </widget>
 
