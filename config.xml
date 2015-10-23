@@ -13,6 +13,10 @@
     <gap:plugin name="org.apache.cordova.camera" source="plugins.cordova.io" />
     <gap:plugin name="org.apache.cordova.file" source="plugins.cordova.io" />
     <gap:plugin name="org.apache.cordova.file-transfer" source="plugins.cordova.io" />
-    <gap:plugin name="phonegap-facebook-plugin" source="plugins.cordova.io" /> 
+    <gap:plugin name="phonegap-facebook-plugin" source="plugins.cordova.io">
+     <param name="fb_app_id" value="1480315715605034" />
+     <param name="fb_app_name" value="Ocevents" />
+     </gap:plugin>
+     
 </widget>
 
