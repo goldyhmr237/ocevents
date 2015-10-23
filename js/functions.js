@@ -397,7 +397,7 @@ jQuery(document).ready(function($)
                      method:"POST",
                      data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100001"},
                      success:function(obj){
-                       //alert(obj.status);
+                       alert(obj.message);
                        if(obj.status == "success")
                        {
                             
