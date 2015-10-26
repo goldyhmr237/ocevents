@@ -345,7 +345,7 @@ function linkwithfacebook()
                      url:main_url,
                      dataType:"json",
                      method:"POST",
-                     data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100001"},
+                     data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100000"},
                      success:function(obj){
                        alert(obj.status);
                        alert(obj.message);
@@ -395,7 +395,7 @@ jQuery(document).ready(function($)
                      url:main_url,
                      dataType:"json",
                      method:"POST",
-                     data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100001"},
+                     data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100000"},
                      success:function(obj){
                        alert(obj.message);
                        if(obj.status == "success")
@@ -819,7 +819,7 @@ function login_process()
              }
              
              }); 
-      var main_url = server_url+'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=100001';
+      var main_url = server_url+'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=100000';
          // alert('here');
           jQuery.ajax({
              url:main_url,
