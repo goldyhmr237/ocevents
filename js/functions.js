@@ -347,11 +347,18 @@ function linkwithfacebook()
                      method:"POST",
                      data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100000"},
                      success:function(obj){
-                       alert(obj.status);
-                       alert(obj.message);
+                       //alert(obj.status);
+                       //alert(obj.message);
                        if(obj.status == "success")
                        {
-                          
+                         //alert(obj.message);
+                         var fb_uid = obj.data.fb_user_id;
+                          db.transaction(function (tx) { 
+                            tx.executeSql('update OCEVENTS_user set fb_user_id = "'+fb_uid+'" where user_id = "'+localStorage.user_id+'"');
+                            
+                               window.location.href="profile.html";
+                            
+                          }); 
                        }
                        else
                        {
@@ -369,6 +376,43 @@ function linkwithfacebook()
               function (response) { alert(JSON.stringify(response)); });
               });
 }
+
+var fbLoginSuccess = function () {
+		facebookConnectPlugin.login( ["email"],
+         function (response) { 
+            
+           
+             var newstr=JSON.stringify(response.authResponse.userID).replace(/\"/g,'');
+             var access_token=JSON.stringify(response.authResponse.accessToken).replace(/\"/g,'');
+            
+             var encoded_newstr =  base64_encode(newstr);
+             var encoded_access_token =  base64_encode(access_token);
+            
+             var main_url = server_url+'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
+                  jQuery.ajax({
+                     url:main_url,
+                     dataType:"json",
+                     method:"POST",
+                     data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100000"},
+                     success:function(obj){
+                       //alert(obj.status);
+                       if(obj.status == "success")
+                       {
+                            
+                          db.transaction(function (tx) { 
+                            tx.executeSql('update OCEVENTS_user set fb_user_id = "" where user_id = "'+localStorage.user_id+'"');
+                            
+                               window.location.href="profile.html";
+                            
+                          });
+                          }
+                        }
+                        }); 
+                     
+                  
+             },
+              function (response) { alert(JSON.stringify(response)); });
+        }
 
 
 var login = function () {
@@ -397,7 +441,7 @@ jQuery(document).ready(function($)
                      method:"POST",
                      data:{fb_access_token : encoded_access_token,fb_user_id : encoded_newstr,event_id : "100000"},
                      success:function(obj){
-                       alert(obj.message);
+                      // alert(obj.message);
                        if(obj.status == "success")
                        {
                             
@@ -523,7 +567,7 @@ function loadgamification()
              //alert("SELECT * FROM OCEVENTS_homepage where user_id = '"+localStorage.user_id+"'");
          tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '"+localStorage.user_id+"'",[],function (tx, results) {
             var len = results.rows.length;  
-            //alert(len);
+//            alert(results.rows.item(0).main_logo_small_image);
             if(results.rows.item(0).type == 'content')
             {            
               if(results.rows.item(0).main_logo_small_image != undefined && results.rows.item(0).main_logo_small_image != null && results.rows.item(0).main_logo_small_image != '')
@@ -739,16 +783,15 @@ function loadprofile()
             {
               $(".selfie_button").html('<button class="pic-remove" onclick="removeprofileimage();" type="button" name="remove_pic" value="1">Remove Selfie From Your Profile</button>');
             }
+            $(".user-facebook-link").show();
             //alert(results.rows.item(0).fb_user_id);
-            if(results.rows.item(0).fb_user_id != null)
+            if(results.rows.item(0).fb_user_id != null && results.rows.item(0).fb_user_id != '' && results.rows.item(0).fb_user_id != undefined)
             {
-               $(".user-facebook-link").hide(); 
+               $(".user-facebook-link").hide();
+              // $("#unlinkfacebook").show(); 
             }
-            
-            if(results.rows.item(0).fb_user_id != null)
-            {
-               $(".user-facebook-link").show(); 
-            }
+           
+     
             
             
             $(".myname").html(results.rows.item(0).first_name+" "+results.rows.item(0).last_name); 
@@ -867,12 +910,13 @@ function login_process()
     										
                         // alert(DtatURL);  
     								//adb logcat *:E		 
-    										 // alert(obj.data.image.image_src);
+    										  //alert(obj.data.image.image_src);
+                          //alert(image_name);
     							  b.download_file(DtatURL,DIR_Name+'/',image_name,function(theFile){ 
                      
                           var ImgFullUrl =  '';
                           ImgFullUrl = theFile.toURI();  
-                          
+                           //alert(ImgFullUrl);
                           db.transaction(function (tx) { 
                             tx.executeSql('update OCEVENTS_homepage set main_logo_small_image = "'+ImgFullUrl+'" where user_id = "'+localStorage.user_id+'"');
                             if(obj.data.content.main_banner_image == null)
@@ -907,7 +951,7 @@ function login_process()
     							  b.download_file(DtatURL,DIR_Name+'/',image_name,function(theFile){ 
                      
                           var BannerImgFullUrl =  '';
-                          ImgFullUrl = localStorage.ImgFullUrl; 
+                          //ImgFullUrl = localStorage.ImgFullUrl; 
                           //alert(localStorage.ImgFullUrl);
                           BannerImgFullUrl = theFile.toURI(); 
                           //alert(BannerImgFullUrl);                          
