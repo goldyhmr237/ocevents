@@ -9,15 +9,21 @@
     </author>
     <content src="index.html" />
     <access origin="*" /> 
-    
-   <gap:plugin name="org.apache.cordova.camera"  />
+    <!-- iPhone 6 / 6+ -->
+<icon src="icons/OCEM4-IOS_152-.png" gap:platform="ios" width="180" height="180" />
+
+<!-- iPhone / iPod Touch  -->
+<icon src="icons/OCEM4-IOS_57-.png" gap:platform="ios" width="57" height="57" />
+<icon src="icons/OCEM4-IOS_120.png" gap:platform="ios" width="120" height="120" />
+
+<icon src="icons/OCEM4-Android_57.png" gap:platform="android" />
+<gap:plugin name="org.apache.cordova.camera"  />
 <gap:plugin name="org.apache.cordova.file"   />
 <gap:plugin name="org.apache.cordova.file-transfer"   />
-
-    <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.8.0">
+<gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.8.0">
      <param name="APP_ID" value="1480315715605034" />
      <param name="APP_NAME" value="Ocevents" />
-     </gap:plugin>
+</gap:plugin>
      
 </widget>
 
