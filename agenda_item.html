@@ -32,7 +32,7 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadprofile();
+                  loadagendaitem();
             });
     }
     var localLink = '/';
@@ -41,11 +41,11 @@
             </head>
     <body class="">
         <div class="main-wrapper">
-             <header>
+    <header>
     <div class="container">
         <div class="row">
             <div class="col-xs-1 header-dropdown-menu-wrapper">
-                <a class="dropdown-btn" href="#">
+                <a class="dropdown-btn" href="#" target="_self">
                     <div class="menu">
                         <i class="menu-icon">
                             <span></span>
@@ -57,7 +57,7 @@
             </div>
                         <div class="col-xs-3 header-cup">
                 <a href="#">
-                    <i class="fa fa-trophy"> <span>#</span> 10</i>
+                    <i class="fa fa-trophy"> <span>#</span> 4</i>
                 </a>
             </div>
                         <div class="col-xs-4 clearfix">
@@ -68,132 +68,60 @@
                 </div>
             </div>
             <div class="col-xs-4 header-login-wrapper">
-                      <a href="#">
+                                    <a href="profile.html">
                         <div class="log-info">
                             <p>
                                                              <!--br>
                                                                     <strong>&lt; Oslo, Norway &gt; </strong><br-->
-                            </p>
+                                                            </p>
                         </div>
-                        <div class="img-wrapper" id="profile_pic" style=""></div>
+                         <div class="img-wrapper" id="profile_pic" style=""></div>
                     </a>
                             </div>
         </div>
     </div>
-</header>                          <div class="container main-container user-profile-container">
+</header>            
+<div class="container main-container agenda-item-container">
 	<div class="header-title row">
-		<p>
-            User profile		</p>
-	</div>
-	<div class="user-profile-add-container">
-		<div class="main-img-wrapper">
-			<div class="main-img" style="background-image: url('');"></div>
+    <p>
+    <a class="nav-arrow prev" href="#" title="Forrige"><!--i class="fa fa-angle-left"></i--> &nbsp;</a>
+<span class="breadcrumbs"><span class="green-text">
+</span>
+</span>    
+<a class="nav-arrow next" href="#" title="Neste"><!--i class="fa fa-angle-right"></i--> &nbsp;</a>
+</p>	</div>
+	<div class="row">
+        		<div class="date-wrapper ">
+			<div class="date">
+                <p>Torsdag 26. Juni</p>
+            </div>
 		</div>
-        <form enctype="multipart/form-data" method="post" action="">
-                                   <div class="selfie_button">
-                                    <div class="pic-upload">
-                <input type="button" value="Add a selfie to your profile"  onclick="getPhoto(pictureSource.PHOTOLIBRARY);">
-                Add a selfie to your profile            </div>
-                </div>
-                    </form>
+                	</div>
+    	<div class="main-img-wrapper">
+		<div class="main-img agenda-main-img" style="background-image: url('');"></div>
+	</div> 
+    	<div class="agenda-item-img-info">
+		<h5>3. Rating page!!!! You can rate here your feeling about æøåÆØÅ</h5>
+        		<p>
+            <i class="fa fa-map-marker"></i> 
+            &nbsp;        </p>
         	</div>
-      <div class="success_message">
-      <div class="isa_success">
-     <i class="fa fa-check"></i>
-     Profile Edited Successfully!
-     <input type="hidden" id="edited_success">
-</div>
-      </div>    
-	<div class="user-info row">
-
-        <div class="user-info-panel show_info_user">
-            <dl class="dl-horizontal">
-                                <dt>Username</dt>
-                <dd class="myname"></dd>
-                
-                                <dt>Email</dt>
-                <dd class="myemail"></dd>
-                
-                                <dt>Mobile</dt>
-                <dd class="mymobile"></dd>
-                
-                                <dt>Gender</dt>
-                <dd class="mygender"></dd>
-                            </dl>
-            <div class="btns-wrapper">
-                <a class="btn user-info-edit-btn" href="#">Edit your profile</a>
-            </div>
-        </div>
-
-        <div class="user-info-edit-form edit_info_user user-info-panel hidden">
-                        <dl class="dl-horizontal clearfix">
-                <dt>
-                    First Name                </dt>
-                <dd>
-                    <input class="form-control" id="fname_edit" type="text" name="data[fName]" value="">
-                </dd>
-                <dt>
-                    Last Name                </dt>
-                <dd>
-                    <input class="form-control" id="lname_edit" type="text" name="data[lName]" value="">
-                </dd>
-                <dt>
-                    Email                </dt>
-                <dd>
-                    <input class="form-control" id="email_edit" type="text" name="data[eMail]" value="">
-                </dd>
-                <dt>
-                    Repeat email                </dt>
-                <dd>
-                    <input class="form-control" id="emailrepeat_edit" type="text" name="data[email_repeat]" value="">
-                </dd>
-                <dt>
-                    Mobile                </dt>
-                <dd>
-                    <input class="form-control" id="mobile_edit" type="text" name="data[mobile]" value="">
-                </dd>
-                <dt>
-                    SetNewPassword                </dt>
-                <dd>
-                    <input class="form-control" id="pwd_edit" type="password" name="data[password]">
-                </dd>
-                <dt>
-                    RepeatNewPassword                </dt>
-                <dd>
-                    <input class="form-control" id="pwdrepeat_edit" type="password" name="data[password_repeat]">
-                </dd>
-            </dl>
-            <div class="btns-wrapper">
-                <button class="btn user-info-save-btn" onclick="return saveprofile();" type="button" name="save_details" value="1">Save</button>
-                <a class="btn user-info-cancel-btn" href="#">Cancel</a>
-            </div>
-        </div>
-	
-	</div>
-    	<div class="user-facebook-link row">
-        		<h4>Link your account to Facebook</h4>
-        <div class="facebook-description">
-            Linking your gamification experience with Facebook:
-<br><br>
-• Easy access to the gamification platform<br>
-• Earn points by connecting<br>
-• Get connected with your friends on Facebook<br>
-• Putting your profile image to it all        </div>
-		<div class="facebook-btn-wrapper">
-			<a href="#" onclick="linkwithfacebook();">
-                <i class="fa fa-facebook"></i> Link your account to Facebook            </a>
+	<div class="agenda-item-future row">
+		<div class="container ">
+			<div class="futures-wrapper">
+                				<div class="future-title">:-)</div>
+                                				<div class="future-info ">
+					<p>Here you can rate our event :-)</p>
+<p><span>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</span></p>                    
+                    				</div>
+			</div>
 		</div>
 	</div>
-  <div id="unlinkfacebook">
-        <div class="facebook-btn-wrapper">
-			<a href="#" onclick="fbLoginSuccess();">
-                <i class="fa fa-facebook"></i> Unlink your account from Facebook            </a>
-		</div>
-  </div>
-	        <dl class="qa-list row">
-                               
-                        </dl>
-    </div>                                        <footer>
+    	
+    </div>
+
+
+               <footer>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 footer-menu">
@@ -238,9 +166,9 @@
                                                                 </div>
         </div>
     </div>
-</footer>                    </div>
+</footer>     </div>
 
-                    <div class="dropdown-menu custom-dropdown" role="menu" aria-labelledby="dLabel">
+    <div class="dropdown-menu custom-dropdown" role="menu" aria-labelledby="dLabel">
                 <div class="user-profile-info">
                     <div class="img-wrapper" id="medium_profile_pic" style="background-image: url('')">
                         <a href="profile.html">
@@ -279,7 +207,7 @@
                                 Welcome                            </a>
                         </li>
                                                 <li>
-                            <a class="active" href="profile.html">
+                            <a href="profile.html">
                                 <i class="gicon-my-profile"></i>
                                 Profile                            </a>
                         </li>
@@ -289,7 +217,7 @@
                                 My ticket                            </a>
                         </li>
                                                 <li>
-                            <a href="agenda.html">
+                            <a class="active" href="agenda.html">
                                 <i class="gicon-agenda"></i>
                                 Agenda                            </a>
                         </li>
@@ -319,6 +247,7 @@
                     </ul>
                 </div>
             </div>
+
         
         
         <script src="js/bootstrap.min.js"></script>
