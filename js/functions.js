@@ -569,6 +569,12 @@ function onFail(message) {
     alert('Failed because: ' + message);
 }
 
+function capturePhoto() {
+      // Take picture using device camera and retrieve image as base64-encoded string
+        navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 100, allowEdit: true, destinationType: destinationType.FILE_URI, saveToPhotoAlbum: false });
+    }
+
+
 function getPhoto(source) {
     // Retrieve image file location from specified source
     navigator.camera.getPicture(onPhotoURISuccess, onFail, {
@@ -576,6 +582,12 @@ function getPhoto(source) {
         destinationType: destinationType.NATIVE_URI,
         sourceType: source
     });
+}
+
+function showbuttons()
+{
+   jQuery('.hidden_button').attr('style','display:block !important');
+   jQuery('.selfie_capture').hide();
 }
 // Called when a photo is successfully retrieved
 function onPhotoURISuccess(imageURI) {
@@ -593,11 +605,11 @@ function onPhotoURISuccess(imageURI) {
         var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.jpg';
     }
     options.fileName = newfname;
-    // alert(newfname);
+     //alert(newfname);
     options.mimeType = "image/jpeg";
     var params = new Object();
     options.params = params;
-    options.headers = "Content-Type: multipart/form-data; boundary=38516d25820c4a9aad05f1e42cb442f4";
+    //options.headers = "Content-Type: multipart/form-data; boundary=38516d25820c4a9aad05f1e42cb442f4";
     options.chunkedMode = false;
     var ft = new FileTransfer();
     //alert(imageURI);
@@ -638,7 +650,7 @@ function onPhotoURISuccess(imageURI) {
                         ImgFullUrl = theFile.toURI();
                         //alert(ImgFullUrl);
                         db.transaction(function(tx) {
-                            tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="true" where user_id = "' + localStorage.user_id + '"');
+                            tx.executeSql('update OCEVENTS_user set image_src = "'+ImgFullUrl+'",is_user_image="true" where user_id = "' + localStorage.user_id + '"');
 
                             window.location.href = "profile.html";
 

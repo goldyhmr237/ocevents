@@ -85,18 +85,29 @@
 		<p>
             User profile		</p>
 	</div>
-	<div class="user-profile-add-container">
+	<div class="user-profile-add-container ">
 		<div class="main-img-wrapper">
 			<div class="main-img" style="background-image: url('');"></div>
 		</div>
         <form enctype="multipart/form-data" method="post" action="">
                                    <div class="selfie_button">
-                                    <div class="pic-upload">
-                <input type="button" value="Add a selfie to your profile"  onclick="getPhoto(pictureSource.PHOTOLIBRARY);">
+                                    <div class="pic-upload selfie_capture">
+                <input type="button" value="Add a selfie to your profile"  onclick="showbuttons();">
+                
                 Add a selfie to your profile            </div>
+                <div class="pic-upload hidden_button" style="display:none;">
+                <input type="button" value="Choose a Photo"  onclick="getPhoto(pictureSource.PHOTOLIBRARY);">
+                
+                Choose a Photo          </div>
+                <div class="pic-upload hidden_button" style="display:none;">
+                <input type="button" value="Take a Photo"  onclick="capturePhoto();">
+                
+               Take a Photo          </div>
                 </div>
                     </form>
         	</div>
+      
+          
       <div class="success_message">
       <div class="isa_success">
      <i class="fa fa-check"></i>
