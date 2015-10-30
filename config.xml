@@ -19,7 +19,7 @@
 <icon src="icons/OCEM4-Android_57.png" gap:platform="android" />
 <gap:plugin name="org.apache.cordova.camera" source="pgb"  />
 <gap:plugin name="org.apache.cordova.file" source="pgb"  />
-<gap:plugin name="cordova-plugin-file-transfer"   />
+<gap:plugin name="org.apache.cordova.file-transfer" source="pgb" version="0.4.6"  />
 <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.8.0">
      <param name="APP_ID" value="1480315715605034" />
      <param name="APP_NAME" value="Ocevents" />
