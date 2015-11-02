@@ -18,7 +18,7 @@
 <icon src="icons/OCEM4-IOS_120.png" gap:platform="ios" width="120" height="120" />
 
 <icon src="icons/OCEM4-Android_57.png" gap:platform="android" />
-<gap:plugin name="com.phonegap.plugin.statusbar" />
+<gap:plugin name="com.phonegap.plugin.statusbar" version="1.1.0" />
 <gap:plugin name="org.apache.cordova.camera" source="pgb"  />
 <gap:plugin name="org.apache.cordova.file" source="pgb"  />
 <gap:plugin name="org.apache.cordova.file-transfer" source="pgb" version="0.4.6"  />
