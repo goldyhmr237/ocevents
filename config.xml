@@ -25,8 +25,14 @@
 <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.8.0">
      <param name="APP_ID" value="1480315715605034" />
      <param name="APP_NAME" value="Ocevents" />
-</gap:plugin>
+</gap:plugin>    
+<gap:config-file platform="ios" parent="UIStatusBarHidden">
+    <true/>
+</gap:config-file>
 
+<gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance">
+    <false/>
+</gap:config-file>
 <preference name="StatusBarBackgroundColor" value="#22364F" />     
 </widget>
 
