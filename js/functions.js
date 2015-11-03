@@ -330,7 +330,7 @@ function linkwithfacebook() {
                     data: {
                         fb_access_token: encoded_access_token,
                         fb_user_id: encoded_newstr,
-                        event_id: "100000"
+                        event_id: static_event_id
                     },
                     success: function(obj) {
                         //alert(obj.status);
@@ -381,7 +381,7 @@ var fbLoginSuccess = function() {
                 data: {
                     fb_access_token: encoded_access_token,
                     fb_user_id: encoded_newstr,
-                    event_id: "100000"
+                    event_id: static_event_id
                 },
                 success: function(obj) {
                     //alert(obj.status);
@@ -431,7 +431,7 @@ var login = function() {
                     data: {
                         fb_access_token: encoded_access_token,
                         fb_user_id: encoded_newstr,
-                        event_id: "100000"
+                        event_id: static_event_id
                     },
                     success: function(obj) {
                         // alert(obj.message);
@@ -706,8 +706,8 @@ function loadagenda() {
     jQuery(document).ready(function($) {
         loadcommonthings();
         $(".agenda-container").hide();
-
-
+        //showAgendaData();
+        
         var main_url = server_url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
         // alert(main_url);
         $.ajax({
@@ -715,12 +715,13 @@ function loadagenda() {
             dataType: "json",
             method: "GET",
             success: function(obj) {
-                //document.write(data.status+'---'+data.data.page_title+'---'+data.data.presentations)
+               // alert(obj.status+'---'+obj.data.page_title+'---'+obj.data.presentations)
                 var imagedatalength = obj.data.presentations_count;
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,counter,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html)');                                
-                    tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' order by title asc", [], function(tx, results) {
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description LONGTEXT,embeded_html,event_time)');                                
+                    tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
+                       // alert(len_ag);
                         if (imagedatalength == len_ag && len_ag != 0) {
                             //alert(imagedatalength);
                             //alert(len_ag);
@@ -730,12 +731,12 @@ function loadagenda() {
                                 //tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,counter,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html)');
                                 tx.executeSql('delete from OCEVENTS_agenda');
                             });
-
+                              var co = 0;
                             $.each(obj.data.presentations, function(key, val) {
                                 if (val.group_title != null) {
-                                    localStorage.group_title = val.group_title;
-                                }
-                                var co = 0;
+                                    //localStorage.group_title = val.group_title;
+                                
+                                
                                 $.each(val.items, function(key1, val1) {
 
                                     // alert(key1);
@@ -766,41 +767,59 @@ function loadagenda() {
                                                 co++;
                                                 //alert(val1.title);
                                                 db.transaction(function(tx) {
-                                                    tx.executeSql("insert into OCEVENTS_agenda (counter,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html) values ('" + co + "','" + localStorage.user_id + "','" + val1.id + "','" + val1.event_id + "','" + val1.title + "','" + val1.speaker_name + "','" + ImgFullUrl + "','" + val1.start_time + "','" + val1.end_time + "','" + val1.description + "','" + val1.embeded_html + "')");
-                                                });
-
-                                                // alert(co);
-                                                // alert(imagedatalength);
+                                                //var descr = val1.description.replace(/'/g, "\\'");
+                                                var descr = "<p>The comments here should flow freely, and can be about everything...<br /><br />Click the <a href=\"#\" target=\"_self\">Comments</a> below to get started&nbsp;</p>\r\n<p>General principles of making friends</p>\r\n<p>&nbsp;</p>\r\n<p>The basic structure of Meet People &gt; Hang Out With Them &gt; Keep Hanging Out &gt; Repeat. Now I'll go into some broader concepts that apply to making friends as a whole.&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>If you want a social life, you've got to make it happen for yourself.</p>\r\n<p>&nbsp;</p>";
+                                                descr = descr.replace(/'/g, "\\");
+                                                    //alert(descr);
+                                                    tx.executeSql("insert into OCEVENTS_agenda (group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html,event_time) values ('"+val.group_title+"','" + localStorage.user_id + "','" + val1.id + "','" + val1.event_id + "','" + val1.title + "','" + val1.speaker_name + "','" + ImgFullUrl + "','" + val1.start_time + "','" + val1.end_time + "', '" + descr + "','" + val1.embeded_html + "','" + val1.time + "')");
+                                                
+                                                  
                                                 if (imagedatalength == co) {
-
+                                                    //alert(co);
+                                                    //alert(imagedatalength);
                                                     //alert(imagedatalength);
                                                     //alert(co);
-                                                    //alert('going');
+                                                   // alert('going');
                                                     showAgendaData();
                                                 }
+                                                });
+
+                                                 
                                             });
                                         }
                                     });
                                 });
+                              }
                             });
                         }
                     });
                 });
             }
-        });
-    });
+        }); 
+    }); 
 }
 
 //function to show agenda items
 function showAgendaData() {
     // alert('here');
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' order by title asc", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' order by start_time asc", [], function(tx, results) {
             var len = results.rows.length;
             //alert(len); 
-            $("#presentations-list").html('<div class="row"><div class="date-wrapper "><div class="date"><p>' + localStorage.group_title + '</p></div></div></div>');
+            //$("#presentations-list").html('<div class="row"><div class="date-wrapper "><div class="date"><p>' + localStorage.group_title + '</p></div></div></div>');
+            $("#presentations-list").html('&nbsp;');
+            var group_title = '';
             for (i = 0; i < len; i++) {
-                $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+results.rows.item(i).agenda_id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + results.rows.item(i).speaker_image + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="" data-eta=""><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="0"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + results.rows.item(i).title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + results.rows.item(i).speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-map-marker"></i>&nbsp;</div></div></div></div></div>');
+            //alert(results.rows.item(i).description);
+                if(results.rows.item(i).group_title != group_title)
+                {
+                  $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>'+results.rows.item(i).group_title+'</p></div></div></div>');
+                }
+                group_title = results.rows.item(i).group_title;
+                
+                
+                
+                $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+results.rows.item(i).agenda_id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + results.rows.item(i).speaker_image + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="" data-eta=""><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="0"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + results.rows.item(i).title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + results.rows.item(i).speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + results.rows.item(i).event_time + '</div></div></div></div></div>');
             }
             jQuery(".agenda-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -933,7 +952,7 @@ function login_process() {
 
 function importhomepage()
 {
-    var main_url = server_url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=100000';
+    var main_url = server_url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id='+static_event_id;
     // alert('here');
     jQuery.ajax({
         url: main_url,
