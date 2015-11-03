@@ -770,7 +770,7 @@ function loadagenda() {
                                                 var descr = val1.description.replace(/'/g, "\\'");
                                                 //var descr = "<p>The comments here should flow freely, and can be about everything...<br /><br />Click the <a href=\"#\" target=\"_self\">Comments</a> below to get started&nbsp;</p>\r\n<p>General principles of making friends</p>\r\n<p>&nbsp;</p>\r\n<p>The basic structure of Meet People &gt; Hang Out With Them &gt; Keep Hanging Out &gt; Repeat. Now I'll go into some broader concepts that apply to making friends as a whole.&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>If you want a social life, you've got to make it happen for yourself.</p>\r\n<p>&nbsp;</p>";
                                                 descr = descr.replace(/'/g, "\\");
-                                                    alert(descr);
+                                                    //alert(descr);
                                                     tx.executeSql("insert into OCEVENTS_agenda (group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html,event_time) values ('"+val.group_title+"','" + localStorage.user_id + "','" + val1.id + "','" + val1.event_id + "','" + val1.title + "','" + val1.speaker_name + "','" + ImgFullUrl + "','" + val1.start_time + "','" + val1.end_time + "', '" + descr + "','" + val1.embeded_html + "','" + val1.time + "')");
                                                 
                                                   
@@ -805,12 +805,12 @@ function showAgendaData() {
     db.transaction(function(tx) {
         tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' order by start_time asc", [], function(tx, results) {
             var len = results.rows.length;
-            //alert(len); 
+            alert(len); 
             //$("#presentations-list").html('<div class="row"><div class="date-wrapper "><div class="date"><p>' + localStorage.group_title + '</p></div></div></div>');
             $("#presentations-list").html('&nbsp;');
             var group_title = '';
             for (i = 0; i < len; i++) {
-            //alert(results.rows.item(i).description);
+            alert(results.rows.item(i).description);
                 if(results.rows.item(i).group_title != group_title)
                 {
                   $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>'+results.rows.item(i).group_title+'</p></div></div></div>');
