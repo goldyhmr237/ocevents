@@ -679,12 +679,13 @@ function loadagendaitem()
 {
     jQuery(document).ready(function($) {
         loadcommonthings();
-        $(".date p").html(localStorage.group_title);
+        
         db.transaction(function(tx) {                                                
               tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' and agenda_id = '"+localStorage.agenda_id+"'", [], function(tx, results) {
               var len_ag = results.rows.length;
               $(".green-text").html(results.rows.item(0).title+' '+results.rows.item(0).speaker_name); 
               $(".agenda-item-img-info h5").html(results.rows.item(0).title);
+              $(".date p").html(results.rows.item(0).group_title);
               $(".future-title").html(results.rows.item(0).speaker_name); 
               $(".future-info").html(results.rows.item(0).description); 
               $(".agenda-main-img").attr("style", "background-image:url(" + results.rows.item(0).speaker_image + ")");  
