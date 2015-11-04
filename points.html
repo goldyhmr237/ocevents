@@ -32,7 +32,7 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadprofile();
+                  loadpoints();
             });
     }
     var localLink = '/';
@@ -41,11 +41,11 @@
             </head>
     <body class="">
         <div class="main-wrapper">
-             <header>
+    <header>
     <div class="container">
         <div class="row">
             <div class="col-xs-1 header-dropdown-menu-wrapper">
-                <a class="dropdown-btn" href="#">
+                <a class="dropdown-btn" href="#" target="_self">
                     <div class="menu">
                         <i class="menu-icon">
                             <span></span>
@@ -57,7 +57,7 @@
             </div>
                         <div class="col-xs-3 header-cup">
                 <a href="#">
-                    <i class="fa fa-trophy"> <span>#</span> 10</i>
+                    <i class="fa fa-trophy"> <span>#</span> 4</i>
                 </a>
             </div>
                         <div class="col-xs-4 clearfix">
@@ -68,143 +68,135 @@
                 </div>
             </div>
             <div class="col-xs-4 header-login-wrapper">
-                      <a href="#">
+                                    <a href="profile.html">
                         <div class="log-info">
                             <p>
                                                              <!--br>
                                                                     <strong>&lt; Oslo, Norway &gt; </strong><br-->
-                            </p>
+                                                            </p>
                         </div>
-                        <div class="img-wrapper" id="profile_pic" style=""></div>
+                         <div class="img-wrapper" id="profile_pic" style=""></div>
                     </a>
                             </div>
         </div>
     </div>
-</header>                          <div class="container main-container user-profile-container">
-	<div class="header-title row">
-		<p>
-            User profile		</p>
-	</div>
-	<div class="user-profile-add-container ">
-		<div class="main-img-wrapper">
-			<div class="main-img" style="background-image: url('');"></div>
-		</div>
-        <form enctype="multipart/form-data" method="post" action="">
-                                   <div class="selfie_button">
-                                    <div class="pic-upload selfie_capture">
-                <input type="button" value="Add a selfie to your profile"  onclick="showbuttons();">
-                
-                Add a selfie to your profile            </div>
-                <div class="pic-upload hidden_button" style="display:none;">
-                <input type="button" value="Choose a Photo"  onclick="getPhoto(pictureSource.PHOTOLIBRARY);">
-                
-                Choose a Photo          </div>
-                <div class="pic-upload hidden_button" style="display:none;">
-                <input type="button" value="Take a Photo"  onclick="capturePhoto();">
-                
-               Take a Photo          </div>
-                </div>
-                    </form>
-        	</div>
-      
-          
-      <div class="success_message">
-      <div class="isa_success">
-     <i class="fa fa-check"></i>
-     Profile Edited Successfully!
-     <input type="hidden" id="edited_success">
-</div>
-      </div>    
-	<div class="user-info row">
-
-        <div class="user-info-panel show_info_user">
-            <dl class="dl-horizontal">
-                                <dt>Username</dt>
-                <dd class="myname"></dd>
-                
-                                <dt>Email</dt>
-                <dd class="myemail"></dd>
-                
-                                <dt>Mobile</dt>
-                <dd class="mymobile"></dd>
-                
-                                <dt>Gender</dt>
-                <dd class="mygender"></dd>
-                            </dl>
-            <div class="btns-wrapper">
-                <a class="btn user-info-edit-btn" href="#">Edit your profile</a>
-            </div>
+</header>
+<div align="center" class="container loading_agenda_items main-container">
+       <br />
+        Loading Points...
+        <br />
+        <img src="img/loading.gif" />
+</div>            
+<div class="container main-container leaderboards-container">
+        <div class="header-title row">
+    <p>
+<span class="breadcrumbs"><span class="green-text">Points</span></span></p>    </div>
+        <div class="subheader-grey row"></div>
+    <div class="user-points-table-container row">
+        <table class="user-points-table-title">
+    <tbody><tr>
+        <th class="col-xs-12">
+            <a href="gamification.html" class="active">
+                Your Scores            </a>
+        </th>
+            </tr>
+</tbody></table>        <div class="user-points-table">
+            <table class="table table-striped">
+                <tbody>
+                                    <tr>
+                        <td>
+                            <a href="#">
+                                <span class="num">3.</span>
+                                <span class="icon">
+                                                                  </span>
+                                Bonus                            </a>
+                        </td>
+                        <td class="point">
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/6">
+                                                                0                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                                    <tr>
+                        <td>
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/3">
+                                <span class="num">7.</span>
+                                <span class="icon">
+                                    <i class="gicon-friends"></i>                                </span>
+                                Social                            </a>
+                        </td>
+                        <td class="point">
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/3">
+                                                                1 000                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                                    <tr>
+                        <td>
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/2">
+                                <span class="num">8.</span>
+                                <span class="icon">
+                                    <i class="gicon-seeker"></i>                                </span>
+                                Seekergame                            </a>
+                        </td>
+                        <td class="point">
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/2">
+                                                                    <span class="count">0</span>
+                                                                0                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                                    <tr>
+                        <td>
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/5">
+                                <span class="num">7.</span>
+                                <span class="icon">
+                                    <i class="gicon-quiz"></i>                                </span>
+                                Course/Quiz                            </a>
+                        </td>
+                        <td class="point">
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/5">
+                                                                    <span class="count">0</span>
+                                                                0                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                                    <tr>
+                        <td>
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/4">
+                                <span class="num">10.</span>
+                                <span class="icon">
+                                    <i class="gicon-comments"></i>                                </span>
+                                Communication                            </a>
+                        </td>
+                        <td class="point">
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/4">
+                                                                0                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                                    <tr>
+                        <td>
+                            <a href="#">
+                                <span class="num">10.</span>
+                                <span class="icon">
+                                    <i class="gicon-points"></i>                                </span>
+                                Total                            </a>
+                        </td>
+                        <td class="point">
+                            <a href="http://www.oceventmanager.com/user-points/-/100041/1">
+                                                                1 000                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </td>
+                    </tr>
+                                </tbody>
+            </table>
         </div>
+    </div>
+</div>  
 
-        <div class="user-info-edit-form edit_info_user user-info-panel hidden">
-                        <dl class="dl-horizontal clearfix">
-                <dt>
-                    First Name                </dt>
-                <dd>
-                    <input class="form-control" id="fname_edit" type="text" name="data[fName]" value="">
-                </dd>
-                <dt>
-                    Last Name                </dt>
-                <dd>
-                    <input class="form-control" id="lname_edit" type="text" name="data[lName]" value="">
-                </dd>
-                <dt>
-                    Email                </dt>
-                <dd>
-                    <input class="form-control" id="email_edit" type="text" name="data[eMail]" value="">
-                </dd>
-                <dt>
-                    Repeat email                </dt>
-                <dd>
-                    <input class="form-control" id="emailrepeat_edit" type="text" name="data[email_repeat]" value="">
-                </dd>
-                <dt>
-                    Mobile                </dt>
-                <dd>
-                    <input class="form-control" id="mobile_edit" type="text" name="data[mobile]" value="">
-                </dd>
-                <dt>
-                    SetNewPassword                </dt>
-                <dd>
-                    <input class="form-control" id="pwd_edit" type="password" name="data[password]">
-                </dd>
-                <dt>
-                    RepeatNewPassword                </dt>
-                <dd>
-                    <input class="form-control" id="pwdrepeat_edit" type="password" name="data[password_repeat]">
-                </dd>
-            </dl>
-            <div class="btns-wrapper">
-                <button class="btn user-info-save-btn" onclick="return saveprofile();" type="button" name="save_details" value="1">Save</button>
-                <a class="btn user-info-cancel-btn" href="#">Cancel</a>
-            </div>
-        </div>
-	
-	</div>
-    	<div class="user-facebook-link row">
-        		<h4>Link your account to Facebook</h4>
-        <div class="facebook-description">
-            Linking your gamification experience with Facebook:
-<br><br>
-• Easy access to the gamification platform<br>
-• Earn points by connecting<br>
-• Get connected with your friends on Facebook<br>
-• Putting your profile image to it all        </div>
-		<div class="facebook-btn-wrapper">
-			<a href="#" onclick="linkwithfacebook();">
-                <i class="fa fa-facebook"></i> Link your account to Facebook            </a>
-		</div>
-	</div>
-  <div id="unlinkfacebook">
-        <div class="facebook-btn-wrapper">
-			<a href="#" onclick="fbLoginSuccess();">
-                <i class="fa fa-facebook"></i> Unlink your account from Facebook            </a>
-		</div>
-  </div>
-	        <dl class="qa-list row">
-                               
-                        </dl>
-    </div>                                        <footer>
+
+               <footer>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 footer-menu">
@@ -219,7 +211,7 @@
                     <div class="label-container ">
                         <a href="#">
                             <label>
-                                    <i class="gicon-sponsors"></i>
+                                                                <i class="gicon-sponsors"></i>
                                 <p>menuSponsorsList</p>
                             </label>
                         </a>
@@ -249,9 +241,9 @@
                                                                 </div>
         </div>
     </div>
-</footer>                    </div>
+</footer>     </div>
 
-                    <div class="dropdown-menu custom-dropdown" role="menu" aria-labelledby="dLabel">
+    <div class="dropdown-menu custom-dropdown" role="menu" aria-labelledby="dLabel">
                 <div class="user-profile-info">
                     <div class="img-wrapper" id="medium_profile_pic" style="background-image: url('')">
                         <a href="profile.html">
@@ -290,7 +282,7 @@
                                 Welcome                            </a>
                         </li>
                                                 <li>
-                            <a class="active" href="profile.html">
+                            <a href="profile.html">
                                 <i class="gicon-my-profile"></i>
                                 Profile                            </a>
                         </li>
@@ -305,7 +297,7 @@
                                 Agenda                            </a>
                         </li>
                                                                         <li>
-                            <a href="points.html">
+                            <a class="active" href="points.html">
                                 <i class="gicon-points"></i>
                                 Points                            </a>
                         </li>
@@ -330,6 +322,7 @@
                     </ul>
                 </div>
             </div>
+
         
         
         <script src="js/bootstrap.min.js"></script>

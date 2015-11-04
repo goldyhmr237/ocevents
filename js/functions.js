@@ -702,6 +702,80 @@ function gotoagenda(agenda_id)
     window.location.href= 'agenda_item.html';
 }
 
+//function to fetch user points
+function loadpoints()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".leaderboards-container").hide();
+        //jQuery(".loading_agenda_items").hide();
+        var main_url = server_url + 'user-points/?gvm_json=1';
+        // alert(main_url);
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+              var imagedatalength = obj.categories.length;  
+                db.transaction(function(tx) {
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal)');                                
+                    tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+                        var len_ag = results.rows.length;
+                       // alert(len_ag);
+                        if (imagedatalength == len_ag && len_ag != 0) {                            
+                            showPointsData();
+                        }
+                        else
+                        {
+                           db.transaction(function(tx) {
+                                 tx.executeSql('delete from OCEVENTS_points');
+                            });
+                            var co = 0;
+                            $.each(obj.categories, function(key, val) {
+                                db.transaction(function(tx) {
+                                tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal+ "')");
+                                //alert(val.position);
+                                co++;
+                                  // alert(co);
+                                      //alert(imagedatalength); 
+                                if (imagedatalength == co) {
+                                      //alert(co);
+                                      //alert(imagedatalength);
+                                     // alert('going');
+                                      showPointsData();
+                                  }
+                                });     
+                            });
+                        }
+                        
+                    });
+                    
+                    });    
+            }
+            
+            });
+    });    
+}
+
+//function to show user points
+function showPointsData() {
+    // alert('here');
+    db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "' order by position asc", [], function(tx, results) {
+            var len = results.rows.length;
+            $(".table-striped tbody").html('&nbsp;');
+            var group_title = '';
+            for (i = 0; i < len; i++) {
+            //alert(results.rows.item(i).description);
+                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span><span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+            }
+            jQuery(".leaderboards-container").show();
+            jQuery(".loading_agenda_items").hide();
+
+        });
+    });
+}
+
 //function to fetch agenda items
 function loadagenda() {
     jQuery(document).ready(function($) {
