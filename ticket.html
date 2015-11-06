@@ -32,7 +32,7 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadpoints();
+                  loadticket();
             });
     }
     var localLink = '/';
@@ -83,32 +83,26 @@
 </header>
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading Points...
+        Loading Ticket...
         <br />
         <img src="img/loading.gif" />
-</div>            
-<div class="container main-container leaderboards-container">
-        <div class="header-title row">
-    <p>
-<span class="breadcrumbs"><span class="green-text">Points</span></span></p>    </div>
-        <div class="subheader-grey row"></div>
-    <div class="user-points-table-container row">
-        <table class="user-points-table-title">
-    <tbody><tr>
-        <th class="col-xs-12">
-            <a href="gamification.html" class="active">
-                Your Scores            </a>
-        </th>
-            </tr>
-</tbody></table>        <div class="user-points-table">
-            <table class="table table-striped">
-                <tbody>
-                                   
-                                </tbody>
-            </table>
-        </div>
-    </div>
-</div>  
+</div> 
+ <div class="container main-container ticketing-container">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="ticketing-title-wrapper">
+				<h1>My ticket</h1>
+			</div>
+			<div class="ticketing-content">
+				<h3>OCintranet</h3>
+				<div class="qr-code-wrapper">
+					<img class="qr_photo" src="">
+				</div>
+				<p class="ticket_code">TC07302993-000001753210-4</p>
+			</div>
+		</div>
+	</div>
+</div>
 
 
                <footer>
@@ -185,7 +179,7 @@
                         <p class="my-events-title">My events</p>
                                                 <p>
                             <a href="index.html" class="active">
-                               OCintranet</a>
+                              OCintranet                        </a>
                         </p>
                                             </div>
                 </div>
@@ -202,7 +196,7 @@
                                 Profile                            </a>
                         </li>
                                                 <li>
-                            <a href="ticket.html">
+                            <a class="active" href="ticket.html">
                                 <i class="gicon-my-ticket"></i>
                                 My ticket                            </a>
                         </li>
@@ -212,7 +206,7 @@
                                 Agenda                            </a>
                         </li>
                                                                         <li>
-                            <a class="active" href="points.html">
+                            <a href="points.html">
                                 <i class="gicon-points"></i>
                                 Points                            </a>
                         </li>
@@ -220,7 +214,7 @@
                             <a href="contacts.html">
                                 <i class="gicon-friends">
                                                                     </i>
-                                Add Contacts                            </a>
+                                Add Contacts                          </a>
                         </li>
                                                 <li>
                             To install, tap <span></span> and choose<br> "Add to Home Screen"

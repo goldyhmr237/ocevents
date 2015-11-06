@@ -64,11 +64,8 @@ function removeprofileimage() {
                             //alert(ImgFullUrl);
                             db.transaction(function(tx) {
                                 tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="false" where user_id = "' + localStorage.user_id + '"');
-
                                 window.location.href = "profile.html";
-
                             });
-
                         });
                     }
                 });
@@ -703,6 +700,71 @@ function gotoagenda(agenda_id)
 }
 
 //function to fetch user points
+function loadticket()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        db.transaction(function(tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
+            tx.executeSql('delete from OCEVENTS_ticket');
+        });
+        $(".ticketing-container").hide();
+        var main_url = server_url + 'ticketing/-/100041/?gvm_json=1';
+        // alert(main_url);
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+              var DIR_Name = 'oc_photos';
+              var a = new DirManager();
+              a.create_r(DIR_Name, Log('created successfully'));
+              var b = new FileManager();
+              var img_src = server_url+obj.ticketSrc;
+              var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+               // alert(img_src);
+              var image_name = getFileNameFromPath(img_src);
+              //alert(image_name);
+
+          //alert(imagedatalength);
+          jQuery.ajax({
+              url: STR,
+              dataType: "html",
+              success: function(DtatURL) {    
+                  b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                      //alert(DtatURL);
+                      var ImgFullUrl = '';
+                      ImgFullUrl = theFile.toURI();
+                      
+                     // alert(ImgFullUrl);
+                      db.transaction(function(tx) {                       
+                                            
+                        tx.executeSql("insert into OCEVENTS_ticket (user_id,ticketCode,ticketSrc) values ('" + localStorage.user_id + "','" + obj.ticketCode + "','" + ImgFullUrl + "')");
+                        showTicket();
+                      });
+                    });
+                }
+                });  
+                                                  
+            }
+          });  
+     });   
+}
+
+//function to show user ticket
+function showTicket()
+{
+     db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_ticket where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+            jQuery(".ticket_code").html(results.rows.item(0).ticketCode);
+            jQuery(".qr_photo").attr("src",results.rows.item(0).ticketSrc);
+            jQuery(".ticketing-container").show();
+            jQuery(".loading_agenda_items").hide();
+        });
+    });
+}        
+
+//function to fetch user points
 function loadpoints()
 {
    jQuery(document).ready(function($) {
@@ -923,6 +985,7 @@ function loadprofile() {
             var len = results.rows.length;
             //alert(results.rows.item(0).image_src);
             $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
+            $(".player_code").html(results.rows.item(0).player_code);
             $(".main-img").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             //var image_source = getFileNameFromPath(image_src);  

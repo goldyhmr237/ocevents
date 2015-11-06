@@ -32,11 +32,11 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadpoints();
+                  loadcontacts();
             });
     }
     var localLink = '/';
-                var GHomepageLink = "profile.html";
+                var GHomepageLink = "contacts.html";
             </script>
             </head>
     <body class="">
@@ -81,34 +81,123 @@
         </div>
     </div>
 </header>
-<div align="center" class="container loading_agenda_items main-container">
+<!--div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading Points...
+        Loading Contacts...
         <br />
         <img src="img/loading.gif" />
-</div>            
-<div class="container main-container leaderboards-container">
-        <div class="header-title row">
-    <p>
-<span class="breadcrumbs"><span class="green-text">Points</span></span></p>    </div>
-        <div class="subheader-grey row"></div>
-    <div class="user-points-table-container row">
-        <table class="user-points-table-title">
-    <tbody><tr>
-        <th class="col-xs-12">
-            <a href="gamification.html" class="active">
-                Your Scores            </a>
-        </th>
-            </tr>
-</tbody></table>        <div class="user-points-table">
-            <table class="table table-striped">
-                <tbody>
-                                   
-                                </tbody>
-            </table>
-        </div>
+</div--> 
+ <div class="container main-container add-friends-container">
+    <div class="header-title row">
+        <p>
+            <i class="fa fa-user"></i>
+            Contacts        </p>
     </div>
-</div>  
+    
+    
+    <div class="add-friend-form-container">
+        <form class="form-container" action="" method="post">
+                        <div class="player-code-wrapper">
+                <p>
+                    Your player ID: 
+                    <span class="green-text">QIETXDQ</span>
+                </p>
+            </div>
+                        <div class="player-code-input-wrapper">
+                <label for="user-code">Add contact  <i class="fa fa-user"></i></label>
+                <input id="user-code" class="form-control" type="text" name="user_code" placeholder="Your contact user ID">
+            </div>
+            <div class="add-btn-wrapper">
+                <button class="btn" type="submit" name="add_friend" value="1">
+                    Add contact                </button>
+            </div>
+                        <div class="form-group">
+                <label for="users-filter">Participants</label>
+                <input id="users-filter" class="form-control" type="text" placeholder="Search">
+                <span><i class="fa fa-search"></i></span>
+                                                        <a class="show-friends-btn" href="http://oceventmanager.com/user-add-friend/-/100041/friends/">
+                        Your contacts                    </a>
+                                                </div>
+        </form>
+    </div>
+        <div id="friends-content-container">
+            
+                
+                        <div class="friends-items-container">
+                            
+                        <div class="friends-item-title">A</div>
+        <div class="friends-item-wrapper">
+        <div class="friends-item">
+
+                        <a href="http://oceventmanager.com/user-add-friend/-/100041/#" onclick="alert(&#39;UserNotPairedErrorShort&#39;); return false;">
+            
+                
+                <div class="friends-item-img" style="background-image: url(&#39;/resources/files/event/images/thumb_1443087759.jpg&#39;);"></div>
+                <h2>Adrian Patrascu</h2>
+
+                
+                            </a>
+        </div>
+            </div>
+        <div class="friends-item-wrapper">
+        <div class="friends-item">
+
+                        <a href="http://oceventmanager.com/user-add-friend/-/100041/#" onclick="alert(&#39;UserNotPairedErrorShort&#39;); return false;">
+            
+                
+                <div class="friends-item-img" style="background-image: url(&#39;/resources/files/event/images/thumb_1445009861.jpg&#39;);"></div>
+                <h2>adrian patrascu</h2>
+
+                
+                            </a>
+        </div>
+            </div>
+        <div class="friends-item-wrapper">
+        <div class="friends-item">
+
+                        <a href="http://oceventmanager.com/user-add-friend/-/100041/#" onclick="alert(&#39;UserNotPairedErrorShort&#39;); return false;">
+            
+                
+                <div class="friends-item-img" style="background-image: url(&#39;/oc-publisher-framework/beta/resources/gamification/images/mobile/default-user-image.png&#39;);"></div>
+                <h2>ahfgsdjhdfgksj hjgkjgkj</h2>
+
+                
+                            </a>
+        </div>
+            </div>
+            <div class="friends-item-title">B</div>
+        <div class="friends-item-wrapper">
+        <div class="friends-item">
+
+                        <a href="http://oceventmanager.com/user-add-friend/-/100041/#" onclick="alert(&#39;UserNotPairedErrorShort&#39;); return false;">
+            
+                
+                <div class="friends-item-img" style="background-image: url(&#39;/oc-publisher-framework/beta/resources/gamification/images/mobile/default-user-image.png&#39;);"></div>
+                <h2>Bård  Sørlie</h2>
+
+                
+                            </a>
+        </div>
+            </div>
+        <div class="friends-item-wrapper">
+        <div class="friends-item">
+
+                        <a href="http://oceventmanager.com/user-add-friend/-/100041/#" onclick="alert(&#39;UserNotPairedErrorShort&#39;); return false;">
+            
+                
+                <div class="friends-item-img" style="background-image: url(&#39;/oc-publisher-framework/beta/resources/gamification/images/mobile/default-user-image.png&#39;);"></div>
+                <h2>Bogdan Radulescu</h2>
+
+                
+                            </a>
+        </div>
+         </div>
+        </div>
+                    
+                
+        </div>  
+    
+</div>
 
 
                <footer>
@@ -185,7 +274,7 @@
                         <p class="my-events-title">My events</p>
                                                 <p>
                             <a href="index.html" class="active">
-                               OCintranet</a>
+                              OCintranet                        </a>
                         </p>
                                             </div>
                 </div>
@@ -202,7 +291,7 @@
                                 Profile                            </a>
                         </li>
                                                 <li>
-                            <a href="ticket.html">
+                            <a class="active" href="ticket.html">
                                 <i class="gicon-my-ticket"></i>
                                 My ticket                            </a>
                         </li>
@@ -212,7 +301,7 @@
                                 Agenda                            </a>
                         </li>
                                                                         <li>
-                            <a class="active" href="points.html">
+                            <a href="points.html">
                                 <i class="gicon-points"></i>
                                 Points                            </a>
                         </li>
