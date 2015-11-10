@@ -298,6 +298,30 @@ function base64_encode(data) {
 
     return (r ? enc.slice(0, r - 3) : enc) + '==='.slice(r || 3);
 }
+
+//UnLink your facebook account
+function unlinkwithfacebook() {
+    if(confirm('Are you sure you want to unlink facebook from your account?')){
+                
+    
+    var main_url = server_url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
+                jQuery.ajax({
+                    url: main_url,
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        event_id: static_event_id
+                    },
+                    success: function(obj) {
+                        alert("Facebook Account Unlinked Successfully");
+                        jQuery(".facebook-link").show();
+                        jQuery("#unlinkfacebook").hide();
+                    }
+                    
+                    });
+      }
+}
+
 //Link your facebook account
 function linkwithfacebook() {
     jQuery(document).ready(function($) {
@@ -506,7 +530,7 @@ function logout() {
             //alert(obj.status);                       
             if (obj.status == 'success') {
 
-
+                truncatealltables();
                 localStorage.user_id = '';
                 if (localStorage.fid != '' && localStorage.fid != undefined && localStorage.fid != null) {
                     facebookConnectPlugin.logout(
@@ -781,6 +805,7 @@ function loadpoints()
               var imagedatalength = obj.categories.length;  
                 db.transaction(function(tx) {
                 tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal)');                                
+                    tx.executeSql('delete from OCEVENTS_points');
                     tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
                        // alert(len_ag);
@@ -856,6 +881,7 @@ function loadagenda() {
                 var imagedatalength = obj.data.presentations_count;
                 db.transaction(function(tx) {
                 tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description LONGTEXT,embeded_html,event_time)');                                
+                    tx.executeSql('delete from OCEVENTS_agenda');
                     tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
                        // alert(len_ag);
@@ -993,11 +1019,12 @@ function loadprofile() {
             if (results.rows.item(0).is_user_image == 'true') {
                 $(".selfie_button").html('<button class="pic-remove" onclick="removeprofileimage();" type="button" name="remove_pic" value="1">Remove Selfie From Your Profile</button>');
             }
-            $(".user-facebook-link").show();
-            //alert(results.rows.item(0).fb_user_id);
-            if (results.rows.item(0).fb_user_id != null && results.rows.item(0).fb_user_id != '' && results.rows.item(0).fb_user_id != undefined) {
-                $(".user-facebook-link").hide();
-                // $("#unlinkfacebook").show(); 
+            $(".facebook-link").show();
+           // alert(results.rows.item(0).fb_user_id);
+            if (results.rows.item(0).fb_user_id != null && results.rows.item(0).fb_user_id != 'null' && results.rows.item(0).fb_user_id != '' && results.rows.item(0).fb_user_id != undefined) {
+                //alert('here')
+                $(".facebook-link").hide();
+                 $("#unlinkfacebook").show(); 
             }
 
 
@@ -1020,7 +1047,7 @@ function loadprofile() {
             $("#lname_edit").val(results.rows.item(0).last_name);
             $("#email_edit").val(results.rows.item(0).email);
             $("#mobile_edit").val(results.rows.item(0).mobile);
-            $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;")
+            $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
 
             $(".fa-trophy").html("<span>#</span>" + results.rows.item(0).position);
         });
@@ -1061,6 +1088,7 @@ function loadcommonthings() {
 function login_process() {
     db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)');
+        tx.executeSql('delete from OCEVENTS_qa');
     });
     var main_url = server_url + 'user-profile/?gvm_json=1';
     // alert('here');
@@ -1223,4 +1251,17 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     pictureSource = navigator.camera.PictureSourceType;
     destinationType = navigator.camera.DestinationType;
+}
+
+//function to delete entries all tables
+function truncatealltables()
+{
+  db.transaction(function(tx) {
+    tx.executeSql('delete from OCEVENTS_user');
+    tx.executeSql('delete from OCEVENTS_ticket');
+    tx.executeSql('delete from OCEVENTS_points');
+    tx.executeSql('delete from OCEVENTS_agenda');
+    tx.executeSql('delete from OCEVENTS_qa');
+    tx.executeSql('delete from OCEVENTS_homepage');
+  });        
 }

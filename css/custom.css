@@ -297,8 +297,8 @@
     display: block;
     width: 100%;
     height: 100%;
-    padding-top: 70px;
-    padding-bottom: 90px;
+   /* padding-top: 70px;
+    padding-bottom: 90px;*/
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     border: none;
@@ -537,7 +537,7 @@ div.img {
         margin-left: 0 !important;
     }
     #homepage-content {
-        padding-bottom: 65px;
+        /*padding-bottom: 65px;*/
     }
     .agenda-container .agenda-content .agenda-item .agenda-info .agenda-img {
         width: 80px;
