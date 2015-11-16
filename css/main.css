@@ -12901,7 +12901,7 @@ header .header-login-wrapper {
   display: inline-block;
   color: #ffffff;
   text-align: right;
-  position: absolute;
+ /* position: absolute;*/
   line-height: 65px;
   float: right;
   padding-left: 0;
@@ -13230,7 +13230,7 @@ padding:12px;
 {
   color:#fff;
 }
-.hidden_button
+.teampoints , .yourteam
 {
-  
+   display:none;
 }

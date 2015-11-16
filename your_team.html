@@ -32,11 +32,11 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadpoints();
+                  loadyourpoints();
             });
     }
     var localLink = '/';
-                var GHomepageLink = "points.html";
+                var GHomepageLink = "profile.html";
             </script>
             </head>
     <body class="">
@@ -83,7 +83,7 @@
 </header>
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading Your Scores...
+        Loading Your Team Scores...
         <br />
         <img src="img/loading.gif" />
 </div>            
@@ -95,16 +95,16 @@
     <div class="user-points-table-container row">
         <table class="user-points-table-title">
     <tbody><tr>
-        <th class="col-xs-12">
-            <a href="points.html" class="active">
+        <th class="col-xs-4">
+            <a href="points.html">
                 Your Scores            </a>
         </th>
-        <th class="col-xs-4 teampoints" style="display:none;">
+        <th class="col-xs-4">
             <a href="team_points.html">
                 Team Scores            </a>
         </th>
-        <th class="col-xs-4 yourteam" style="display:none;">
-            <a href="your_team.html">
+        <th class="col-xs-4">
+            <a href="your_team.html" class="active">
                 Your Team           </a>
         </th>
             </tr>

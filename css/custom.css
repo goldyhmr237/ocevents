@@ -309,6 +309,12 @@
     bottom: 0;
     right: 0;  */
 }
+.main-container .header-title p {
+    font-family: Lato, sans-serif;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    font-style: italic !important;
+    }
 .breadcrumbs a {
     color: #fff;
 }

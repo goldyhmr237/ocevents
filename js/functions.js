@@ -577,7 +577,9 @@ function loadgamification() {
                 $(".welcome-content").html(results.rows.item(0).main_text);
             } else if (results.rows.item(0).type == 'url') {
                 // var ref = window.open('http://apache.org', '_system', 'location=yes');
-
+                if (results.rows.item(0).main_logo_small_image != undefined && results.rows.item(0).main_logo_small_image != null && results.rows.item(0).main_logo_small_image != '') {
+                    $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
+                }
                 $(".main-container").html('<iframe src=' + results.rows.item(0).iframe_url + ' id="homepage-content" />');
             } else {
                 $(".main-container").html("No Module Found");
@@ -802,9 +804,20 @@ function loadpoints()
             dataType: "json",
             method: "GET",
             success: function(obj) {
+            //alert(obj.hideTeamScores)
+            var hideTeamScores =  obj.hideTeamScores;
+            //var label =  obj.breadcrumbs.text;
+            //alert(obj.breadcrumbs);
+            //alert(label);
+            var label = '';
+            $.each(obj.breadcrumbs, function(key, val) {
+                    //alert(val.text);
+                    label =  val.text;
+            }); 
+           // alert(label);
               var imagedatalength = obj.categories.length;  
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal)');                                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,hideTeamScores,label)');                                
                     tx.executeSql('delete from OCEVENTS_points');
                     tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -820,7 +833,12 @@ function loadpoints()
                             var co = 0;
                             $.each(obj.categories, function(key, val) {
                                 db.transaction(function(tx) {
-                                tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal+ "')");
+                                var green_count = 0;
+                                if(val.count != null && val.count != undefined && val.count != 'null' && val.count != '')
+                                {
+                                    green_count =  val.count;
+                                } 
+                                tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal,green_count,hideTeamScores,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal+ "','" + green_count+ "','" + hideTeamScores+ "','" + label+ "' )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
@@ -848,13 +866,294 @@ function loadpoints()
 function showPointsData() {
     // alert('here');
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "' order by position asc", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
             var len = results.rows.length;
             $(".table-striped tbody").html('&nbsp;');
+            var label = results.rows.item(0).label;
+            var hideTeamScores = results.rows.item(0).hideTeamScores;            
+            if(hideTeamScores == 'false')
+            {
+                $('.teampoints').show();
+                $('.yourteam').show();
+                $('.user-points-table-title tbody tr th').attr('class','col-xs-4');
+            }
+            $(".green-text").html(label);
             var group_title = '';
+            
+            //alert(results.rows.item(0).hideTeamScores);
             for (i = 0; i < len; i++) {
             //alert(results.rows.item(i).description);
-                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span><span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                var icon = '';
+                if(results.rows.item(i).name == 'Bonus')
+                {
+                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Social')
+                {
+                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Seekergame')
+                {
+                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Course/Quiz')
+                {
+                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Communication')
+                {
+                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                }
+                 else if(results.rows.item(i).name == 'Total')
+                {
+                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                }
+                 var green_count_html = '';
+                if(results.rows.item(i).green_count != 0)
+                { 
+                  var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
+                }
+                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+            }
+            jQuery(".leaderboards-container").show();
+            jQuery(".loading_agenda_items").hide();
+
+        });
+    });
+}
+
+//function to fetch team points
+function loadteampoints()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".leaderboards-container").hide();
+        var main_url = server_url + 'team-points/?gvm_json=1';
+        
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            
+            var label = '';
+            $.each(obj.breadcrumbs, function(key, val) {
+                    //alert(val.text);
+                    label =  val.text;
+            }); 
+           // alert(label);
+              var imagedatalength = obj.categories.length;  
+                db.transaction(function(tx) {
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,index integer,userTotal,green_count,label)');                                
+                    tx.executeSql('delete from OCEVENTS_teampoints');
+                    tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+                        var len_ag = results.rows.length;
+                       // alert(len_ag);
+                        if (imagedatalength == len_ag && len_ag != 0) {                            
+                            showTeamPointsData();
+                        }
+                        else
+                        {
+                           db.transaction(function(tx) {
+                                 tx.executeSql('delete from OCEVENTS_teampoints');
+                            });
+                            var co = 0;
+                            $.each(obj.categories, function(key, val) {
+                                db.transaction(function(tx) {
+                                var green_count = 0;
+                                if(val.count != null && val.count != undefined && val.count != 'null' && val.count != '')
+                                {
+                                    green_count =  val.count;
+                                } 
+                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,index,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                //alert(val.position);
+                                co++;
+                                  // alert(co);
+                                      //alert(imagedatalength); 
+                                if (imagedatalength == co) {
+                                      //alert(co);
+                                      //alert(imagedatalength);
+                                     // alert('going');
+                                      showTeamPointsData();
+                                  }
+                                });     
+                            });
+                        }
+                        
+                    });
+                    
+                    });    
+            }
+            
+            });
+    });    
+}
+
+//function to show team points
+function showTeamPointsData() {
+    // alert('here');
+    db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+            var len = results.rows.length;
+            $(".table-striped tbody").html('&nbsp;');
+            var label = results.rows.item(0).label;
+            
+            $(".green-text").html(label);
+            var group_title = '';
+            
+            for (i = 0; i < len; i++) {
+                var icon = '';
+                if(results.rows.item(i).name == 'Bonus')
+                {
+                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Social')
+                {
+                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Seekergame')
+                {
+                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Course/Quiz')
+                {
+                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Communication')
+                {
+                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                }
+                 else if(results.rows.item(i).name == 'Total')
+                {
+                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                }
+                 var green_count_html = '';
+                if(results.rows.item(i).green_count != 0)
+                { 
+                  var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
+                }
+                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).index+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+            }
+            jQuery(".leaderboards-container").show();
+            jQuery(".loading_agenda_items").hide();
+
+        });
+    });
+}
+
+
+
+//function to fetch your team points
+function loadyourpoints()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".leaderboards-container").hide();
+        var main_url = server_url + 'your-team/?gvm_json=1';
+        
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            
+            var label = '';
+            $.each(obj.breadcrumbs, function(key, val) {
+                    //alert(val.text);
+                    label =  val.text;
+            }); 
+           // alert(label);
+              var imagedatalength = obj.categories.length;  
+                db.transaction(function(tx) {
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,index integer,userTotal,green_count,label)');                                
+                    tx.executeSql('delete from OCEVENTS_yourteampoints');
+                    tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+                        var len_ag = results.rows.length;
+                       // alert(len_ag);
+                        if (imagedatalength == len_ag && len_ag != 0) {                            
+                            showYourTeamPointsData();
+                        }
+                        else
+                        {
+                           db.transaction(function(tx) {
+                                 tx.executeSql('delete from OCEVENTS_yourteampoints');
+                            });
+                            var co = 0;
+                            $.each(obj.categories, function(key, val) {
+                                db.transaction(function(tx) {
+                                var green_count = 0;
+                                if(val.count != null && val.count != undefined && val.count != 'null' && val.count != '')
+                                {
+                                    green_count =  val.count;
+                                } 
+                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,index,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                //alert(val.position);
+                                co++;
+                                  // alert(co);
+                                      //alert(imagedatalength); 
+                                if (imagedatalength == co) {
+                                      //alert(co);
+                                      //alert(imagedatalength);
+                                     // alert('going');
+                                      showYourTeamPointsData();
+                                  }
+                                });     
+                            });
+                        }
+                        
+                    });
+                    
+                    });    
+            }
+            
+            });
+    });    
+}
+
+//function to show team points
+function showYourTeamPointsData() {
+    // alert('here');
+    db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+            var len = results.rows.length;
+            $(".table-striped tbody").html('&nbsp;');
+            var label = results.rows.item(0).label;
+            
+            $(".green-text").html(label);
+            var group_title = '';
+            
+            for (i = 0; i < len; i++) {
+                var icon = '';
+                if(results.rows.item(i).name == 'Bonus')
+                {
+                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Social')
+                {
+                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Seekergame')
+                {
+                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Course/Quiz')
+                {
+                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                }
+                else if(results.rows.item(i).name == 'Communication')
+                {
+                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                }
+                 else if(results.rows.item(i).name == 'Total')
+                {
+                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                }
+                 var green_count_html = '';
+                if(results.rows.item(i).green_count != 0)
+                { 
+                  var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
+                }
+                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).index+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1069,18 +1368,25 @@ function loadcommonthings() {
             var len = results.rows.length;
             $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
-            $(".log-info p").html("<p>" + results.rows.item(0).first_name + " " + results.rows.item(0).last_name + "<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br></p>");
+            $(".log-info p").html(results.rows.item(0).first_name + " " + results.rows.item(0).last_name);
+            if(results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null')
+            {
+              $(".log-info p").append("<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br />");
+            }            
+            //$(".log-info p").append("</p>");
             $(".firstname a").html(results.rows.item(0).first_name);
-            $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;")
+            if(results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null')
+            {
+              $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
+            }
+            
             $(".lastname a").html(results.rows.item(0).last_name);
             $(".fa-trophy").html("<span>#</span>" + results.rows.item(0).position);
         });
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
-            var len = results.rows.length;
-            if (results.rows.item(0).type == 'content') {
-                $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
-            }
+            var len = results.rows.length;            
+                $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);            
         });
     });
 }
@@ -1220,15 +1526,12 @@ function importhomepage()
                     }
 
                 } else if (obj.data.type == 'url') {
-                    db.transaction(function(tx) {
-                        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type)');
-                        tx.executeSql("delete from OCEVENTS_homepage");
-                        tx.executeSql("INSERT INTO OCEVENTS_homepage (user_id,iframe_url,type) VALUES ('" + localStorage.user_id + "','" + obj.data.url + "','" + obj.data.type + "')");
-                        window.location.href = "gamification.html";
-                    });
+                      
+                      downloadLogoFile(obj.data.url,obj.data.type,obj.data.main_logo_image.small_url);
+                      
                 } else {
                     db.transaction(function(tx) {
-                        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type)');
+                        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
                         tx.executeSql("delete from OCEVENTS_homepage");
                         tx.executeSql("INSERT INTO OCEVENTS_homepage (user_id,type) VALUES ('" + localStorage.user_id + "','" + obj.data.type + "')");
                         window.location.href = "gamification.html";
@@ -1264,4 +1567,33 @@ function truncatealltables()
     tx.executeSql('delete from OCEVENTS_qa');
     tx.executeSql('delete from OCEVENTS_homepage');
   });        
+}
+
+
+//function to download logo from server
+function downloadLogoFile(url,type,img_src)
+{
+  var DIR_Name = 'oc_photos';
+  alert(img_src);
+  var a = new DirManager();
+  a.create_r(DIR_Name, Log('created successfully'));
+  var b = new FileManager();
+  var image_name = getFileNameFromPath(img_src);
+  var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src; 
+  jQuery.ajax({
+      url: STR,
+      dataType: "html",
+      success: function(DtatURL) {
+      b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {      
+        var img_uri = theFile.toURI();
+        alert(img_uri);
+        db.transaction(function(tx) {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
+        tx.executeSql("delete from OCEVENTS_homepage");
+        tx.executeSql("INSERT INTO OCEVENTS_homepage (user_id,iframe_url,type,main_logo_small_image) VALUES ('" + localStorage.user_id + "','" + url + "','" + type + "','" + img_uri + "')");
+        window.location.href = "gamification.html";
+      });
+      });
+    }
+  });
 }
