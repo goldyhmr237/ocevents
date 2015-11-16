@@ -1574,7 +1574,7 @@ function truncatealltables()
 function downloadLogoFile(url,type,img_src)
 {
   var DIR_Name = 'oc_photos';
-  alert(img_src);
+  //alert(img_src);
   var a = new DirManager();
   a.create_r(DIR_Name, Log('created successfully'));
   var b = new FileManager();
@@ -1586,7 +1586,7 @@ function downloadLogoFile(url,type,img_src)
       success: function(DtatURL) {
       b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {      
         var img_uri = theFile.toURI();
-        alert(img_uri);
+        //alert(img_uri);
         db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
         tx.executeSql("delete from OCEVENTS_homepage");
