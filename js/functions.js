@@ -944,7 +944,7 @@ function loadteampoints()
            // alert(label);
               var imagedatalength = obj.categories.length;  
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,index integer,userTotal,green_count,label)');                                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label)');                                
                     tx.executeSql('delete from OCEVENTS_teampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -965,7 +965,7 @@ function loadteampoints()
                                 {
                                     green_count =  val.count;
                                 } 
-                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,index,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
@@ -1032,7 +1032,7 @@ function showTeamPointsData() {
                 { 
                   var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).index+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1065,7 +1065,7 @@ function loadyourpoints()
            // alert(label);
               var imagedatalength = obj.categories.length;  
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,index integer,userTotal,green_count,label)');                                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label)');                                
                     tx.executeSql('delete from OCEVENTS_yourteampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -1086,7 +1086,7 @@ function loadyourpoints()
                                 {
                                     green_count =  val.count;
                                 } 
-                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,index,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
@@ -1153,7 +1153,7 @@ function showYourTeamPointsData() {
                 { 
                   var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).index+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
