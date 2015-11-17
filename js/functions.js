@@ -24,7 +24,6 @@ function resetpassword() {
                 alert(resp.login_error);
             }
         }
-
     });
 }
 
@@ -965,7 +964,7 @@ function loadteampoints()
                                 {
                                     green_count =  val.count;
                                 } 
-                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
@@ -1086,7 +1085,7 @@ function loadyourpoints()
                                 {
                                     green_count =  val.count;
                                 } 
-                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.index + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
