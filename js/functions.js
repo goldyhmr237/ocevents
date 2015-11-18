@@ -426,7 +426,7 @@ var fbLoginSuccess = function() {
 
 
 var login = function() {
-alert('here');
+//alert('here');
     jQuery(document).ready(function($) {
 
         if (!window.cordova) {
@@ -436,7 +436,7 @@ alert('here');
         facebookConnectPlugin.login(["email"],
             function(response) {
 
-                alert('here 1');
+                //alert('here 1');
                 var newstr = JSON.stringify(response.authResponse.userID).replace(/\"/g, '');
                 var access_token = JSON.stringify(response.authResponse.accessToken).replace(/\"/g, '');
 
@@ -455,7 +455,7 @@ alert('here');
                         event_id: static_event_id
                     },
                     success: function(obj) {
-                         alert(obj.message);
+                        // alert(obj.message);
                         if (obj.status == "success") {
 
 
