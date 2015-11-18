@@ -2,7 +2,7 @@
 <widget id="com.ocevent.ocevents" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Ocevents</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        Ocevent Manager Gamification App
     </description>
     <author email="dev@cordova.apache.org" href="http://cordova.io">
         Apache Cordova Team
