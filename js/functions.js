@@ -1357,9 +1357,9 @@ function loadprofile() {
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
             var len = results.rows.length;
-            if (results.rows.item(0).type == 'content') {
+            
                 $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
-            }
+            
 
 
         });
