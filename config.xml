@@ -10,7 +10,7 @@
     <content src="index.html" />
     <access origin="*" /> 
     <platform name="android">
-  <preference name="phonegap-version" value="3.9.1" />
+  <preference name="phonegap-version" value="4.0.2" />
   
 </platform>   
     <!-- iPhone 6 / 6+ -->
