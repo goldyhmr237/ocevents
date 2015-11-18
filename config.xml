@@ -12,7 +12,11 @@
     <platform name="android">
   <preference name="phonegap-version" value="4.0.2" />
   
-</platform>   
+</platform> 
+<platform name="ios">
+  <preference name="phonegap-version" value="3.9.1" />
+  
+</platform>  
     <!-- iPhone 6 / 6+ -->
 <icon src="icons/OCEM4-IOS_152-.png" gap:platform="ios" width="180" height="180" />
 
