@@ -426,6 +426,7 @@ var fbLoginSuccess = function() {
 
 
 var login = function() {
+alert('here');
     jQuery(document).ready(function($) {
 
         if (!window.cordova) {
@@ -435,7 +436,7 @@ var login = function() {
         facebookConnectPlugin.login(["email"],
             function(response) {
 
-
+                alert('here 1');
                 var newstr = JSON.stringify(response.authResponse.userID).replace(/\"/g, '');
                 var access_token = JSON.stringify(response.authResponse.accessToken).replace(/\"/g, '');
 
@@ -454,7 +455,7 @@ var login = function() {
                         event_id: static_event_id
                     },
                     success: function(obj) {
-                        // alert(obj.message);
+                         alert(obj.message);
                         if (obj.status == "success") {
 
 
@@ -558,6 +559,7 @@ function logout() {
 function loadgamification() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
     loadcommonthings();
+    showfooter('home');
     db.transaction(function(tx) {
 
         //alert("SELECT * FROM OCEVENTS_homepage where user_id = '"+localStorage.user_id+"'");
@@ -583,6 +585,9 @@ function loadgamification() {
             } else {
                 $(".main-container").html("No Module Found");
             }
+            
+            
+            
         });
     });
 }
@@ -1423,6 +1428,45 @@ function login_process() {
 
 function importhomepage()
 {
+    var main_url = server_url + 'g-homepage/?gvm_json=1&event_id='+static_event_id;
+    db.transaction(function(tx) {
+
+            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+            tx.executeSql("delete from OCEVENTS_footerlinks");
+            
+            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+            tx.executeSql("delete from OCEVENTS_footermorelinks");
+     });                   
+    jQuery.ajax({
+        url: main_url,
+        dataType: "json",
+        method: "GET",
+        success: function(data) {
+            jQuery.each( data._footerMenuData.mainButtons, function( key, val ) {
+             
+                     db.transaction(function(tx) {
+                     var friend_count = 0;
+                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
+                         {
+                            friend_count = 1;
+                         }
+                         tx.executeSql("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
+                         //alert("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
+                     });
+            });
+             jQuery.each( data._footerMenuData.moreButtons, function( key, val ) {
+             
+                    db.transaction(function(tx) {
+                         var mfriend_count = 0;
+                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
+                         {
+                            mfriend_count = 1;
+                         }
+                         tx.executeSql("insert into OCEVENTS_footermorelinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+mfriend_count+"','"+val.text+"')");
+                     });
+            });
+         
+    
     var main_url = server_url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id='+static_event_id;
     // alert('here');
     jQuery.ajax({
@@ -1539,6 +1583,8 @@ function importhomepage()
             }
         }
     });
+    }
+    });
 }
 
 var pictureSource; // picture source
@@ -1554,20 +1600,6 @@ function onDeviceReady() {
     pictureSource = navigator.camera.PictureSourceType;
     destinationType = navigator.camera.DestinationType;
 }
-
-//function to delete entries all tables
-function truncatealltables()
-{
-  db.transaction(function(tx) {
-    tx.executeSql('delete from OCEVENTS_user');
-    tx.executeSql('delete from OCEVENTS_ticket');
-    tx.executeSql('delete from OCEVENTS_points');
-    tx.executeSql('delete from OCEVENTS_agenda');
-    tx.executeSql('delete from OCEVENTS_qa');
-    tx.executeSql('delete from OCEVENTS_homepage');
-  });        
-}
-
 
 //function to download logo from server
 function downloadLogoFile(url,type,img_src)
@@ -1596,3 +1628,72 @@ function downloadLogoFile(url,type,img_src)
     }
   });
 }
+
+//function to show footer links
+function showfooter(active)
+{
+    db.transaction(function(tx) {
+      tx.executeSql("SELECT * FROM OCEVENTS_footerlinks", [], function(tx, results) {
+          var len = results.rows.length;
+         // alert(len)
+          if(len > 0)
+          {
+            jQuery('.footer-menu').html('');
+            var link = '';
+            var name = '';
+            var menu_text = '';
+            var icon = '';
+            var active_class = '';            
+            for (i = 0; i < len; i++) {
+              name = results.rows.item(i).name;
+              if(name == active)
+              {
+                 active_class = 'active'; 
+              }
+              else
+              {
+                active_class = '';  
+              }
+              if(name == 'home')
+              {
+                link = 'gamification.html';
+              }
+              else if(name == 'agenda')
+              {
+                link = 'agenda.html';
+              }
+              else if(name == 'friends')
+              {
+                link = 'contacts.html';
+              }
+              else if(name == 'points')
+              {
+                link = 'points.html';
+              }
+              menu_text = results.rows.item(i).menu_text;
+              icon = results.rows.item(i).icon;            
+              jQuery('.footer-menu').append("<div class='label-container "+active_class+"'><a href="+link+"><label><i class="+icon+"></i><p>"+menu_text+"</p></label></a></div>");  
+            }
+          }          
+      });
+    });
+}
+
+//function to delete entries from all the tables
+function truncatealltables()
+{
+  db.transaction(function(tx) {
+    tx.executeSql('delete from OCEVENTS_user');
+    tx.executeSql('delete from OCEVENTS_ticket');
+    tx.executeSql('delete from OCEVENTS_points');
+    tx.executeSql('delete from OCEVENTS_agenda');
+    tx.executeSql('delete from OCEVENTS_qa');
+    tx.executeSql('delete from OCEVENTS_homepage');
+    tx.executeSql('delete from OCEVENTS_teampoints');
+    tx.executeSql('delete from OCEVENTS_yourteampoints');
+    tx.executeSql('delete from OCEVENTS_footerlinks');
+    tx.executeSql('delete from OCEVENTS_footermorelinks');
+  });        
+}
+
+
