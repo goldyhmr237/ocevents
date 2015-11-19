@@ -824,7 +824,7 @@ function loadpoints()
            // alert(label);
               var imagedatalength = obj.categories.length;  
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,hideTeamScores,label)');                                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,hideTeamScores,label,instance_id)');                                
                     tx.executeSql('delete from OCEVENTS_points');
                     tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -845,7 +845,7 @@ function loadpoints()
                                 {
                                     green_count =  val.count;
                                 } 
-                                tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal,green_count,hideTeamScores,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal+ "','" + green_count+ "','" + hideTeamScores+ "','" + label+ "' )");
+                                tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal+ "','" + green_count+ "','" + hideTeamScores+ "','" + label+ "' ,'" + val.instance_id+ "' )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
@@ -952,7 +952,7 @@ function loadteampoints()
            // alert(label);
               var imagedatalength = obj.categories.length;  
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label)');                                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');                                
                     tx.executeSql('delete from OCEVENTS_teampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -973,7 +973,7 @@ function loadteampoints()
                                 {
                                     green_count =  val.count;
                                 } 
-                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "','" + val.instance_id + "' )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
@@ -1040,13 +1040,225 @@ function showTeamPointsData() {
                 { 
                   var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gototeamdetail('+results.rows.item(i).instance_id+');"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#" onclick="gototeamdetail('+results.rows.item(i).instance_id+');">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
 
         });
     });
+}
+
+//function to go to team point detail page
+function gototeamdetail(instance_id)
+{
+    localStorage.instance_id = instance_id;
+    window.location.href = 'team_detail_point.html';
+}
+
+//function to fetch detail team point
+function loaddetailteampoints()
+{
+  jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".leaderboards-container").hide();
+        importfooter('team-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id,'your-team');
+        var main_url = server_url + 'team-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id+'?gvm_json=1';
+        
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            
+               var label = '';
+            $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
+                    
+                    if(key == 0)
+                    {
+                       $(".breadcrumbs a").html(val.text) 
+                    }
+                    if(key == 1)
+                    {
+                      $(".green-text").html(val.text)  
+                    }
+                    
+            });
+            $(".team-points-table table tbody").html('');
+             var i = 0;
+            $.each(obj.topScoresViewVars.teamPointsSel, function(key, val) {
+                   if(key == obj.topScoresViewVars.currentUserTeam)
+                   {
+                      var classcss="current-user" ;
+                   } 
+                   else
+                   {
+                      var classcss="" ;
+                   }            
+                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+val.pos+'</span></td><td><span class="name">'+key+'</span></td><td class="point">'+val.points+'</td></tr>');
+            
+                
+               i++;
+             }); 
+             var difference = Number(10) - Number(i);
+             for(v = 0; v < difference; v++)
+             {
+                i++;
+                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
+             }
+             $(".user-points-table table tbody").html('');
+             $.each(obj.categories, function(key, val) {
+                 if(val.instance_id == localStorage.instance_id)
+                 {
+                  var classcss="active" ;
+                 } 
+                 else
+                 {
+                    var classcss="" ;
+                 }
+                 
+                 var icon = '';
+                if(val.name == 'Bonus')
+                {
+                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                }
+                else if(val.name == 'Social')
+                {
+                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                }
+                else if(val.name == 'Seekergame')
+                {
+                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                }
+                else if(val.name == 'Course/Quiz')
+                {
+                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                }
+                else if(val.name == 'Communication')
+                {
+                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                }
+                 else if(val.name == 'Total')
+                {
+                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                }
+                     
+                $(".user-points-table table tbody").append('<tr class='+classcss+'><td><a href="#" onclick="gototeamdetail('+val.instance_id+')"><span class="num">'+val.position+'.</span>'+icon+val.name+'</a></td><td class="point"><a href="#" onclick="gototeamdetail('+val.instance_id+')">'+val.points+'<i class="fa fa-angle-right"></i></a></td></tr>');  
+                 
+             });
+            jQuery(".leaderboards-container").show();
+            jQuery(".loading_agenda_items").hide(); 
+            }
+        });
+        
+  });      
+}
+
+
+//function to go to  your team point detail page
+function gotoyourteamdetail(instance_id)
+{
+    localStorage.instance_id = instance_id;
+    window.location.href = 'your_detail_point.html';
+}
+
+
+//function to fetch your detail team point
+function loadyourdetailteampoints()
+{
+  jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".leaderboards-container").hide();
+        importfooter('Your-team/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id,'your-team');
+        var main_url = server_url + 'Your-team/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id+'?gvm_json=1';
+        
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            
+               var label = '';
+            $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
+                    
+                    if(key == 0)
+                    {
+                       $(".breadcrumbs a").html(val.text) 
+                    }
+                    if(key == 1)
+                    {
+                      $(".green-text").html(val.text)  
+                    }
+                    
+            });
+            $(".team-points-table table tbody").html('');
+             var i = 0;
+              var classcss = '';
+            $.each(obj.topScoresViewVars.usersSel, function(key, val) {
+                 if(key == localStorage.user_id)
+                 {
+                    var classcss="current-user" ;
+                 } 
+                 else
+                 {
+                    var classcss="" ;
+                 } 
+                i++;               
+                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+i+'</span></td><td><span class="name">'+val.fName+' '+val.lName+'</span></td><td class="point">'+val.total+'</td></tr>');
+            
+               }); 
+             var difference = Number(10) - Number(i);
+             for(v = 0; v < difference; v++)
+             {
+                i++;
+                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
+             }
+             $(".user-points-table table tbody").html('');
+             $.each(obj.categories, function(key, val) {
+                 if(val.instance_id == localStorage.instance_id)
+                 {
+                  var classcss="active" ;
+                 } 
+                 else
+                 {
+                    var classcss="" ;
+                 }
+                 
+                 var icon = '';
+                if(val.name == 'Bonus')
+                {
+                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                }
+                else if(val.name == 'Social')
+                {
+                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                }
+                else if(val.name == 'Seekergame')
+                {
+                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                }
+                else if(val.name == 'Course/Quiz')
+                {
+                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                }
+                else if(val.name == 'Communication')
+                {
+                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                }
+                 else if(val.name == 'Total')
+                {
+                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                }
+                     
+                $(".user-points-table table tbody").append('<tr class='+classcss+'><td><a href="#" onclick="gotoyourteamdetail('+val.instance_id+')"><span class="num">'+val.position+'.</span>'+icon+val.name+'</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail('+val.instance_id+')">'+val.points+'<i class="fa fa-angle-right"></i></a></td></tr>');  
+                 
+             });
+            jQuery(".leaderboards-container").show();
+            jQuery(".loading_agenda_items").hide(); 
+            }
+        });
+        
+  });      
 }
 
 
@@ -1074,7 +1286,7 @@ function loadyourpoints()
            // alert(label);
               var imagedatalength = obj.categories.length;  
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label)');                                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');                                
                     tx.executeSql('delete from OCEVENTS_yourteampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -1095,7 +1307,7 @@ function loadyourpoints()
                                 {
                                     green_count =  val.count;
                                 } 
-                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "' )");
+                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "','" + val.instance_id+ "'  )");
                                 //alert(val.position);
                                 co++;
                                   // alert(co);
@@ -1162,7 +1374,7 @@ function showYourTeamPointsData() {
                 { 
                   var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotoyourteamdetail('+results.rows.item(i).instance_id+');"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail('+results.rows.item(i).instance_id+');">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1712,15 +1924,58 @@ function showfooter(active)
           }          
       });
       tx.executeSql("SELECT * FROM OCEVENTS_footermorelinks", [], function(tx, results) {
-          var len = results.rows.length;
+          var len = results.rows.length; 
+          //alert(len)          
            if(len > 0)
            {
               jQuery('.footer-menu').append('<div class="more-btn label-container"><label><i class="gicon-more"></i><p>More</p></label></div> ');
-              var more_wrapper = '<div class="more-wrapper"><div class="footer-menu-opened"><ul><li>hi</li>';
+              var more_wrapper = '<div class="more-wrapper"><div class="footer-menu-opened"><ul>';
+              //jQuery('.footer-menu').html('');
+            var link = '';
+            var name = '';
+            var menu_text = '';
+            var icon = '';
+            var active_class = '';            
+            for (i = 0; i < len; i++) {
+              name = results.rows.item(i).name;
+              if(name == active)
+              {
+                 active_class = 'active'; 
+              }
+              else
+              {
+                active_class = '';  
+              }
+              if(name == 'home')
+              {
+                link = 'gamification.html';
+              }
+              else if(name == 'agenda')
+              {
+                link = 'agenda.html';
+              }
+              else if(name == 'friends')
+              {
+                link = 'contacts.html';
+              }
+              else if(name == 'points')
+              {
+                link = 'points.html';
+              }
+              menu_text = results.rows.item(i).menu_text;               
+              icon = results.rows.item(i).icon; 
+              more_wrapper += '<li><label><a href='+link+'><i class='+icon+'></i><span>'+menu_text+'</span></a></label></li>';
+          }    
+              
               
               more_wrapper += '</ul></div></div>';
-             // alert(more_wrapper);
+               //more_wrapper += '';
+              // alert(more_wrapper);
               jQuery('.footer-menu').prepend(more_wrapper);
+              jQuery('.more-btn').on('click', function ()
+              {	
+          		  jQuery('.footer-menu').toggleClass('footer-menu-open');
+          	  });
            }
       });    
     });
