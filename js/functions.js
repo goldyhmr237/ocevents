@@ -559,7 +559,8 @@ function logout() {
 function loadgamification() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
     loadcommonthings();
-    showfooter('home');
+    importfooter('g-homepage','home');
+    
     db.transaction(function(tx) {
 
         //alert("SELECT * FROM OCEVENTS_homepage where user_id = '"+localStorage.user_id+"'");
@@ -706,7 +707,7 @@ function loadagendaitem()
 {
     jQuery(document).ready(function($) {
         loadcommonthings();
-        
+        importfooter('View-presentation/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id,'agenda-item');
         db.transaction(function(tx) {                                                
               tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' and agenda_id = '"+localStorage.agenda_id+"'", [], function(tx, results) {
               var len_ag = results.rows.length;
@@ -734,12 +735,13 @@ function loadticket()
 {
    jQuery(document).ready(function($) {
         loadcommonthings();
+        importfooter('ticketing','home');
         db.transaction(function(tx) {
             tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
             tx.executeSql('delete from OCEVENTS_ticket');
         });
         $(".ticketing-container").hide();
-        var main_url = server_url + 'ticketing/-/100041/?gvm_json=1';
+        var main_url = server_url + 'ticketing/-/'+static_event_id+'/?gvm_json=1';
         // alert(main_url);
         $.ajax({
             url: main_url,
@@ -799,6 +801,7 @@ function loadpoints()
 {
    jQuery(document).ready(function($) {
         loadcommonthings();
+        importfooter('user-points','points');
         $(".leaderboards-container").hide();
         //jQuery(".loading_agenda_items").hide();
         var main_url = server_url + 'user-points/?gvm_json=1';
@@ -931,6 +934,7 @@ function loadteampoints()
 {
    jQuery(document).ready(function($) {
         loadcommonthings();
+        importfooter('team-points','team-points');
         $(".leaderboards-container").hide();
         var main_url = server_url + 'team-points/?gvm_json=1';
         
@@ -1053,6 +1057,7 @@ function loadyourpoints()
    jQuery(document).ready(function($) {
         loadcommonthings();
         $(".leaderboards-container").hide();
+        importfooter('Your-team','your-team');
         var main_url = server_url + 'your-team/?gvm_json=1';
         
         $.ajax({
@@ -1170,6 +1175,7 @@ function showYourTeamPointsData() {
 function loadagenda() {
     jQuery(document).ready(function($) {
         loadcommonthings();
+        importfooter('agenda','agenda');
         $(".agenda-container").hide();
         //showAgendaData();
         
@@ -1298,7 +1304,7 @@ function showAgendaData() {
 function loadprofile() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
 
-
+    importfooter('user-profile','profile');
     db.transaction(function(tx) {
 
         tx.executeSql("SELECT * FROM OCEVENTS_qa where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
@@ -1360,7 +1366,7 @@ function loadprofile() {
             
                 $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
             
-
+         
 
         });
     });
@@ -1428,43 +1434,7 @@ function login_process() {
 
 function importhomepage()
 {
-    var main_url = server_url + 'g-homepage/?gvm_json=1&event_id='+static_event_id;
-    db.transaction(function(tx) {
-
-            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
-            tx.executeSql("delete from OCEVENTS_footerlinks");
-            
-            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
-            tx.executeSql("delete from OCEVENTS_footermorelinks");
-     });                   
-    jQuery.ajax({
-        url: main_url,
-        dataType: "json",
-        method: "GET",
-        success: function(data) {
-            jQuery.each( data._footerMenuData.mainButtons, function( key, val ) {
-             
-                     db.transaction(function(tx) {
-                     var friend_count = 0;
-                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
-                         {
-                            friend_count = 1;
-                         }
-                         tx.executeSql("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
-                         //alert("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
-                     });
-            });
-             jQuery.each( data._footerMenuData.moreButtons, function( key, val ) {
-             
-                    db.transaction(function(tx) {
-                         var mfriend_count = 0;
-                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
-                         {
-                            mfriend_count = 1;
-                         }
-                         tx.executeSql("insert into OCEVENTS_footermorelinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+mfriend_count+"','"+val.text+"')");
-                     });
-            });
+    
          
     
     var main_url = server_url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id='+static_event_id;
@@ -1583,8 +1553,7 @@ function importhomepage()
             }
         }
     });
-    }
-    });
+    
 }
 
 var pictureSource; // picture source
@@ -1629,13 +1598,68 @@ function downloadLogoFile(url,type,img_src)
   });
 }
 
+//function to import footer links
+function importfooter(page,active)
+{
+  //alert(page);
+  //alert(active);
+  var main_url = server_url + page + '/?gvm_json=1&event_id='+static_event_id;
+    db.transaction(function(tx) {
+
+            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+            tx.executeSql("delete from OCEVENTS_footerlinks");
+            
+            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+            tx.executeSql("delete from OCEVENTS_footermorelinks");
+     });                   
+    jQuery.ajax({
+        url: main_url,
+        dataType: "json",
+        method: "GET",
+        success: function(data) {
+        if(data._footerMenuData != undefined && data._footerMenuData != 'undefined')
+        {
+           var getdata =   data._footerMenuData;
+        }
+        else
+        {
+           var getdata =   data.data._footerMenuData;
+        }
+            jQuery.each( getdata.mainButtons, function( key, val ) {
+                       //alert(val.name);
+                     db.transaction(function(tx) {
+                     var friend_count = 0;
+                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
+                         {
+                            friend_count = val.friends_requests_count;
+                         }
+                         tx.executeSql("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
+                         //alert("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
+                     });
+            });
+             jQuery.each( getdata.moreButtons, function( key, val ) {
+             
+                    db.transaction(function(tx) {
+                         var mfriend_count = 0;
+                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
+                         {
+                            mfriend_count = val.friends_requests_count;
+                         }
+                         tx.executeSql("insert into OCEVENTS_footermorelinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+mfriend_count+"','"+val.text+"')");
+                    });
+              });
+              showfooter(active);
+            }
+        });
+}
+
 //function to show footer links
 function showfooter(active)
 {
     db.transaction(function(tx) {
       tx.executeSql("SELECT * FROM OCEVENTS_footerlinks", [], function(tx, results) {
           var len = results.rows.length;
-         // alert(len)
+          //alert(len)
           if(len > 0)
           {
             jQuery('.footer-menu').html('');
@@ -1670,12 +1694,35 @@ function showfooter(active)
               {
                 link = 'points.html';
               }
+              
+              var friends_requests_count = results.rows.item(i).friends_requests_count;
+              if(friends_requests_count > 0)
+              {
+                var count_label = '<span class="count-label">'+friends_requests_count+'</span>';
+              }
+              else
+              {
+                var count_label = '';
+              }
               menu_text = results.rows.item(i).menu_text;
+              
               icon = results.rows.item(i).icon;            
-              jQuery('.footer-menu').append("<div class='label-container "+active_class+"'><a href="+link+"><label><i class="+icon+"></i><p>"+menu_text+"</p></label></a></div>");  
+              jQuery('.footer-menu').append("<div class='label-container "+active_class+"'><a href="+link+"><label>"+count_label+"<i class="+icon+"></i><p>"+menu_text+"</p></label></a></div>");  
             }
           }          
       });
+      tx.executeSql("SELECT * FROM OCEVENTS_footermorelinks", [], function(tx, results) {
+          var len = results.rows.length;
+           if(len > 0)
+           {
+              jQuery('.footer-menu').append('<div class="more-btn label-container"><label><i class="gicon-more"></i><p>More</p></label></div> ');
+              var more_wrapper = '<div class="more-wrapper"><div class="footer-menu-opened"><ul><li>hi</li>';
+              
+              more_wrapper += '</ul></div></div>';
+             // alert(more_wrapper);
+              jQuery('.footer-menu').prepend(more_wrapper);
+           }
+      });    
     });
 }
 
