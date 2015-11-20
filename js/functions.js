@@ -53,14 +53,11 @@ function removeprofileimage() {
                     dataType: "html",
                     success: function(DtatURL) {
 
-                        //alert(DtatURL);  
-                        //adb logcat *:E		 
-                        // alert(obj.data.image.image_src);
                         b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
 
                             var ImgFullUrl = '';
                             ImgFullUrl = theFile.toURI();
-                            //alert(ImgFullUrl);
+                            
                             db.transaction(function(tx) {
                                 tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="false" where user_id = "' + localStorage.user_id + '"');
                                 window.location.href = "profile.html";
@@ -167,10 +164,7 @@ function saveprofile() {
                 }
                 //alert(obj.message);
             }
-
         });
-
-
     });
 }
 
@@ -920,13 +914,134 @@ function showPointsData() {
                 { 
                   var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints('+results.rows.item(i).instance_id+');"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#" onclick="gotopoints('+results.rows.item(i).instance_id+');">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
 
         });
     });
+}
+
+//function to go to user point detail page
+function gotopoints(instance_id)
+{
+    localStorage.instance_id = instance_id;
+    window.location.href = 'user_detail.html';
+}
+
+//function to fetch user detail 
+function loaduserdetail()
+{
+  jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".leaderboards-container").hide();
+        importfooter('user-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id,'points');
+        var main_url = server_url + 'user-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id+'?gvm_json=1';
+        
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            
+               var label = '';
+            $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
+                    
+                    if(key == 0)
+                    {
+                       $(".breadcrumbs a").html(val.text) 
+                    }
+                    if(key == 1)
+                    {
+                      $(".green-text").html(val.text)  
+                    }
+                    
+            });
+            $(".team-points-table table tbody").html('');
+             var i = 0;
+              var classcss = '';
+            $.each(obj.topScoresViewVars.users, function(key, val) {
+                 if(val.eventuser_id == localStorage.user_id)
+                 {
+                    var classcss="current-user" ;
+                 } 
+                 else
+                 {
+                    var classcss="" ;
+                 } 
+                 if(val.image != '')
+                {
+                  var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url('+val.image+');"></div></span></td>';
+                }
+                else
+                {
+                  var newtd = '<td class="avatar-col"></td>';
+                }
+                i++;               
+                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+i+'</span></td>'+newtd+'<td><span class="name">'+val.fName+' '+val.lName+'</span></td><td class="point">'+val.total+'</td></tr>');
+            
+               }); 
+             var difference = Number(10) - Number(i);
+             for(v = 0; v < difference; v++)
+             {
+                i++;
+                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
+             }
+             $(".user-points-table table tbody").html('');
+             $.each(obj.categories, function(key, val) {
+                 if(val.instance_id == localStorage.instance_id)
+                 {
+                  var classcss="active" ;
+                 } 
+                 else
+                 {
+                    var classcss="" ;
+                 }
+                 
+                 var icon = '';
+                if(val.name == 'Bonus')
+                {
+                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                }
+                else if(val.name == 'Social')
+                {
+                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                }
+                else if(val.name == 'Seekergame')
+                {
+                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                }
+                else if(val.name == 'Course/Quiz')
+                {
+                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                }
+                else if(val.name == 'Communication')
+                {
+                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                }
+                 else if(val.name == 'Total')
+                {
+                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                }
+                if(val.count > 0)
+                {
+                  var cnt = '<span class="count">'+val.count+'</span>';
+                }
+                else
+                {
+                  var cnt = '';
+                }
+                     
+                $(".user-points-table table tbody").append('<tr class='+classcss+'><td><a href="#" onclick="gotopoints('+val.instance_id+')"><span class="num">'+val.position+'.</span>'+icon+val.name+'</a></td><td class="point"><a href="#" onclick="gotopoints('+val.instance_id+')">'+cnt+val.userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');  
+                 
+             });
+              jQuery(".leaderboards-container").show();
+              jQuery(".loading_agenda_items").hide(); 
+            }
+        });
+        
+  });      
 }
 
 //function to fetch team points
@@ -1203,15 +1318,24 @@ function loadyourdetailteampoints()
                  {
                     var classcss="" ;
                  } 
-                i++;               
-                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+i+'</span></td><td><span class="name">'+val.fName+' '+val.lName+'</span></td><td class="point">'+val.total+'</td></tr>');
+                i++; 
+                if(val.image != '')
+                {
+                  var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url('+val.image+');"></div></span></td>';
+                }
+                else
+                {
+                  var newtd = '<td class="avatar-col"></td>';
+                } 
+                  //alert(newtd)        
+                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+i+'</span></td>'+newtd+'<td><span class="name">'+val.fName+' '+val.lName+'</span></td><td class="point">'+val.total+'</td></tr>');
             
                }); 
              var difference = Number(10) - Number(i);
              for(v = 0; v < difference; v++)
              {
                 i++;
-                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
+                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
              }
              $(".user-points-table table tbody").html('');
              $.each(obj.categories, function(key, val) {
@@ -1249,7 +1373,8 @@ function loadyourdetailteampoints()
                 {
                   icon = '<span class="icon"><i class="gicon-points"></i></span>';
                 }
-                     
+                
+                    
                 $(".user-points-table table tbody").append('<tr class='+classcss+'><td><a href="#" onclick="gotoyourteamdetail('+val.instance_id+')"><span class="num">'+val.position+'.</span>'+icon+val.name+'</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail('+val.instance_id+')">'+val.points+'<i class="fa fa-angle-right"></i></a></td></tr>');  
                  
              });
@@ -1401,7 +1526,7 @@ function loadagenda() {
                // alert(obj.status+'---'+obj.data.page_title+'---'+obj.data.presentations)
                 var imagedatalength = obj.data.presentations_count;
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description LONGTEXT,embeded_html,event_time)');                                
+                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description LONGTEXT,embeded_html,event_time,duration,eta)');                                
                     tx.executeSql('delete from OCEVENTS_agenda');
                     tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -1455,7 +1580,7 @@ function loadagenda() {
                                                 //var descr = "<p>The comments here should flow freely, and can be about everything...<br /><br />Click the <a href=\"#\" target=\"_self\">Comments</a> below to get started&nbsp;</p>\r\n<p>General principles of making friends</p>\r\n<p>&nbsp;</p>\r\n<p>The basic structure of Meet People &gt; Hang Out With Them &gt; Keep Hanging Out &gt; Repeat. Now I'll go into some broader concepts that apply to making friends as a whole.&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>If you want a social life, you've got to make it happen for yourself.</p>\r\n<p>&nbsp;</p>";
                                                 descr = descr.replace(/'/g, "\\");
                                                     //alert(descr);
-                                                    tx.executeSql("insert into OCEVENTS_agenda (group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html,event_time) values ('"+val.group_title+"','" + localStorage.user_id + "','" + val1.id + "','" + val1.event_id + "','" + val1.title + "','" + val1.speaker_name + "','" + ImgFullUrl + "','" + val1.start_time + "','" + val1.end_time + "', '" + descr + "','" + val1.embeded_html + "','" + val1.time + "')");
+                                                    tx.executeSql("insert into OCEVENTS_agenda (group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html,event_time,duration,eta) values ('"+val.group_title+"','" + localStorage.user_id + "','" + val1.id + "','" + val1.event_id + "','" + val1.title + "','" + val1.speaker_name + "','" + ImgFullUrl + "','" + val1.start_time + "','" + val1.end_time + "', '" + descr + "','" + val1.embeded_html + "','" + val1.time + "','" + val1.duration + "','" + val1.eta + "')");
                                                 
                                                   
                                                 if (imagedatalength == co) {
@@ -1501,9 +1626,25 @@ function showAgendaData() {
                 }
                 group_title = results.rows.item(i).group_title;
                 
-                
-                
-                $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+results.rows.item(i).agenda_id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + results.rows.item(i).speaker_image + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="" data-eta=""><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="0"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + results.rows.item(i).title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + results.rows.item(i).speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + results.rows.item(i).event_time + '</div></div></div></div></div>');
+              var duration = results.rows.item(i).duration; //7903980 =====  11978580
+              
+              var eta = results.rows.item(i).eta;   //3593396 ====   8691056
+              
+               if (Number(eta) > Number(duration)) {
+                // The event has not started yet.
+                var progress = 0;
+            } else {
+                // The event has started and is in progress.
+                var progress = ((duration - eta) / duration) * 100;
+            } 
+            
+            var c = Math.PI * 49.5 * 2;
+            var pct = ((100 - progress) / 100) * c;
+            pct = pct.toFixed(3)+'px';
+            //alert(pct);
+              //54.5368
+              //27.4450  
+                $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+results.rows.item(i).agenda_id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + results.rows.item(i).speaker_image + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + results.rows.item(i).title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + results.rows.item(i).speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + results.rows.item(i).event_time + '</div></div></div></div></div>');
             }
             jQuery(".agenda-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1929,7 +2070,8 @@ function showfooter(active)
            if(len > 0)
            {
               jQuery('.footer-menu').append('<div class="more-btn label-container"><label><i class="gicon-more"></i><p>More</p></label></div> ');
-              var more_wrapper = '<div class="more-wrapper"><div class="footer-menu-opened"><ul>';
+           
+              var more_wrapper = '<div class="more-wrapper"><div class="footer-menu-opened"><ul><li><label><a id="home" href="gamification.html"><i class="gicon-welcome"></i><span>Home</span></a></label></li></ul><ul class="divider"><li><i class="gicon-gamification"></i><span class="line"></span></li></ul><ul>';
               //jQuery('.footer-menu').html('');
             var link = '';
             var name = '';
@@ -1971,7 +2113,8 @@ function showfooter(active)
               more_wrapper += '</ul></div></div>';
                //more_wrapper += '';
               // alert(more_wrapper);
-              jQuery('.footer-menu').prepend(more_wrapper);
+              
+              jQuery('.footer-menu').prepend(more_wrapper); 
               jQuery('.more-btn').on('click', function ()
               {	
           		  jQuery('.footer-menu').toggleClass('footer-menu-open');
