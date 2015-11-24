@@ -696,6 +696,33 @@ function onPhotoURISuccess(imageURI) {
     }
 }
 
+//function to play video
+function playvideo(videoUrl)
+{
+  var options = {
+    successCallback: function() {
+      console.log("Video was closed without error.");
+    },
+    errorCallback: function(errMsg) {
+      console.log("Error! " + errMsg);
+    }
+  };
+  window.plugins.streamingMedia.playVideo(videoUrl,options);
+}
+
+function checkdefined(str)
+{
+  //alert(str)
+  if(str != '' && str != undefined && str != 'undefined' && str != null && str != 'null')
+  {
+    return 'yes';
+  }
+  else
+  {
+    return 'no';
+  }
+}
+
 //load agenda item
 function loadagendaitem()
 {
@@ -715,8 +742,21 @@ function loadagendaitem()
                 $(".future-info").html(data.presentation.description.value);
                 var imgurl = server_url + 'resources/files/images/'+ data.presentation.speaker_image.__extra.medium_file_name;
                 $(".agenda-main-img").attr("style", "background-image:url("  +imgurl+ ")"); 
+                //alert(checkundefined(data.videoSrc));
+               if(checkdefined(data.videoSrc) == 'yes')
+               {
+                   $('.future-video').show();
+                   $('.future-video').attr('onclick','playvideo("'+server_url+data.videoSrc+'")');
+                   $('.playme').attr('src',server_url+data.videoPoster);
+                   $('.playme').attr('style','width:100%;height:400px;');
+                   $('.future-info').attr('style','position:relative;bottom:128px;');
+               }
+               // var videoUrl = 'http://oceventmanager.com/resources/files/videos/'+data.presentation.presentation_video.__extra.filename;
+               // <div class="mejs-overlay-button"></div>
+                // Just play a video
+                //window.plugins.streamingMedia.playVideo(videoUrl);
             }            
-            });
+            }); 
         /*db.transaction(function(tx) {                                                
               tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' and agenda_id = '"+localStorage.agenda_id+"'", [], function(tx, results) {
               var len_ag = results.rows.length;
