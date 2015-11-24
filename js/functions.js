@@ -1509,6 +1509,61 @@ function showYourTeamPointsData() {
 }
 
 //function to fetch agenda items
+function loadallagenda() {
+    jQuery(document).ready(function($) {
+        loadcommonthings();
+        importfooter('agenda','agenda');
+        $(".agenda-container").hide();
+        //showAgendaData();
+        //http://www.oceventmanager.com/agenda/-/OCintranet-100041/?ajax=1&all=1&gvm_json=1
+        var main_url = server_url + 'agenda/-/OCintranet-'+static_event_id+'/?ajax=1&all=1&gvm_json=1';
+        // alert(main_url);
+        $("#presentations-list").html('&nbsp;');
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            $.each(obj.data.presentations, function(key, val) {
+                if(val.group_title != null)
+                {
+                var group_title = '';
+                if(val.group_title != group_title)
+                {
+                  $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>'+val.group_title+'</p></div></div></div>');
+                }
+                group_title = val.group_title;
+                $.each(val.items, function(key1, val1) {
+              var duration = val1.duration; //7903980 =====  11978580
+              
+              var eta = val1.eta;   //3593396 ====   8691056
+              
+               if (Number(eta) > Number(duration)) {
+                // The event has not started yet.
+                var progress = 0;
+            } else {
+                // The event has started and is in progress.
+                var progress = ((duration - eta) / duration) * 100;
+            } 
+            
+            var c = Math.PI * 49.5 * 2;
+            var pct = ((100 - progress) / 100) * c;
+            pct = pct.toFixed(3)+'px';
+            //alert(pct);
+              //54.5368
+              //27.4450  
+          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + val1.time + '</div></div></div></div></div>');
+           });
+            }
+            });
+            jQuery(".agenda-container").show();
+            jQuery(".loading_agenda_items").hide();
+            }
+        }); 
+    }); 
+}
+
+//function to fetch agenda items
 function loadagenda() {
     jQuery(document).ready(function($) {
         loadcommonthings();
@@ -1518,11 +1573,48 @@ function loadagenda() {
         
         var main_url = server_url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
         // alert(main_url);
+        $("#presentations-list").html('&nbsp');
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
+               $.each(obj.data.presentations, function(key, val) {
+                if(val.group_title != null)
+                {
+                var group_title = '';
+                if(val.group_title != group_title)
+                {
+                  $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>'+val.group_title+'</p></div></div></div>');
+                }
+                group_title = val.group_title;
+                $.each(val.items, function(key1, val1) {
+              var duration = val1.duration; //7903980 =====  11978580
+              
+              var eta = val1.eta;   //3593396 ====   8691056
+              
+               if (Number(eta) > Number(duration)) {
+                // The event has not started yet.
+                var progress = 0;
+            } else {
+                // The event has started and is in progress.
+                var progress = ((duration - eta) / duration) * 100;
+            } 
+            
+            var c = Math.PI * 49.5 * 2;
+            var pct = ((100 - progress) / 100) * c;
+            pct = pct.toFixed(3)+'px';
+            //alert(pct);
+              //54.5368
+              //27.4450  
+          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + val1.time + '</div></div></div></div></div>');
+           });
+            }
+            });
+            jQuery(".agenda-container").show();
+            jQuery(".loading_agenda_items").hide();
+            
+               /*
                // alert(obj.status+'---'+obj.data.page_title+'---'+obj.data.presentations)
                 var imagedatalength = obj.data.presentations_count;
                 db.transaction(function(tx) {
@@ -1602,7 +1694,7 @@ function loadagenda() {
                             });
                         }
                     });
-                });
+                }); */
             }
         }); 
     }); 

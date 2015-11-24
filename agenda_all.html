@@ -32,7 +32,7 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadagenda();
+                  loadallagenda();
             });
     }
     var localLink = '/';
@@ -83,7 +83,7 @@
 </header>            
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading current agenda items...
+        Loading all the agenda items...
         <br />
         <img src="img/loading.gif" />
 </div>
@@ -99,8 +99,8 @@
 			</div>
 			<div class="see-all-wrapper col-xs-4">
 				<span>
-                    <a style="color: #fff;text-decoration: none;" href="agenda_all.html" data-type="all">
-                        <span>See All</span>
+                    <a style="color: #fff;text-decoration: none;" href="agenda.html" data-type="all">
+                        <span>See Current</span>
                         <i class="fa fa-clock-o"></i>
                     </a>
                 </span>
