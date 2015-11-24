@@ -702,7 +702,22 @@ function loadagendaitem()
     jQuery(document).ready(function($) {
         loadcommonthings();
         importfooter('View-presentation/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id,'agenda-item');
-        db.transaction(function(tx) {                                                
+        var main_url = server_url + 'View-presentation/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'?gvm_json=1';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(data) {
+                $(".green-text").html(data.presentation.title.value);
+                $(".agenda-item-img-info h5").html(data.presentation.title.value);
+                $(".date p").html(data.presentation.group_item);
+                $(".future-title").html(data.presentation.speaker_name.value);
+                $(".future-info").html(data.presentation.description.value);
+                var imgurl = server_url + 'resources/files/images/'+ data.presentation.speaker_image.__extra.medium_file_name;
+                $(".agenda-main-img").attr("style", "background-image:url("  +imgurl+ ")"); 
+            }            
+            });
+        /*db.transaction(function(tx) {                                                
               tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' and agenda_id = '"+localStorage.agenda_id+"'", [], function(tx, results) {
               var len_ag = results.rows.length;
               $(".green-text").html(results.rows.item(0).title+' '+results.rows.item(0).speaker_name); 
@@ -712,7 +727,7 @@ function loadagendaitem()
               $(".future-info").html(results.rows.item(0).description); 
               $(".agenda-main-img").attr("style", "background-image:url(" + results.rows.item(0).speaker_image + ")");  
          });
-         });       
+         }); */      
                         
     });  
 }
