@@ -32,7 +32,7 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadcontacts();
+                  loadyourcontacts();
             });
     }
                 var localLink = '/';
@@ -83,7 +83,7 @@
 </header>
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading All Contacts...
+        Loading Your Contacts...
         <br />
         <img src="img/loading.gif" />
 </div> 
@@ -101,8 +101,8 @@
                 <label for="users-filter">Participants</label>
                 <input id="users-filter" class="form-control" type="text" placeholder="Search">
                 <span><i class="fa fa-search"></i></span>
-                                                        <a class="show-friends-btn" href="your_contacts.html">
-                        Your contacts                    </a>
+                                                        <a class="show-friends-btn" href="contacts.html">
+                        All Users                   </a>
                                                 </div>
         </form>
     </div>
@@ -638,7 +638,7 @@
     <div class="container">
         <div class="row">
              <div class="col-xs-12 footer-menu">
-                                                                        
+                                                                       
                     </div>
         </div>
     </div>

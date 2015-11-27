@@ -32,11 +32,11 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadagendaitem();
+                  loadfrienddetail();
             });
     }
     var localLink = '/';
-                var GHomepageLink = "profile.html";
+                var GHomepageLink = "view_friend.html";
             </script>
             </head>
     <body class="">
@@ -83,177 +83,116 @@
 </header>
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading agenda...
+        Loading Friend's Details...
         <br />
         <img src="img/loading.gif" />
 </div>            
-<div class="container main-container agenda-item-container">
-	<div class="header-title row">
-    <p>
-    <a class="nav-arrow prev" href="#" title="Forrige"><i class="fa fa-angle-left"></i> &nbsp;</a>
-<span class="breadcrumbs"><span class="green-text">
-</span>
-</span>    
-<a class="nav-arrow next" href="#" title="Neste"><i class="fa fa-angle-right"></i> &nbsp;</a>
-</p>	</div>
-	<div class="row">
-        		<div class="date-wrapper ">
-			<div class="date">
-                <p></p>
-            </div>
-		</div>
-                	</div>
-    	<div class="main-img-wrapper">
-		<div class="main-img agenda-main-img" style="background-image: url('');"></div>
-	</div> 
-    	<div class="agenda-item-img-info">
-		<h5></h5>
-        		<p>
-             
-            &nbsp;        </p>
-        	</div>
-	<div class="agenda-item-future row">
-		<div class="container ">
-			<div class="futures-wrapper">
-			<div class="future-title">:-)</div>
-      <div class="future-video video" onclick="playvideo();">
-				<img src="" class="playme">
-        <img src='img/bigplay.png' class="bigplay" />
-        </div>
-                                				<div class="future-info ">
-					<p></p>
-<p><span></span></p>                    
-                    				</div>
-			</div>
-		</div>
-	</div>
-    <div class="row">
-        <div class="presentation-modules">
-                       
-                    </div>
-    </div>	
-    <div class="row">
-		<div class="agenda-item-rating-container" style="display:none;">
-			<span>Your rating</span>
-			<div class="item-interactions">
-				
-			</div>   
-            			<!--a id="rate" href="javascript:void();">Rate</a>
-            			<div class="after-rating-container hidden">
-                                <p class="msg"></p>
-                <div class="comment-form hidden">
-                    <div class="form-group">
-                        <input type="text" class="form-control comment-input" placeholder="Write a comment">
-                        <span><i class="fa fa-comment"></i></span>
-                    </div>
-                    <div class="after-rate-btn-wrapper">
-                        <a class="cancel-btn send-comment" href="">Cancel</a>
-                        <a class="send-btn send-comment" href="">Send</a>					
-                    </div>
-                </div>
-                			</div-->
-		</div>
-	</div>
+<div class="container main-container add-friends-container">
+    <div class="header-title header-title2 row ">
+        <p>
+                        <a class="prev" href="http://oceventmanager.com/user-add-friend/-/OCintranet-100041/view/100013" title="previous friend">
+                <i class="fa fa-angle-left"></i>
+            </a>
+                        
+            <span class="breadcrumbs"><a href="contacts.html"></a> / <span class="green-text"></span></span>            
+                        <a class="next" href="http://oceventmanager.com/user-add-friend/-/OCintranet-100041/view/100020" title="next friend">
+                <i class="fa fa-angle-right"></i>
+            </a>
+                    </p>
     </div>
+    
+    
+    <div class="item-inner-wrapper row">
+        <div class="friends-item-inner">
+            <div class="friends-item-img" style="background-image: url(&#39;/resources/files/event/images/thumb_1441364827.jpg&#39;);"></div>
+            <h2>
+                                <i class="fa fa-user"></i>
+                                Håkon Bjercke            </h2>
+                        <h6>&lt;Oslo, Norway&gt;</h6>
+                    </div>
+    </div>
+    
+        <div class="row">
+        <div class="item-inner-info">
+                        <div class="add-btn-wrapper">
+                <a href="tel:+4790762776">
+                    Call                </a>
+            </div>
+                        
+                        <div class="add-btn-wrapper">
+                <a href="mailto:hb@onecom.no">
+                    Email                </a>
+            </div>
+            
+                            <div class="add-btn-wrapper">
+                    <a href="http://oceventmanager.com/user-add-friend/-/OCintranet-100041/view/100017/vcard/">
+                        <i class="fa fa-download"></i>
+                        Download VCard                    </a>
+                </div>
+                        
+                        <p>
+                Mobile: 
+                <span class="green-text">+4790762776</span>
+            </p>
+                        
+                        <p>
+                E-mail: 
+                <span class="green-text">hb@onecom.no</span>
+            </p>
+                        
+                        <p>
+                Gender: 
+                <span class="green-text">male</span>
+            </p>
+                        
+                        
+                            <h3 class="registration-questions-title">User information</h3>
+                                                                                            <p>
+                        Your position:                        <span class="green-text">Prosjektleder</span>
+                    </p>
+                                                                            <p>
+                        First day @ OC                        <span class="green-text">2010-09-01</span>
+                    </p>
+                                                                            <p>
+                        Date of birth:                        <span class="green-text">1973-03-11</span>
+                    </p>
+                                                                            <p>
+                        Your office                        <span class="green-text">Oslo, Norway</span>
+                    </p>
+                                                                            <p>
+                        3 skills we should know about:                        <span class="green-text">• storyboarding&lt;br /&gt;
+• voicing&lt;br /&gt;
+• getting the job done</span>
+                    </p>
+                                                                            <p>
+                        Private details                        <span class="green-text"></span>
+                    </p>
+                                                                            <p>
+                        Sports interest:                        <span class="green-text">alpine skiing, golf, Stabæk Football and ping pong</span>
+                    </p>
+                                                                            <p>
+                        Civile status                        <span class="green-text">Married</span>
+                    </p>
+                                                                            <p>
+                        Your social medias (F, LinkedIn +++)                        <span class="green-text">https://www.facebook.com/hakon.bjercke&lt;br /&gt;
+https://www.linkedin.com/ (Håkon Bjercke)&lt;br /&gt;
+instacubic on Instagram&lt;br /&gt;
+EurosportHakon on Twitter&lt;br /&gt;
+and also I am on Periscope as Lynvingen (Batman in Norwegian)&lt;br /&gt;
+</span>
+                    </p>
+                                                                            <p>
+                        OC Status                        <span class="green-text"></span>
+                    </p>
+                                                        </div>
+    </div>
+    </div>  
 
-
-               <footer>
+<footer>
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 footer-menu">  
-            <div class="more-wrapper">
-                    <div class="footer-menu-opened">
-                        <ul>
-                            <li>
-                                <label>
-                                    <a id="home" href="gamification.html">
-                                        <i class="gicon-welcome"></i>
-                                        <span>Home</span>
-                                    </a>
-                                </label>
-                            </li>
-                                                    </ul>
-                                                <ul class="divider">
-                            <li>
-                                <i class="gicon-gamification"></i>
-                                <span class="line"></span>
-                            </li>
-                        </ul>
-                        <ul>
-                                                        <li class="">
-                                <label>
-                                    <a href="javascript:addquestion();">
-                                        <i class="gicon-questions"></i>
-                                        <span>Questions</span>
-                                    </a>
-                                </label>
-                            </li>
-                                                        <li class="">
-                                <label>
-                                    <a href="javascript:quiz();">
-                                        <i class="gicon-quiz"></i>
-                                        <span>Course/Quiz</span>
-                                    </a>
-                                </label>
-                            </li>
-                                                        <li class="">
-                                <label>
-                                    <a href="javascript:seeker();">
-                                        <i class="gicon-seeker"></i>
-                                        <span>Seeker</span>
-                                    </a>
-                                </label>
-                            </li>
-                                                        <li class=" last">
-                                <label>
-                                    <a href="javascript:addvote();">
-                                        <i class="gicon-voting"></i>
-                                        <span>Voting</span>
-                                    </a>
-                                </label>
-                            </li>
-                                                    </ul>
-                                            </div>
-                </div>                                                                    
-                    <div class="label-container ">
-                        <a href="agenda.html">
-                            <label>
-                                                                <i class="gicon-agenda"></i>
-                                <p>Agenda</p>
-                            </label>
-                        </a>
-                    </div>
-                                        <div class="label-container ">
-                        <a href="contacts.html">
-                            <label>
-                                                                
-                                                                <i class="gicon-friends"></i>
-                                <p>Contacts</p>
-                            </label>
-                        </a>
-                    </div>
-                       <div class="label-container ">
-                        <a href="points.html">
-                            <label>
-                                <i class="gicon-points"></i>
-                                <p>Points</p>
-                            </label>
-                        </a>
-                      </div>
-                      <div class="label-container ">
-                        <a href="javascript:add_comments();">
-                            <label>
-                                                                <i class="gicon-comments"></i>
-                                <p>Comments</p>
-                            </label>
-                        </a>
-                    </div>
-                    <div class="more-btn label-container">
-                    <label>
-                        <i class="gicon-more"></i>
-                        <p>More</p>
-                    </label>
-                </div>  
+            <div class="col-xs-12 footer-menu">
+                                                                         
                     </div>
         </div>
     </div>
@@ -307,13 +246,13 @@
                                 <i class="gicon-my-ticket"></i>
                                 My ticket                            </a>
                         </li>
-                        <li>
-                            <a class="active" href="agenda.html">
+                                                <li>
+                            <a href="agenda.html">
                                 <i class="gicon-agenda"></i>
                                 Agenda                            </a>
                         </li>
                                                                         <li>
-                            <a href="points.html">
+                            <a class="active" href="points.html">
                                 <i class="gicon-points"></i>
                                 Points                            </a>
                         </li>
@@ -321,7 +260,7 @@
                             <a href="contacts.html">
                                 <i class="gicon-friends">
                                                                     </i>
-                               Add Contacts                          </a>
+                                Add Contacts                            </a>
                         </li>
                                                 <li>
                             To install, tap <span></span> and choose<br> "Add to Home Screen"

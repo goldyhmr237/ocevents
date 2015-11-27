@@ -728,6 +728,7 @@ function loadagendaitem()
 {
     jQuery(document).ready(function($) {
         loadcommonthings();
+        $(".agenda-item-container").hide();
         importfooter('View-presentation/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id,'agenda-item');
         var main_url = server_url + 'View-presentation/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'?gvm_json=1';
         $.ajax({
@@ -735,6 +736,22 @@ function loadagendaitem()
             dataType: "json",
             method: "GET",
             success: function(data) {
+            if(data.prevPresentation != false)
+            {
+                $('.prev').attr('onclick','gotoagenda("'+data.prevPresentation.instance_id+'")');
+            }
+            else
+            {
+                $('.prev i').hide();
+            }
+            if(data.nextPresentation != false)
+            {
+                $('.next').attr('onclick','gotoagenda("'+data.nextPresentation.instance_id+'")');
+            }
+            else
+            {
+                $('.next i').hide();
+            }
                 $(".green-text").html(data.presentation.title.value);
                 $(".agenda-item-img-info h5").html(data.presentation.title.value);
                 $(".date p").html(data.presentation.group_item);
@@ -751,10 +768,29 @@ function loadagendaitem()
                    $('.playme').attr('style','width:100%;height:400px;');
                    $('.future-info').attr('style','position:relative;bottom:128px;');
                }
-               // var videoUrl = 'http://oceventmanager.com/resources/files/videos/'+data.presentation.presentation_video.__extra.filename;
-               // <div class="mejs-overlay-button"></div>
-                // Just play a video
-                //window.plugins.streamingMedia.playVideo(videoUrl);
+               if(checkdefined(data.presentation.embeded_html.value) == 'yes')
+               {
+                   $(".future-info").append('<div class="video-wrapper">'+data.presentation.embeded_html.value+'</div>');
+               }
+                  
+               $.each( data.presentationModules, function( key, val ) {
+                       
+                        var container_class = val.container_class;
+                        var icon_class = val.icon_class;
+                        var text = val.text;
+                        //alert(text)
+                        $(".presentation-modules").append('<a href="#"><i class="'+icon_class+'"></i>'+text+'</a>')
+                       
+                    });
+                    
+                    if(data.hasRating == true)
+                    {
+                        $('.agenda-item-rating-container').show();                        
+                        $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="'+data.ratevalue+'" data-original-title="" title=""><a href="#" class="rate-star active" data-rate="1"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="2"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="3"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="4"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="5"><i class="fa fa-star"></i></a></div>');
+                    }
+                   
+               $(".agenda-item-container").show(); 
+               $(".loading_agenda_items").hide();
             }            
             }); 
         /*db.transaction(function(tx) {                                                
@@ -1607,7 +1643,7 @@ function loadallagenda() {
             //alert(pct);
               //54.5368
               //27.4450  
-          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + val1.time + '</div></div></div></div></div>');
+          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
            });
             }
             });
@@ -1662,7 +1698,7 @@ function loadagenda() {
             //alert(pct);
               //54.5368
               //27.4450  
-          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + val1.time + '</div></div></div></div></div>');
+          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
            });
             }
             });
@@ -1798,6 +1834,209 @@ function showAgendaData() {
 
         });
     });
+}
+
+function viewfriend(user_id)
+{
+    localStorage.friend_id = user_id;
+    window.location.href = 'view_friend.html';
+}
+
+//function to fetch user detail 
+function loadfrienddetail()
+{
+  jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".add-friends-container").hide();
+        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id,'friends');
+        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id+'?gvm_json=1';
+        
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            
+               var label = '';
+            $.each(obj.breadcrumbs, function(key, val) {
+                    
+                    if(key == 0)
+                    {
+                       $(".breadcrumbs a").html(val.text) 
+                    }
+                    if(key == 1)
+                    {
+                      $(".green-text").html(val.text)  
+                    }                    
+            });
+            if(checkdefined(obj.prevFriendLink) == 'yes')
+            {
+               var prev_link = obj.prevFriendLink;
+                var split_it = prev_link.split('view/');
+                alert(split_it[1]);
+              // $('.prev').attr('onclick','viewfriend("'+friend_id+'")'); 
+            }
+            else
+            {
+              $('.prev').hide();
+            }
+            if(checkdefined(obj.nextFriendLink) == 'yes')
+            {
+               //$('.next').attr('onclick','viewfriend("'+friend_id+'")'); 
+            }
+            else
+            {
+              $('.nextFriendLink').hide();
+            }
+            $(".add-friends-container").show();
+            $(".loading_agenda_items").hide();
+            }
+            });
+  });
+}            
+
+//function to load contacts
+function loadcontacts()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/','friends');
+        $(".add-friends-container").hide();
+        //showAgendaData();
+        
+        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/?gvm_json=1';
+        $(".friends-items-container").html('&nbsp');
+        var icon_class = '';
+        var link = '';
+        var team = '';
+        var divider = '';
+        var first_letter = '';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+             $.each( obj.eventUserFriends, function( key, val ) {
+             icon_class = '';
+             link = '';
+             team = '';
+             divider = '';
+             
+             if(first_letter != val.fName[0].toUpperCase())
+             {
+                   //alert(first_letter)
+                  //alert(val.fName[0].toUpperCase())
+                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+             }
+             
+             first_letter = val.fName[0].toUpperCase();
+             
+             if(key == 0 && val.fName[0] != 'A')
+             {
+                 divider = '<div class="friends-item-title"> </div>';
+             }
+             
+              
+             if(checkdefined(val.team) == 'yes')
+             {
+                team = '&lt;'+val.team+'&gt;';
+             }
+             
+             if(val.is_friend == 1 && val.status == 1)
+             {
+                icon_class = 'pending';
+                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel-friend-request">No</a></div></div>';
+             }
+             if(val.is_friend == 1 && val.status == 2)
+             {
+                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
+             }
+             if(val.is_friend == 0)
+             {
+                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" class="success send-friend-request">Yes</a></div></div>';
+             }
+             
+            $('.friends-items-container').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
+            $(".loading_agenda_items").hide();
+            $(".add-friends-container").show();
+             
+             });
+           }
+           
+           });
+  });            
+}
+
+//function to load contacts
+function loadyourcontacts()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/friends','friends');
+        $(".add-friends-container").hide();
+        //showAgendaData();
+        
+        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/friends?gvm_json=1';
+        $(".friends-items-container").html('&nbsp');
+        var icon_class = '';
+        var link = '';
+        var team = '';
+        var divider = '';
+        var first_letter = '';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+             $.each( obj.eventUserFriends, function( key, val ) {
+             icon_class = '';
+             link = '';
+             team = '';
+             divider = '';
+             
+             if(first_letter != val.fName[0].toUpperCase())
+             {
+                   //alert(first_letter)
+                  //alert(val.fName[0].toUpperCase())
+                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+             }
+             
+             first_letter = val.fName[0].toUpperCase();
+             
+             if(key == 0 && val.fName[0] != 'A')
+             {
+                 divider = '<div class="friends-item-title"> </div>';
+             }
+             
+              
+             if(checkdefined(val.team) == 'yes')
+             {
+                team = '&lt;'+val.team+'&gt;';
+             }
+             
+             if(val.is_friend == 1 && val.status == 1)
+             {
+                icon_class = 'pending';
+                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel-friend-request">No</a></div></div>';
+             }
+             if(val.is_friend == 1 && val.status == 2)
+             {
+                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
+             }
+             if(val.is_friend == 0)
+             {
+                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" class="success send-friend-request">Yes</a></div></div>';
+             }
+             
+            $('.friends-items-container').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
+            $(".loading_agenda_items").hide();
+            $(".add-friends-container").show();
+             
+             });
+           }
+           
+           });
+  });            
 }
 
 //Load profile page variables
