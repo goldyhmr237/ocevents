@@ -1838,6 +1838,7 @@ function showAgendaData() {
 
 function viewfriend(user_id)
 {
+    //alert(user_id)
     localStorage.friend_id = user_id;
     window.location.href = 'view_friend.html';
 }
@@ -1871,10 +1872,11 @@ function loadfrienddetail()
             });
             if(checkdefined(obj.prevFriendLink) == 'yes')
             {
-               var prev_link = obj.prevFriendLink;
+                var prev_link = obj.prevFriendLink;
                 var split_it = prev_link.split('view/');
-                alert(split_it[1]);
-              // $('.prev').attr('onclick','viewfriend("'+friend_id+'")'); 
+                var prev_friend_id = split_it[1];
+              //  alert(prev_friend_id);
+                $('.prev').attr('onclick','viewfriend("'+prev_friend_id+'")'); 
             }
             else
             {
@@ -1882,14 +1884,33 @@ function loadfrienddetail()
             }
             if(checkdefined(obj.nextFriendLink) == 'yes')
             {
-               //$('.next').attr('onclick','viewfriend("'+friend_id+'")'); 
+                var next_link = obj.nextFriendLink;
+                var split_it = next_link.split('view/');
+                var next_friend_id = split_it[1];
+                //  alert(next_friend_id);
+               // $('.next').attr('onclick','viewfriend("'+next_friend_id+'")');
+               $('.next').attr('onclick','viewfriend("'+next_friend_id+'")'); 
             }
             else
             {
               $('.nextFriendLink').hide();
             }
-            $(".add-friends-container").show();
-            $(".loading_agenda_items").hide();
+            $('.friends-item-img').attr('style','background-image: url('+obj.userImageSrc+');');
+            $('.fa-user').after(obj.fullName);
+            if(checkdefined(obj.userTeam) == 'yes')
+            {
+                $('.friends-item-inner h6').html('&lt;'+obj.userTeam+'&gt;');
+            }
+            if(checkdefined(obj.mobile) == 'yes')
+            {
+                $('.call_button').attr('href','tel:'+obj.mobile);
+            }
+            if(checkdefined(obj.eMail) == 'yes')
+            {
+                $('.email_button').attr('href','mailto:'+obj.eMail);
+            }
+                $(".add-friends-container").show();
+                $(".loading_agenda_items").hide();
             }
             });
   });
