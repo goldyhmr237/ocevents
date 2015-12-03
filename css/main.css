@@ -12738,8 +12738,8 @@ header .header-login-wrapper {
   display: inline-block;
   color: #ffffff;
   text-align: right;
-  /* neccessary to comment for ios */
-  /* position: absolute;   */
+  
+   position: absolute;   
   line-height: 65px;
   float: right;
   padding-left: 0;
@@ -12763,6 +12763,7 @@ header .header-login-wrapper .img-wrapper {
 header .header-login-wrapper .img-wrapper:after {
   content: "";
   border: 3px solid #83a946;
+  /* neccessary to comment for ios */
  /* position: absolute; */
   top: -7px;
   left: -7px;
