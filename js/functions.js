@@ -1848,7 +1848,7 @@ function loadfrienddetail()
 {
   jQuery(document).ready(function($) {
         loadcommonthings();
-        $(".add-friends-container").hide();
+        //$(".add-friends-container").hide();
         importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id,'friends');
         var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id+'?gvm_json=1';
         
@@ -1876,7 +1876,7 @@ function loadfrienddetail()
                 var split_it = prev_link.split('view/');
                 var prev_friend_id = split_it[1];
               //  alert(prev_friend_id);
-                $('.prev').attr('onclick','viewfriend("'+prev_friend_id+'")'); 
+                $('.prev').attr('onclick','viewfriend('+prev_friend_id+')'); 
             }
             else
             {
@@ -1889,7 +1889,7 @@ function loadfrienddetail()
                 var next_friend_id = split_it[1];
                 //  alert(next_friend_id);
                // $('.next').attr('onclick','viewfriend("'+next_friend_id+'")');
-               $('.next').attr('onclick','viewfriend("'+next_friend_id+'")'); 
+               $('.next').attr('onclick','viewfriend('+next_friend_id+')'); 
             }
             else
             {
@@ -1904,17 +1904,69 @@ function loadfrienddetail()
             if(checkdefined(obj.mobile) == 'yes')
             {
                 $('.call_button').attr('href','tel:'+obj.mobile);
+                $('.em').html(obj.mob);
             }
             if(checkdefined(obj.eMail) == 'yes')
             {
                 $('.email_button').attr('href','mailto:'+obj.eMail);
+                $('.em').html(obj.eMail);
             }
+            if(checkdefined(obj.downloadVCardLink) == 'yes')
+            {
+                $('.vcard').attr('onclick','downloadVcard("'+obj.downloadVCardLink+'")');
+            }
+            if(checkdefined(obj.gender) == 'yes')
+            {
+                $('.gender').html(obj.gender);
+            }
+            $.each(obj.userQA, function(i, dataVal) {
+                
+                if (i != 0 && dataVal.question != undefined && dataVal.answer != undefined) {
+                   $('.qa').append('<p>'+dataVal.question+'<span class="green-text">'+dataVal.answer+'</span></p>');
+                }
+                
+            });    
+            
                 $(".add-friends-container").show();
                 $(".loading_agenda_items").hide();
             }
             });
   });
-}            
+}
+
+//function to download vCard
+function downloadVcard(url)
+{
+   var download_url = server_url + url;
+   //alert(download_url)
+   var fileTransfer = new FileTransfer();
+   var store = cordova.file.dataDirectory;
+   fileTransfer.download(
+   download_url,
+   store + "theFile.vcf",
+   function(theFile) {
+   alert("File Downloaded Successfully on your device, check it here : " + theFile.toURI());
+   //showLink(theFile.toURI());
+   },
+   function(error) {
+   alert("download error source " + error.source);
+   alert("download error target " + error.target);
+   alert("upload error code: " + error.code);
+   }
+   );                                 
+}
+
+function showLink(url){
+        //alert(url);
+        /*var divEl = document.getElementById("ready");
+        var aElem = document.createElement("a");
+        aElem.setAttribute("target", "_blank");
+        aElem.setAttribute("href", url);
+        aElem.appendChild(document.createTextNode("Ready! Click To Open."))
+        divEl.appendChild(aElem); */
+        //jQuery('#ready').html('<a target="_blank" href='+url+' />Ready! Click To Open.</a>');
+ 
+    }            
 
 //function to load contacts
 function loadcontacts()
