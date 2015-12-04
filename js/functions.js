@@ -1848,7 +1848,7 @@ function loadfrienddetail()
 {
   jQuery(document).ready(function($) {
         loadcommonthings();
-        //$(".add-friends-container").hide();
+        $(".add-friends-container").hide();
         importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id,'friends');
         var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id+'?gvm_json=1';
         
@@ -1966,29 +1966,77 @@ function showLink(url){
         divEl.appendChild(aElem); */
         //jQuery('#ready').html('<a target="_blank" href='+url+' />Ready! Click To Open.</a>');
  
-    }            
-
-//function to load contacts
-function loadcontacts()
+    } 
+    
+    
+// function to cancel friend request
+function cancelRequest(player_code) 
 {
-   jQuery(document).ready(function($) {
-        loadcommonthings();
-        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/','friends');
-        $(".add-friends-container").hide();
-        //showAgendaData();
-        
-        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/?gvm_json=1';
-        $(".friends-items-container").html('&nbsp');
-        var icon_class = '';
+  jQuery(document).ready(function($) {
+  $(".add-friends-container").hide();
+  $(".loading_cancel").show();
+     var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/cancel/'+player_code+'?gvm_json=1';
+      $(".all_conts").html('&nbsp');
+      var icon_class = '';
         var link = '';
         var team = '';
         var divider = '';
         var first_letter = '';
+        
+        var ficon_class = '';
+        var flink = '';
+        var fteam = '';
+        var fdivider = '';
+        var ffirst_letter = '';
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
-            success: function(obj) {
+            success: function(obj) {   
+              //alert(obj.receivedFriendsRequests.length)
+              if(obj.receivedFriendsRequests.length > 0)
+              {
+                  $('.contacts_request').show();
+                  $('.friends-requests-container').show();
+              }
+              else
+              {
+                 $('.contacts_request').hide();
+                  $('.friends-requests-container').hide();
+              }
+              $('.friends-requests-container').html('&nbsp;');
+            $.each( obj.receivedFriendsRequests, function( key, val ) {
+                if(checkdefined(val.event_user_id) == 'yes')
+                {
+                    
+                     ficon_class = '';
+                     flink = '';
+                     fteam = '';
+                     fdivider = '';
+                      // alert(val.fName[0].toUpperCase());
+                   if(ffirst_letter != val.fName[0].toUpperCase())
+                   {
+                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+                   }
+                   
+                   ffirst_letter = val.fName[0].toUpperCase();
+                 
+                   
+                   if(checkdefined(val.team) == 'yes')
+                   {
+                      fteam = '&lt;'+val.team+'&gt;';
+                   }
+                    ficon_class = 'pending';
+                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=acceptRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
+                
+                 
+                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
+                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
+                
+               }
+            });
+            
+            
              $.each( obj.eventUserFriends, function( key, val ) {
              icon_class = '';
              link = '';
@@ -2018,18 +2066,406 @@ function loadcontacts()
              if(val.is_friend == 1 && val.status == 1)
              {
                 icon_class = 'pending';
-                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel-friend-request">No</a></div></div>';
+                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
              }
              if(val.is_friend == 1 && val.status == 2)
              {
                 link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
              }
-             if(val.is_friend == 0)
+             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
              {
-                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" class="success send-friend-request">Yes</a></div></div>';
+                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
              }
              
-            $('.friends-items-container').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
+             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
+             {
+                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
+             }
+             
+            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
+            $(".loading_agenda_items").hide();
+            $(".add-friends-container").show();
+             
+             });
+              $('.form-container').prepend('<div class="alert alert-success">Contact request canceled</div>');
+              $(".add-friends-container").show();
+              $(".loading_cancel").hide();
+              $( ".alert-success" ).fadeOut( 5000 );
+           }
+           
+           });  
+  });  
+}
+
+
+// function to approve friend request
+function approveRequest(player_code) 
+{
+  jQuery(document).ready(function($) {
+     var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/approve/'+player_code+'?gvm_json=1';
+      $(".all_conts").html('&nbsp');
+      $(".add-friends-container").hide();
+      $(".loading_approve").show();
+      var icon_class = '';
+        var link = '';
+        var team = '';
+        var divider = '';
+        var first_letter = '';
+        
+        var ficon_class = '';
+        var flink = '';
+        var fteam = '';
+        var fdivider = '';
+        var ffirst_letter = '';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {   
+              //alert(obj.receivedFriendsRequests.length)
+              if(obj.receivedFriendsRequests.length > 0)
+              {
+                  $('.contacts_request').show();
+                  $('.friends-requests-container').show();
+              }
+              else
+              {
+                 $('.contacts_request').hide();
+                  $('.friends-requests-container').hide();
+              }
+              $('.friends-requests-container').html('&nbsp;');
+            $.each( obj.receivedFriendsRequests, function( key, val ) {
+                if(checkdefined(val.event_user_id) == 'yes')
+                {
+                    
+                     ficon_class = '';
+                     flink = '';
+                     fteam = '';
+                     fdivider = '';
+                      // alert(val.fName[0].toUpperCase());
+                   if(ffirst_letter != val.fName[0].toUpperCase())
+                   {
+                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+                   }
+                   
+                   ffirst_letter = val.fName[0].toUpperCase();
+                 
+                   
+                   if(checkdefined(val.team) == 'yes')
+                   {
+                      fteam = '&lt;'+val.team+'&gt;';
+                   }
+                    ficon_class = 'pending';
+                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=approveRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
+                
+                 
+                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
+                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
+                
+               }
+            });
+            
+            
+             $.each( obj.eventUserFriends, function( key, val ) {
+             icon_class = '';
+             link = '';
+             team = '';
+             divider = '';
+             
+             if(first_letter != val.fName[0].toUpperCase())
+             {
+                   //alert(first_letter)
+                  //alert(val.fName[0].toUpperCase())
+                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+             }
+             
+             first_letter = val.fName[0].toUpperCase();
+             
+             if(key == 0 && val.fName[0] != 'A')
+             {
+                 divider = '<div class="friends-item-title"> </div>';
+             }
+             
+              
+             if(checkdefined(val.team) == 'yes')
+             {
+                team = '&lt;'+val.team+'&gt;';
+             }
+             
+             if(val.is_friend == 1 && val.status == 1)
+             {
+                icon_class = 'pending';
+                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
+             }
+             if(val.is_friend == 1 && val.status == 2)
+             {
+                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
+             }
+             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
+             {
+                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
+             }
+             
+             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
+             {
+                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
+             }
+             
+            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
+            $(".loading_agenda_items").hide();
+            $(".add-friends-container").show();
+             
+             });
+             $('.form-container').prepend('<div class="alert alert-success">Contact Request Approved</div>');
+             $(".add-friends-container").show();
+             $(".loading_approve").hide();
+             $( ".alert-success" ).fadeOut( 5000 );
+           }
+           
+           });  
+  });  
+}
+
+
+// function to send friend request
+function sendRequest(player_code) 
+{
+  jQuery(document).ready(function($) {
+     $(".add-friends-container").hide();
+     $(".loading_send").show();
+     var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/add/'+player_code+'?gvm_json=1';
+      $(".all_conts").html('&nbsp');
+      var icon_class = '';
+        var link = '';
+        var team = '';
+        var divider = '';
+        var first_letter = '';
+        
+        var ficon_class = '';
+        var flink = '';
+        var fteam = '';
+        var fdivider = '';
+        var ffirst_letter = '';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {   
+              //alert(obj.receivedFriendsRequests.length)
+              if(obj.receivedFriendsRequests.length > 0)
+              {
+                  $('.contacts_request').show();
+                  $('.friends-requests-container').show();
+              }
+              else
+              {
+                 $('.contacts_request').hide();
+                  $('.friends-requests-container').hide();
+              }
+              $('.friends-requests-container').html('&nbsp;');
+            $.each( obj.receivedFriendsRequests, function( key, val ) {
+                if(checkdefined(val.event_user_id) == 'yes')
+                {
+                    
+                     ficon_class = '';
+                     flink = '';
+                     fteam = '';
+                     fdivider = '';
+                      // alert(val.fName[0].toUpperCase());
+                   if(ffirst_letter != val.fName[0].toUpperCase())
+                   {
+                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+                   }
+                   
+                   ffirst_letter = val.fName[0].toUpperCase();
+                 
+                   
+                   if(checkdefined(val.team) == 'yes')
+                   {
+                      fteam = '&lt;'+val.team+'&gt;';
+                   }
+                    ficon_class = 'pending';
+                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=approveRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
+                
+                 
+                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
+                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
+                
+               }
+            });
+            
+            
+             $.each( obj.eventUserFriends, function( key, val ) {
+             icon_class = '';
+             link = '';
+             team = '';
+             divider = '';
+             
+             if(first_letter != val.fName[0].toUpperCase())
+             {
+                   //alert(first_letter)
+                  //alert(val.fName[0].toUpperCase())
+                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+             }
+             
+             first_letter = val.fName[0].toUpperCase();
+             
+             if(key == 0 && val.fName[0] != 'A')
+             {
+                 divider = '<div class="friends-item-title"> </div>';
+             }
+             
+              
+             if(checkdefined(val.team) == 'yes')
+             {
+                team = '&lt;'+val.team+'&gt;';
+             }
+             
+             if(val.is_friend == 1 && val.status == 1)
+             {
+                icon_class = 'pending';
+                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
+             }
+             if(val.is_friend == 1 && val.status == 2)
+             {
+                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
+             }
+             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
+             {
+                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
+             }
+             
+             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
+             {
+                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
+             }
+             
+            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
+            $(".loading_agenda_items").hide();
+            $(".add-friends-container").show();
+             
+             });
+             $('.form-container').prepend('<div class="alert alert-success">Contact Request Sent</div>');
+             $(".add-friends-container").show();
+             $(".loading_send").hide();
+             $( ".alert-success" ).fadeOut( 5000 );
+           }
+           
+           });  
+  });  
+}             
+
+//function to load contacts
+function loadcontacts()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/','friends');
+        $(".add-friends-container").hide();
+        //showAgendaData();
+        
+        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/?gvm_json=1';
+        $(".all_conts").html('&nbsp');
+        var icon_class = '';
+        var link = '';
+        var team = '';
+        var divider = '';
+        var first_letter = '';
+        
+        var ficon_class = '';
+        var flink = '';
+        var fteam = '';
+        var fdivider = '';
+        var ffirst_letter = '';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {    
+              //alert(obj.receivedFriendsRequests.length)
+              if(obj.receivedFriendsRequests.length > 0)
+              {
+                  $('.contacts_request').show();
+                  $('.friends-requests-container').show();
+              }
+            $.each( obj.receivedFriendsRequests, function( key, val ) {
+                if(checkdefined(val.event_user_id) == 'yes')
+                {
+                    
+                     ficon_class = '';
+                     flink = '';
+                     fteam = '';
+                     fdivider = '';
+                      // alert(val.fName[0].toUpperCase());
+                   if(ffirst_letter != val.fName[0].toUpperCase())
+                   {
+                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+                   }
+                   
+                   ffirst_letter = val.fName[0].toUpperCase();
+                 
+                   
+                   if(checkdefined(val.team) == 'yes')
+                   {
+                      fteam = '&lt;'+val.team+'&gt;';
+                   }
+                    ficon_class = 'pending';
+                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=approveRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
+                
+                 
+                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
+                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
+                
+               }
+            });
+            
+            
+             $.each( obj.eventUserFriends, function( key, val ) {
+             icon_class = '';
+             link = '';
+             team = '';
+             divider = '';
+             
+             if(first_letter != val.fName[0].toUpperCase())
+             {
+                   //alert(first_letter)
+                  //alert(val.fName[0].toUpperCase())
+                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
+             }
+             
+             first_letter = val.fName[0].toUpperCase();
+             
+             if(key == 0 && val.fName[0] != 'A')
+             {
+                 divider = '<div class="friends-item-title"> </div>';
+             }
+             
+              
+             if(checkdefined(val.team) == 'yes')
+             {
+                team = '&lt;'+val.team+'&gt;';
+             }
+             
+             if(val.is_friend == 1 && val.status == 1)
+             {
+                icon_class = 'pending';
+                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
+             }
+             if(val.is_friend == 1 && val.status == 2)
+             {
+                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
+             }
+             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
+             {
+                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
+             }
+             
+             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
+             {
+                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
+             }
+             
+            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
             $(".loading_agenda_items").hide();
             $(".add-friends-container").show();
              
@@ -2090,7 +2526,7 @@ function loadyourcontacts()
              if(val.is_friend == 1 && val.status == 1)
              {
                 icon_class = 'pending';
-                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel-friend-request">No</a></div></div>';
+                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
              }
              if(val.is_friend == 1 && val.status == 2)
              {
@@ -2098,7 +2534,7 @@ function loadyourcontacts()
              }
              if(val.is_friend == 0)
              {
-                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" class="success send-friend-request">Yes</a></div></div>';
+                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
              }
              
             $('.friends-items-container').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   

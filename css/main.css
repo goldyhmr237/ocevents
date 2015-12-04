@@ -12738,8 +12738,7 @@ header .header-login-wrapper {
   display: inline-block;
   color: #ffffff;
   text-align: right;
-  
-   position: absolute;   
+  position: absolute;
   line-height: 65px;
   float: right;
   padding-left: 0;
@@ -12753,7 +12752,7 @@ header .header-login-wrapper .img-wrapper {
   border-radius: 50%;
   border: 3px solid #fff;
   padding: 3px;
-  position: absolute;  
+  position: absolute;
   right: -7px;
   top: 3px;
   background-image: url(../img/avatar.png);
@@ -12763,8 +12762,7 @@ header .header-login-wrapper .img-wrapper {
 header .header-login-wrapper .img-wrapper:after {
   content: "";
   border: 3px solid #83a946;
-  /* neccessary to comment for ios */
- /* position: absolute; */
+  position: absolute;
   top: -7px;
   left: -7px;
   width: 53px;
@@ -12966,13 +12964,13 @@ footer .footer-menu .label-container label p {
   font-weight: 300;
   line-height: 10px;
   font-size: 12px;
-}  
+}
 .hide-footer-labels footer .footer-menu,
 .hide-footer-labels footer .label-container {
-  height: 50px !important;
+  height: 50px;
 }
 .hide-footer-labels footer .label-container label p {
-  display: none !important;
+  display: none;
 }
 footer .footer-menu .label-container.active label,
 footer .footer-menu.footer-menu-open .footer-menu-opened ul li.active a {
@@ -13060,11 +13058,11 @@ padding:12px;
   color: #93bc3e;
   font-size: 16px;
 }
-.loading_agenda_items
+.loading_agenda_items, .loading_cancel, .loading_approve, .loading_send
 {
   color:#fff;
 }
-.teampoints , .yourteam , .future-video
+.teampoints , .yourteam , .future-video , .contacts_request , .friends-requests-container , .loading_cancel , .loading_approve , .loading_send
 {
    display:none;
 }
