@@ -154,9 +154,9 @@ jQuery(function ($)
 	
 	$(window).bind('scroll', function () 
 	{
-		if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && nextPageLink != null) {
-			getAjaxMoreUsers(nextPageLink);
-		}
+	/*	if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && nextPageLink != null) {
+			   getAjaxMoreUsers(nextPageLink);
+		}  */
 	});
     
     // Disable the form submit if we press the enter key inside the input.
@@ -170,15 +170,38 @@ jQuery(function ($)
 	$('#users-filter').on('keyup', function () 
 	{
 		var q = stripURLSegment($(this).val());
-		
+		    
 		searchTimer && clearTimeout(searchTimer);
 		searchTimer = setTimeout(function () 
 		{
 			lastLetter = '';
-			getAjaxUsers(currentPageLink + (q != '' ? 'q-' + stripURLSegment(q) : ''));
+      //alert(q)
+      //alert(currentPageLink);
+			//getAjaxUsers(currentPageLink + (q != '' ? 'q-' + stripURLSegment(q) : ''));
+      getuserbyajax(q);
 		}, 500);
 	});
-	
+  
+  //code starts here from Rahul
+  //function to get users by ajax request
+  function getuserbyajax(q)
+  {
+      jQuery(document).ready(function($)
+      {
+      var add_url = $('.is_friend').val();
+      var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/'+add_url+'/q-'+q+'?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+      //alert(main_url);
+      jQuery.ajax({
+          url: main_url,
+          dataType: "json",
+          method: "GET",
+          success: function(obj) {
+             showcommoncontacts(obj);
+          }
+          }); 
+          });
+  }
+	//code ends here from Rahul
 	/**
 	 * Method used to replace the current users with new loaded users. 
 	 * 

@@ -32,11 +32,11 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadyourcontacts();
+                  loadallsponsors();
             });
     }
-                var localLink = '/';
-                var GHomepageLink = "contacts.html";
+    var localLink = '/';
+                var GHomepageLink = "sponsors_all.html";
             </script>
             </head>
     <body class="">
@@ -80,57 +80,81 @@
                             </div>
         </div>
     </div>
-</header>
+</header>            
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading Your Contacts...
+        Loading All Sponsors...
         <br />
         <img src="img/loading.gif" />
-</div> 
-<div class="container main-container add-friends-container">
-    <div class="header-title row">
-        <p>
-            <i class="fa fa-user"></i>
-            Contacts        </p>
-    </div>
-       <h2 class="container-title contacts_request">
-            Contacts            <i class="gicon-friends"></i>
-        </h2>
-        <div class="friends-items-container friends-requests-container">
-                    
-        </div> 
-      <input type="hidden" class="is_friend" value="friends" />
-    <div class="add-friend-form-container">
-        <form class="form-container" action="" method="post">
-                                                <div class="form-group">
-                <label for="users-filter">Participants</label>
-                <input id="users-filter" class="form-control" type="text" placeholder="Search">
-                <span><i class="fa fa-search"></i></span>
-                                                        <a class="show-friends-btn" href="contacts.html">
-                        All Users                   </a>
-                                                </div>
-        </form>
-    </div>
-        <div id="friends-content-container">
-            
-                
-                        <div class="friends-items-container all_conts">
-                        
-                    
-                        </div>
-                    
-                
-        </div>  
-    
 </div>
-
+<div class="container main-container agenda-container">
+	<div class="row">
+		<div class="agenda-header-wrapper">
+			
+			<div class="calendar-icon-wrapper col-xs-4">
+				<i class="gicon-agenda"></i>
+			</div>
+			<div class="header-title col-xs-4">
+                <h1>Play</h1>
+			</div>
+			<div class="see-all-wrapper col-xs-4">
+				<span>
+                    <a style="color: #fff;text-decoration: none;" href="sponsors.html" data-type="all">
+                        <span>See Current</span>
+                        <i class="fa fa-clock-o"></i>
+                    </a>
+                </span>
+			</div>
+		</div>
+	</div>
+    <div id="presentations-list">
+                        <div class="row">
+                        <div class="date-wrapper ">
+                            <div class="date">
+                                <p>Torsdag 26. Juni</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                <div class="row">
+                    <div class="agenda-content">
+                        <div class="agenda-item col-xs-12">
+                            <a href="http://beta.oceventmanager.com/View-presentation/-/100000/51">
+                                <div class="agenda-info">
+                                                        <div class="agenda-img" style="background-image: url(/resources/files/images/100176_6_a7068995c922ce0b0b839fcdf33d77de_medium.jpg);">
+                                                        <svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="" data-eta="">
+                        <circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle>
+                        <circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="0"></circle>   
+                    </svg>
+                </div>
+                                    <div class="agenda-wrapper">
+                                        <span class="agenda-slogan">
+                                            1. Quiz test + rating                                        </span>
+                                        <i class="fa fa-angle-right"></i>
+                                                                                    <div class="agenda-person-info">
+                                                <span class="name">Quiz test subtitle</span>
+                                            </div>
+                                                                            </div>
+                                </div>
+                            </a>
+                            <div class="agenda-footer">
+                                                                &nbsp;
+                                                                <div class="meeting-location">
+                                    <i class="fa fa-map-marker"></i>
+                                    Barcelona                                </div>
+                                                            </div>
+                        </div>
+                    </div>
+                </div>
+                 
+                        </div>
+</div>
 
                <footer>
     <div class="container">
         <div class="row">
-             <div class="col-xs-12 footer-menu">
-                                                                       
-                    </div>
+            <div class="col-xs-12 footer-menu">
+                 </div>
         </div>
     </div>
 </footer>     </div>
@@ -162,7 +186,7 @@
                         <p class="my-events-title">My events</p>
                                                 <p>
                             <a href="index.html" class="active">
-                              OCintranet                        </a>
+                                OCintranet</a>
                         </p>
                                             </div>
                 </div>
@@ -179,12 +203,12 @@
                                 Profile                            </a>
                         </li>
                                                 <li>
-                            <a class="active" href="ticket.html">
+                            <a href="ticket.html">
                                 <i class="gicon-my-ticket"></i>
                                 My ticket                            </a>
                         </li>
                                                 <li>
-                            <a href="agenda.html">
+                            <a class="active" href="agenda.html">
                                 <i class="gicon-agenda"></i>
                                 Agenda                            </a>
                         </li>
@@ -197,7 +221,7 @@
                             <a href="contacts.html">
                                 <i class="gicon-friends">
                                                                     </i>
-                                Add Contacts                            </a>
+                               Add Contacts                          </a>
                         </li>
                                                 <li>
                             To install, tap <span></span> and choose<br> "Add to Home Screen"

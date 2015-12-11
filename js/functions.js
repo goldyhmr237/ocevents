@@ -57,7 +57,7 @@ function removeprofileimage() {
 
                             var ImgFullUrl = '';
                             ImgFullUrl = theFile.toURI();
-                            
+
                             db.transaction(function(tx) {
                                 tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="false" where user_id = "' + localStorage.user_id + '"');
                                 window.location.href = "profile.html";
@@ -294,25 +294,25 @@ function base64_encode(data) {
 
 //UnLink your facebook account
 function unlinkwithfacebook() {
-    if(confirm('Are you sure you want to unlink facebook from your account?')){
-                
-    
-    var main_url = server_url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
-                jQuery.ajax({
-                    url: main_url,
-                    dataType: "json",
-                    method: "POST",
-                    data: {
-                        event_id: static_event_id
-                    },
-                    success: function(obj) {
-                        alert("Facebook Account Unlinked Successfully");
-                        jQuery(".facebook-link").show();
-                        jQuery("#unlinkfacebook").hide();
-                    }
-                    
-                    });
-      }
+    if (confirm('Are you sure you want to unlink facebook from your account?')) {
+
+
+        var main_url = server_url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
+        jQuery.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data: {
+                event_id: static_event_id
+            },
+            success: function(obj) {
+                alert("Facebook Account Unlinked Successfully");
+                jQuery(".facebook-link").show();
+                jQuery("#unlinkfacebook").hide();
+            }
+
+        });
+    }
 }
 
 //Link your facebook account
@@ -420,7 +420,7 @@ var fbLoginSuccess = function() {
 
 
 var login = function() {
-//alert('here');
+    //alert('here');
     jQuery(document).ready(function($) {
 
         if (!window.cordova) {
@@ -553,8 +553,8 @@ function logout() {
 function loadgamification() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
     loadcommonthings();
-    importfooter('g-homepage','home');
-    
+    importfooter('g-homepage', 'home');
+
     db.transaction(function(tx) {
 
         //alert("SELECT * FROM OCEVENTS_homepage where user_id = '"+localStorage.user_id+"'");
@@ -580,9 +580,9 @@ function loadgamification() {
             } else {
                 $(".main-container").html("No Module Found");
             }
-            
-            
-            
+
+
+
         });
     });
 }
@@ -592,9 +592,14 @@ function onFail(message) {
 }
 
 function capturePhoto() {
-      // Take picture using device camera and retrieve image as base64-encoded string
-        navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 100, allowEdit: true, destinationType: destinationType.FILE_URI, saveToPhotoAlbum: false });
-    }
+    // Take picture using device camera and retrieve image as base64-encoded string
+    navigator.camera.getPicture(onPhotoURISuccess, onFail, {
+        quality: 100,
+        allowEdit: true,
+        destinationType: destinationType.FILE_URI,
+        saveToPhotoAlbum: false
+    });
+}
 
 
 function getPhoto(source) {
@@ -606,10 +611,9 @@ function getPhoto(source) {
     });
 }
 
-function showbuttons()
-{
-   jQuery('.hidden_button').attr('style','display:block !important');
-   jQuery('.selfie_capture').hide();
+function showbuttons() {
+    jQuery('.hidden_button').attr('style', 'display:block !important');
+    jQuery('.selfie_capture').hide();
 }
 // Called when a photo is successfully retrieved
 function onPhotoURISuccess(imageURI) {
@@ -627,7 +631,7 @@ function onPhotoURISuccess(imageURI) {
         var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.jpg';
     }
     options.fileName = newfname;
-     //alert(newfname);
+    //alert(newfname);
     options.mimeType = "image/jpeg";
     var params = new Object();
     options.params = params;
@@ -672,7 +676,7 @@ function onPhotoURISuccess(imageURI) {
                         ImgFullUrl = theFile.toURI();
                         //alert(ImgFullUrl);
                         db.transaction(function(tx) {
-                            tx.executeSql('update OCEVENTS_user set image_src = "'+ImgFullUrl+'",is_user_image="true" where user_id = "' + localStorage.user_id + '"');
+                            tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="true" where user_id = "' + localStorage.user_id + '"');
 
                             window.location.href = "profile.html";
 
@@ -697,102 +701,93 @@ function onPhotoURISuccess(imageURI) {
 }
 
 //function to play video
-function playvideo(videoUrl)
-{
-  var options = {
-    successCallback: function() {
-      console.log("Video was closed without error.");
-    },
-    errorCallback: function(errMsg) {
-      console.log("Error! " + errMsg);
-    }
-  };
-  window.plugins.streamingMedia.playVideo(videoUrl,options);
+function playvideo(videoUrl) {
+    var options = {
+        successCallback: function() {
+            console.log("Video was closed without error.");
+        },
+        errorCallback: function(errMsg) {
+            console.log("Error! " + errMsg);
+        }
+    };
+    window.plugins.streamingMedia.playVideo(videoUrl, options);
 }
 
-function checkdefined(str)
-{
-  //alert(str)
-  if(str != '' && str != undefined && str != 'undefined' && str != null && str != 'null')
-  {
-    return 'yes';
-  }
-  else
-  {
-    return 'no';
-  }
+function checkdefined(str) {
+    //alert(str)
+    if (str != '' && str != undefined && str != 'undefined' && str != null && str != 'null') {
+        return 'yes';
+    } else {
+        return 'no';
+    }
 }
 
 //load agenda item
-function loadagendaitem()
-{
+function loadagendaitem() {
     jQuery(document).ready(function($) {
         loadcommonthings();
         $(".agenda-item-container").hide();
-        importfooter('View-presentation/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id,'agenda-item');
-        var main_url = server_url + 'View-presentation/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'?gvm_json=1';
+        importfooter('View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda-item');
+        var main_url = server_url + 'View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(data) {
-            if(data.prevPresentation != false)
-            {
-                $('.prev').attr('onclick','gotoagenda("'+data.prevPresentation.instance_id+'")');
-            }
-            else
-            {
-                $('.prev i').hide();
-            }
-            if(data.nextPresentation != false)
-            {
-                $('.next').attr('onclick','gotoagenda("'+data.nextPresentation.instance_id+'")');
-            }
-            else
-            {
-                $('.next i').hide();
-            }
+                if (data.prevPresentation != false) {
+                    $('.prev').attr('onclick', 'gotoagenda("' + data.prevPresentation.instance_id + '")');
+                } else {
+                    $('.prev i').hide();
+                }
+                if (data.nextPresentation != false) {
+                    $('.next').attr('onclick', 'gotoagenda("' + data.nextPresentation.instance_id + '")');
+                } else {
+                    $('.next i').hide();
+                }
                 $(".green-text").html(data.presentation.title.value);
                 $(".agenda-item-img-info h5").html(data.presentation.title.value);
                 $(".date p").html(data.presentation.group_item);
                 $(".future-title").html(data.presentation.speaker_name.value);
                 $(".future-info").html(data.presentation.description.value);
-                var imgurl = server_url + 'resources/files/images/'+ data.presentation.speaker_image.__extra.medium_file_name;
-                $(".agenda-main-img").attr("style", "background-image:url("  +imgurl+ ")"); 
+                if (checkdefined(data.presentation.speaker_image) == 'yes') {
+                    var imgurl = server_url + 'resources/files/images/' + data.presentation.speaker_image.__extra.medium_file_name;
+                    $(".agenda-main-img").attr("style", "background-image:url(" + imgurl + ")");
+                }
+                //alert(data.presentation.time)
+                if (checkdefined(data.presentation.time) == 'yes') {
+                    $('.fa-clock-o').after(data.presentation.time)
+                }
                 //alert(checkundefined(data.videoSrc));
-               if(checkdefined(data.videoSrc) == 'yes')
-               {
-                   $('.future-video').show();
-                   $('.future-video').attr('onclick','playvideo("'+server_url+data.videoSrc+'")');
-                   $('.playme').attr('src',server_url+data.videoPoster);
-                   $('.playme').attr('style','width:100%;height:400px;');
-                   $('.future-info').attr('style','position:relative;bottom:128px;');
-               }
-               if(checkdefined(data.presentation.embeded_html.value) == 'yes')
-               {
-                   $(".future-info").append('<div class="video-wrapper">'+data.presentation.embeded_html.value+'</div>');
-               }
-                  
-               $.each( data.presentationModules, function( key, val ) {
-                       
-                        var container_class = val.container_class;
-                        var icon_class = val.icon_class;
-                        var text = val.text;
-                        //alert(text)
-                        $(".presentation-modules").append('<a href="#"><i class="'+icon_class+'"></i>'+text+'</a>')
-                       
-                    });
-                    
-                    if(data.hasRating == true)
-                    {
-                        $('.agenda-item-rating-container').show();                        
-                        $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="'+data.ratevalue+'" data-original-title="" title=""><a href="#" class="rate-star active" data-rate="1"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="2"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="3"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="4"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="5"><i class="fa fa-star"></i></a></div>');
-                    }
-                   
-               $(".agenda-item-container").show(); 
-               $(".loading_agenda_items").hide();
-            }            
-            }); 
+                if (checkdefined(data.videoSrc) == 'yes') {
+                    $('.future-video').show();
+                    $('.future-video').attr('onclick', 'playvideo("' + server_url + data.videoSrc + '")');
+                    $('.playme').attr('src', server_url + data.videoPoster);
+                    $('.playme').attr('style', 'width:100%;height:400px;');
+                    $('.future-info').attr('style', 'position:relative;bottom:128px;');
+                }
+                if (checkdefined(data.presentation.embeded_html.value) == 'yes') {
+                    $(".future-info").append('<div class="video-wrapper">' + data.presentation.embeded_html.value + '</div>');
+                }
+
+                $.each(data.presentationModules, function(key, val) {
+
+                    var container_class = val.container_class;
+                    var icon_class = val.icon_class;
+                    var text = val.text;
+                    //alert(text)
+                    $(".presentation-modules").append('<a href="#"><i class="' + icon_class + '"></i>' + text + '</a>')
+
+                });
+
+                if (data.hasRating == true) {
+                    $('.agenda-item-rating-container').show();
+                    $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="' + data.ratevalue + '" data-original-title="" title=""><a href="#" class="rate-star active" data-rate="1"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="2"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="3"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="4"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="5"><i class="fa fa-star"></i></a></div>');
+                }
+
+                $(".agenda-item-container").show();
+                $(".loading_agenda_items").hide();
+            }
+        });
         /*db.transaction(function(tx) {                                                
               tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' and agenda_id = '"+localStorage.agenda_id+"'", [], function(tx, results) {
               var len_ag = results.rows.length;
@@ -803,90 +798,86 @@ function loadagendaitem()
               $(".future-info").html(results.rows.item(0).description); 
               $(".agenda-main-img").attr("style", "background-image:url(" + results.rows.item(0).speaker_image + ")");  
          });
-         }); */      
-                        
-    });  
+         }); */
+
+    });
 }
 
 //got to agenda item
-function gotoagenda(agenda_id)
-{
+function gotoagenda(agenda_id) {
     localStorage.agenda_id = agenda_id;
-    window.location.href= 'agenda_item.html';
+    window.location.href = 'agenda_item.html';
 }
 
 //function to fetch user points
-function loadticket()
-{
-   jQuery(document).ready(function($) {
+function loadticket() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
-        importfooter('ticketing','home');
+        importfooter('ticketing', 'home');
         db.transaction(function(tx) {
             tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
             tx.executeSql('delete from OCEVENTS_ticket');
         });
         $(".ticketing-container").hide();
-        var main_url = server_url + 'ticketing/-/'+static_event_id+'/?gvm_json=1';
+        var main_url = server_url + 'ticketing/-/' + static_event_id + '/?gvm_json=1';
         // alert(main_url);
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-              var DIR_Name = 'oc_photos';
-              var a = new DirManager();
-              a.create_r(DIR_Name, Log('created successfully'));
-              var b = new FileManager();
-              var img_src = server_url+obj.ticketSrc;
-              var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
-               // alert(img_src);
-              var image_name = getFileNameFromPath(img_src);
-              //alert(image_name);
+                var DIR_Name = 'oc_photos';
+                var a = new DirManager();
+                a.create_r(DIR_Name, Log('created successfully'));
+                var b = new FileManager();
+                var img_src = server_url + obj.ticketSrc;
+                var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+                // alert(img_src);
+                var image_name = getFileNameFromPath(img_src);
+                //alert(image_name);
 
-          //alert(imagedatalength);
-          jQuery.ajax({
-              url: STR,
-              dataType: "html",
-              success: function(DtatURL) {    
-                  b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
-                      //alert(DtatURL);
-                      var ImgFullUrl = '';
-                      ImgFullUrl = theFile.toURI();
-                      
-                     // alert(ImgFullUrl);
-                      db.transaction(function(tx) {                       
-                                            
-                        tx.executeSql("insert into OCEVENTS_ticket (user_id,ticketCode,ticketSrc) values ('" + localStorage.user_id + "','" + obj.ticketCode + "','" + ImgFullUrl + "')");
-                        showTicket();
-                      });
-                    });
-                }
-                });  
-                                                  
+                //alert(imagedatalength);
+                jQuery.ajax({
+                    url: STR,
+                    dataType: "html",
+                    success: function(DtatURL) {
+                        b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                            //alert(DtatURL);
+                            var ImgFullUrl = '';
+                            ImgFullUrl = theFile.toURI();
+
+                            // alert(ImgFullUrl);
+                            db.transaction(function(tx) {
+
+                                tx.executeSql("insert into OCEVENTS_ticket (user_id,ticketCode,ticketSrc) values ('" + localStorage.user_id + "','" + obj.ticketCode + "','" + ImgFullUrl + "')");
+                                showTicket();
+                            });
+                        });
+                    }
+                });
+
             }
-          });  
-     });   
+        });
+    });
 }
 
 //function to show user ticket
-function showTicket()
-{
-     db.transaction(function(tx) {
+function showTicket() {
+    db.transaction(function(tx) {
         tx.executeSql("SELECT * FROM OCEVENTS_ticket where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
             jQuery(".ticket_code").html(results.rows.item(0).ticketCode);
-            jQuery(".qr_photo").attr("src",results.rows.item(0).ticketSrc);
+            jQuery(".qr_photo").attr("src", results.rows.item(0).ticketSrc);
             jQuery(".ticketing-container").show();
             jQuery(".loading_agenda_items").hide();
         });
     });
-}        
+}
 
 //function to fetch user points
-function loadpoints()
-{
-   jQuery(document).ready(function($) {
+function loadpoints() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
-        importfooter('user-points','points');
+        importfooter('user-points', 'points');
         $(".leaderboards-container").hide();
         //jQuery(".loading_agenda_items").hide();
         var main_url = server_url + 'user-points/?gvm_json=1';
@@ -896,62 +887,59 @@ function loadpoints()
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            //alert(obj.hideTeamScores)
-            var hideTeamScores =  obj.hideTeamScores;
-            //var label =  obj.breadcrumbs.text;
-            //alert(obj.breadcrumbs);
-            //alert(label);
-            var label = '';
-            $.each(obj.breadcrumbs, function(key, val) {
+                //alert(obj.hideTeamScores)
+                var hideTeamScores = obj.hideTeamScores;
+                //var label =  obj.breadcrumbs.text;
+                //alert(obj.breadcrumbs);
+                //alert(label);
+                var label = '';
+                $.each(obj.breadcrumbs, function(key, val) {
                     //alert(val.text);
-                    label =  val.text;
-            }); 
-           // alert(label);
-              var imagedatalength = obj.categories.length;  
+                    label = val.text;
+                });
+                // alert(label);
+                var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,hideTeamScores,label,instance_id)');                                
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,hideTeamScores,label,instance_id)');
                     tx.executeSql('delete from OCEVENTS_points');
                     tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
-                       // alert(len_ag);
-                        if (imagedatalength == len_ag && len_ag != 0) {                            
+                        // alert(len_ag);
+                        if (imagedatalength == len_ag && len_ag != 0) {
                             showPointsData();
-                        }
-                        else
-                        {
-                           db.transaction(function(tx) {
-                                 tx.executeSql('delete from OCEVENTS_points');
+                        } else {
+                            db.transaction(function(tx) {
+                                tx.executeSql('delete from OCEVENTS_points');
                             });
                             var co = 0;
                             $.each(obj.categories, function(key, val) {
                                 db.transaction(function(tx) {
-                                var green_count = 0;
-                                if(val.count != null && val.count != undefined && val.count != 'null' && val.count != '')
-                                {
-                                    green_count =  val.count;
-                                } 
-                                tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal+ "','" + green_count+ "','" + hideTeamScores+ "','" + label+ "' ,'" + val.instance_id+ "' )");
-                                //alert(val.position);
-                                co++;
-                                  // alert(co);
-                                      //alert(imagedatalength); 
-                                if (imagedatalength == co) {
-                                      //alert(co);
-                                      //alert(imagedatalength);
-                                     // alert('going');
-                                      showPointsData();
-                                  }
-                                });     
+                                    var green_count = 0;
+                                    if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
+                                        green_count = val.count;
+                                    }
+                                    tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal + "','" + green_count + "','" + hideTeamScores + "','" + label + "' ,'" + val.instance_id + "' )");
+                                    //alert(val.position);
+                                    co++;
+                                    // alert(co);
+                                    //alert(imagedatalength); 
+                                    if (imagedatalength == co) {
+                                        //alert(co);
+                                        //alert(imagedatalength);
+                                        // alert('going');
+                                        showPointsData();
+                                    }
+                                });
                             });
                         }
-                        
+
                     });
-                    
-                    });    
+
+                });
             }
-            
-            });
-    });    
+
+        });
+    });
 }
 
 //function to show user points
@@ -962,50 +950,37 @@ function showPointsData() {
             var len = results.rows.length;
             $(".table-striped tbody").html('&nbsp;');
             var label = results.rows.item(0).label;
-            var hideTeamScores = results.rows.item(0).hideTeamScores;            
-            if(hideTeamScores == 'false')
-            {
+            var hideTeamScores = results.rows.item(0).hideTeamScores;
+            if (hideTeamScores == 'false') {
                 $('.teampoints').show();
                 $('.yourteam').show();
-                $('.user-points-table-title tbody tr th').attr('class','col-xs-4');
+                $('.user-points-table-title tbody tr th').attr('class', 'col-xs-4');
             }
             $(".green-text").html(label);
             var group_title = '';
-            
+
             //alert(results.rows.item(0).hideTeamScores);
             for (i = 0; i < len; i++) {
-            //alert(results.rows.item(i).description);
+                //alert(results.rows.item(i).description);
                 var icon = '';
-                if(results.rows.item(i).name == 'Bonus')
-                {
-                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                if (results.rows.item(i).name == 'Bonus') {
+                    icon = '<span class="icon"><i class="social-icon"></i></span>';
+                } else if (results.rows.item(i).name == 'Social') {
+                    icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                } else if (results.rows.item(i).name == 'Seekergame') {
+                    icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                } else if (results.rows.item(i).name == 'Course/Quiz') {
+                    icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                } else if (results.rows.item(i).name == 'Communication') {
+                    icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                } else if (results.rows.item(i).name == 'Total') {
+                    icon = '<span class="icon"><i class="gicon-points"></i></span>';
                 }
-                else if(results.rows.item(i).name == 'Social')
-                {
-                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                var green_count_html = '';
+                if (results.rows.item(i).green_count != 0) {
+                    var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
-                else if(results.rows.item(i).name == 'Seekergame')
-                {
-                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                }
-                else if(results.rows.item(i).name == 'Course/Quiz')
-                {
-                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                }
-                else if(results.rows.item(i).name == 'Communication')
-                {
-                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                }
-                 else if(results.rows.item(i).name == 'Total')
-                {
-                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
-                 var green_count_html = '';
-                if(results.rows.item(i).green_count != 0)
-                { 
-                  var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
-                }
-                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints('+results.rows.item(i).instance_id+');"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#" onclick="gotopoints('+results.rows.item(i).instance_id+');">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');">' + green_count_html + results.rows.item(i).userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1015,192 +990,160 @@ function showPointsData() {
 }
 
 //function to go to user point detail page
-function gotopoints(instance_id)
-{
+function gotopoints(instance_id) {
     localStorage.instance_id = instance_id;
     window.location.href = 'user_detail.html';
 }
 
 //function to fetch user detail 
-function loaduserdetail()
-{
-  jQuery(document).ready(function($) {
+function loaduserdetail() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
         $(".leaderboards-container").hide();
-        importfooter('user-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id,'points');
-        var main_url = server_url + 'user-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id+'?gvm_json=1';
-        
+        importfooter('user-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'points');
+        var main_url = server_url + 'user-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            
-               var label = '';
-            $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
-                    
-                    if(key == 0)
-                    {
-                       $(".breadcrumbs a").html(val.text) 
+
+                var label = '';
+                $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
                     }
-                    if(key == 1)
-                    {
-                      $(".green-text").html(val.text)  
+                    if (key == 1) {
+                        $(".green-text").html(val.text)
                     }
-                    
-            });
-            $(".team-points-table table tbody").html('');
-             var i = 0;
-              var classcss = '';
-            $.each(obj.topScoresViewVars.users, function(key, val) {
-                 if(val.eventuser_id == localStorage.user_id)
-                 {
-                    var classcss="current-user" ;
-                 } 
-                 else
-                 {
-                    var classcss="" ;
-                 } 
-                 if(val.image != '')
-                {
-                  var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url('+val.image+');"></div></span></td>';
+
+                });
+                $(".team-points-table table tbody").html('');
+                var i = 0;
+                var classcss = '';
+                $.each(obj.topScoresViewVars.users, function(key, val) {
+                    if (val.eventuser_id == localStorage.user_id) {
+                        var classcss = "current-user";
+                    } else {
+                        var classcss = "";
+                    }
+                    if (val.image != '') {
+                        var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url(' + val.image + ');"></div></span></td>';
+                    } else {
+                        var newtd = '<td class="avatar-col"></td>';
+                    }
+                    i++;
+                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + val.total + '</td></tr>');
+
+                });
+                var difference = Number(10) - Number(i);
+                for (v = 0; v < difference; v++) {
+                    i++;
+                    $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">' + i + '</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>');
                 }
-                else
-                {
-                  var newtd = '<td class="avatar-col"></td>';
-                }
-                i++;               
-                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+i+'</span></td>'+newtd+'<td><span class="name">'+val.fName+' '+val.lName+'</span></td><td class="point">'+val.total+'</td></tr>');
-            
-               }); 
-             var difference = Number(10) - Number(i);
-             for(v = 0; v < difference; v++)
-             {
-                i++;
-                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
-             }
-             $(".user-points-table table tbody").html('');
-             $.each(obj.categories, function(key, val) {
-                 if(val.instance_id == localStorage.instance_id)
-                 {
-                  var classcss="active" ;
-                 } 
-                 else
-                 {
-                    var classcss="" ;
-                 }
-                 
-                 var icon = '';
-                if(val.name == 'Bonus')
-                {
-                  icon = '<span class="icon"><i class="social-icon"></i></span>';
-                }
-                else if(val.name == 'Social')
-                {
-                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
-                }
-                else if(val.name == 'Seekergame')
-                {
-                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                }
-                else if(val.name == 'Course/Quiz')
-                {
-                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                }
-                else if(val.name == 'Communication')
-                {
-                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                }
-                 else if(val.name == 'Total')
-                {
-                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
-                if(val.count > 0)
-                {
-                  var cnt = '<span class="count">'+val.count+'</span>';
-                }
-                else
-                {
-                  var cnt = '';
-                }
-                     
-                $(".user-points-table table tbody").append('<tr class='+classcss+'><td><a href="#" onclick="gotopoints('+val.instance_id+')"><span class="num">'+val.position+'.</span>'+icon+val.name+'</a></td><td class="point"><a href="#" onclick="gotopoints('+val.instance_id+')">'+cnt+val.userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');  
-                 
-             });
-              jQuery(".leaderboards-container").show();
-              jQuery(".loading_agenda_items").hide(); 
+                $(".user-points-table table tbody").html('');
+                $.each(obj.categories, function(key, val) {
+                    if (val.instance_id == localStorage.instance_id) {
+                        var classcss = "active";
+                    } else {
+                        var classcss = "";
+                    }
+
+                    var icon = '';
+                    if (val.name == 'Bonus') {
+                        icon = '<span class="icon"><i class="social-icon"></i></span>';
+                    } else if (val.name == 'Social') {
+                        icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                    } else if (val.name == 'Seekergame') {
+                        icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                    } else if (val.name == 'Course/Quiz') {
+                        icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                    } else if (val.name == 'Communication') {
+                        icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                    } else if (val.name == 'Total') {
+                        icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                    }
+                    if (val.count > 0) {
+                        var cnt = '<span class="count">' + val.count + '</span>';
+                    } else {
+                        var cnt = '';
+                    }
+
+                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotopoints(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + val.instance_id + ')">' + cnt + val.userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
+
+                });
+                jQuery(".leaderboards-container").show();
+                jQuery(".loading_agenda_items").hide();
             }
         });
-        
-  });      
+
+    });
 }
 
 //function to fetch team points
-function loadteampoints()
-{
-   jQuery(document).ready(function($) {
+function loadteampoints() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
-        importfooter('team-points','team-points');
+        importfooter('team-points', 'team-points');
         $(".leaderboards-container").hide();
         var main_url = server_url + 'team-points/?gvm_json=1';
-        
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            
-            var label = '';
-            $.each(obj.breadcrumbs, function(key, val) {
+
+                var label = '';
+                $.each(obj.breadcrumbs, function(key, val) {
                     //alert(val.text);
-                    label =  val.text;
-            }); 
-           // alert(label);
-              var imagedatalength = obj.categories.length;  
+                    label = val.text;
+                });
+                // alert(label);
+                var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');                                
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');
                     tx.executeSql('delete from OCEVENTS_teampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
-                       // alert(len_ag);
-                        if (imagedatalength == len_ag && len_ag != 0) {                            
+                        // alert(len_ag);
+                        if (imagedatalength == len_ag && len_ag != 0) {
                             showTeamPointsData();
-                        }
-                        else
-                        {
-                           db.transaction(function(tx) {
-                                 tx.executeSql('delete from OCEVENTS_teampoints');
+                        } else {
+                            db.transaction(function(tx) {
+                                tx.executeSql('delete from OCEVENTS_teampoints');
                             });
                             var co = 0;
                             $.each(obj.categories, function(key, val) {
                                 db.transaction(function(tx) {
-                                var green_count = 0;
-                                if(val.count != null && val.count != undefined && val.count != 'null' && val.count != '')
-                                {
-                                    green_count =  val.count;
-                                } 
-                                tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "','" + val.instance_id + "' )");
-                                //alert(val.position);
-                                co++;
-                                  // alert(co);
-                                      //alert(imagedatalength); 
-                                if (imagedatalength == co) {
-                                      //alert(co);
-                                      //alert(imagedatalength);
-                                     // alert('going');
-                                      showTeamPointsData();
-                                  }
-                                });     
+                                    var green_count = 0;
+                                    if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
+                                        green_count = val.count;
+                                    }
+                                    tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points + "','" + green_count + "','" + label + "','" + val.instance_id + "' )");
+                                    //alert(val.position);
+                                    co++;
+                                    // alert(co);
+                                    //alert(imagedatalength); 
+                                    if (imagedatalength == co) {
+                                        //alert(co);
+                                        //alert(imagedatalength);
+                                        // alert('going');
+                                        showTeamPointsData();
+                                    }
+                                });
                             });
                         }
-                        
+
                     });
-                    
-                    });    
+
+                });
             }
-            
-            });
-    });    
+
+        });
+    });
 }
 
 //function to show team points
@@ -1211,42 +1154,30 @@ function showTeamPointsData() {
             var len = results.rows.length;
             $(".table-striped tbody").html('&nbsp;');
             var label = results.rows.item(0).label;
-            
+
             $(".green-text").html(label);
             var group_title = '';
-            
+
             for (i = 0; i < len; i++) {
                 var icon = '';
-                if(results.rows.item(i).name == 'Bonus')
-                {
-                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                if (results.rows.item(i).name == 'Bonus') {
+                    icon = '<span class="icon"><i class="social-icon"></i></span>';
+                } else if (results.rows.item(i).name == 'Social') {
+                    icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                } else if (results.rows.item(i).name == 'Seekergame') {
+                    icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                } else if (results.rows.item(i).name == 'Course/Quiz') {
+                    icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                } else if (results.rows.item(i).name == 'Communication') {
+                    icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                } else if (results.rows.item(i).name == 'Total') {
+                    icon = '<span class="icon"><i class="gicon-points"></i></span>';
                 }
-                else if(results.rows.item(i).name == 'Social')
-                {
-                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                var green_count_html = '';
+                if (results.rows.item(i).green_count != 0) {
+                    var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
-                else if(results.rows.item(i).name == 'Seekergame')
-                {
-                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                }
-                else if(results.rows.item(i).name == 'Course/Quiz')
-                {
-                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                }
-                else if(results.rows.item(i).name == 'Communication')
-                {
-                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                }
-                 else if(results.rows.item(i).name == 'Total')
-                {
-                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
-                 var green_count_html = '';
-                if(results.rows.item(i).green_count != 0)
-                { 
-                  var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
-                }
-                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gototeamdetail('+results.rows.item(i).instance_id+');"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#" onclick="gototeamdetail('+results.rows.item(i).instance_id+');">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gototeamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gototeamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + results.rows.item(i).userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1256,295 +1187,244 @@ function showTeamPointsData() {
 }
 
 //function to go to team point detail page
-function gototeamdetail(instance_id)
-{
+function gototeamdetail(instance_id) {
     localStorage.instance_id = instance_id;
     window.location.href = 'team_detail_point.html';
 }
 
 //function to fetch detail team point
-function loaddetailteampoints()
-{
-  jQuery(document).ready(function($) {
+function loaddetailteampoints() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
         $(".leaderboards-container").hide();
-        importfooter('team-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id,'your-team');
-        var main_url = server_url + 'team-points/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id+'?gvm_json=1';
-        
+        importfooter('team-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'your-team');
+        var main_url = server_url + 'team-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            
-               var label = '';
-            $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
-                    
-                    if(key == 0)
-                    {
-                       $(".breadcrumbs a").html(val.text) 
+
+                var label = '';
+                $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
                     }
-                    if(key == 1)
-                    {
-                      $(".green-text").html(val.text)  
+                    if (key == 1) {
+                        $(".green-text").html(val.text)
                     }
-                    
-            });
-            $(".team-points-table table tbody").html('');
-             var i = 0;
-            $.each(obj.topScoresViewVars.teamPointsSel, function(key, val) {
-                   if(key == obj.topScoresViewVars.currentUserTeam)
-                   {
-                      var classcss="current-user" ;
-                   } 
-                   else
-                   {
-                      var classcss="" ;
-                   }            
-                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+val.pos+'</span></td><td><span class="name">'+key+'</span></td><td class="point">'+val.points+'</td></tr>');
-            
-                
-               i++;
-             }); 
-             var difference = Number(10) - Number(i);
-             for(v = 0; v < difference; v++)
-             {
-                i++;
-                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
-             }
-             $(".user-points-table table tbody").html('');
-             $.each(obj.categories, function(key, val) {
-                 if(val.instance_id == localStorage.instance_id)
-                 {
-                  var classcss="active" ;
-                 } 
-                 else
-                 {
-                    var classcss="" ;
-                 }
-                 
-                 var icon = '';
-                if(val.name == 'Bonus')
-                {
-                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+
+                });
+                $(".team-points-table table tbody").html('');
+                var i = 0;
+                $.each(obj.topScoresViewVars.teamPointsSel, function(key, val) {
+                    if (key == obj.topScoresViewVars.currentUserTeam) {
+                        var classcss = "current-user";
+                    } else {
+                        var classcss = "";
+                    }
+                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + val.pos + '</span></td><td><span class="name">' + key + '</span></td><td class="point">' + val.points + '</td></tr>');
+
+
+                    i++;
+                });
+                var difference = Number(10) - Number(i);
+                for (v = 0; v < difference; v++) {
+                    i++;
+                    $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">' + i + '</span></td><td><span class="name">-</span></td><td class="point">0</td></tr>');
                 }
-                else if(val.name == 'Social')
-                {
-                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
-                }
-                else if(val.name == 'Seekergame')
-                {
-                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                }
-                else if(val.name == 'Course/Quiz')
-                {
-                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                }
-                else if(val.name == 'Communication')
-                {
-                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                }
-                 else if(val.name == 'Total')
-                {
-                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
-                     
-                $(".user-points-table table tbody").append('<tr class='+classcss+'><td><a href="#" onclick="gototeamdetail('+val.instance_id+')"><span class="num">'+val.position+'.</span>'+icon+val.name+'</a></td><td class="point"><a href="#" onclick="gototeamdetail('+val.instance_id+')">'+val.points+'<i class="fa fa-angle-right"></i></a></td></tr>');  
-                 
-             });
-            jQuery(".leaderboards-container").show();
-            jQuery(".loading_agenda_items").hide(); 
+                $(".user-points-table table tbody").html('');
+                $.each(obj.categories, function(key, val) {
+                    if (val.instance_id == localStorage.instance_id) {
+                        var classcss = "active";
+                    } else {
+                        var classcss = "";
+                    }
+
+                    var icon = '';
+                    if (val.name == 'Bonus') {
+                        icon = '<span class="icon"><i class="social-icon"></i></span>';
+                    } else if (val.name == 'Social') {
+                        icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                    } else if (val.name == 'Seekergame') {
+                        icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                    } else if (val.name == 'Course/Quiz') {
+                        icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                    } else if (val.name == 'Communication') {
+                        icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                    } else if (val.name == 'Total') {
+                        icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                    }
+
+                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gototeamdetail(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gototeamdetail(' + val.instance_id + ')">' + val.points + '<i class="fa fa-angle-right"></i></a></td></tr>');
+
+                });
+                jQuery(".leaderboards-container").show();
+                jQuery(".loading_agenda_items").hide();
             }
         });
-        
-  });      
+
+    });
 }
 
 
 //function to go to  your team point detail page
-function gotoyourteamdetail(instance_id)
-{
+function gotoyourteamdetail(instance_id) {
     localStorage.instance_id = instance_id;
     window.location.href = 'your_detail_point.html';
 }
 
 
 //function to fetch your detail team point
-function loadyourdetailteampoints()
-{
-  jQuery(document).ready(function($) {
+function loadyourdetailteampoints() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
         $(".leaderboards-container").hide();
-        importfooter('Your-team/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id,'your-team');
-        var main_url = server_url + 'Your-team/-/OCintranet-'+static_event_id+'/topscores/'+localStorage.instance_id+'?gvm_json=1';
-        
+        importfooter('Your-team/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'your-team');
+        var main_url = server_url + 'Your-team/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            
-               var label = '';
-            $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
-                    
-                    if(key == 0)
-                    {
-                       $(".breadcrumbs a").html(val.text) 
+
+                var label = '';
+                $.each(obj.topScoresViewVars.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
                     }
-                    if(key == 1)
-                    {
-                      $(".green-text").html(val.text)  
+                    if (key == 1) {
+                        $(".green-text").html(val.text)
                     }
-                    
-            });
-            $(".team-points-table table tbody").html('');
-             var i = 0;
-              var classcss = '';
-            $.each(obj.topScoresViewVars.usersSel, function(key, val) {
-                 if(key == localStorage.user_id)
-                 {
-                    var classcss="current-user" ;
-                 } 
-                 else
-                 {
-                    var classcss="" ;
-                 } 
-                i++; 
-                if(val.image != '')
-                {
-                  var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url('+val.image+');"></div></span></td>';
+
+                });
+                $(".team-points-table table tbody").html('');
+                var i = 0;
+                var classcss = '';
+                $.each(obj.topScoresViewVars.usersSel, function(key, val) {
+                    if (key == localStorage.user_id) {
+                        var classcss = "current-user";
+                    } else {
+                        var classcss = "";
+                    }
+                    i++;
+                    if (val.image != '') {
+                        var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url(' + val.image + ');"></div></span></td>';
+                    } else {
+                        var newtd = '<td class="avatar-col"></td>';
+                    }
+                    //alert(newtd)        
+                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + val.total + '</td></tr>');
+
+                });
+                var difference = Number(10) - Number(i);
+                for (v = 0; v < difference; v++) {
+                    i++;
+                    $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">' + i + '</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>');
                 }
-                else
-                {
-                  var newtd = '<td class="avatar-col"></td>';
-                } 
-                  //alert(newtd)        
-                  $(".team-points-table table tbody").append('<tr class='+classcss+'><td class="num-col"><span class="num">'+i+'</span></td>'+newtd+'<td><span class="name">'+val.fName+' '+val.lName+'</span></td><td class="point">'+val.total+'</td></tr>');
-            
-               }); 
-             var difference = Number(10) - Number(i);
-             for(v = 0; v < difference; v++)
-             {
-                i++;
-                $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">'+i+'</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>'); 
-             }
-             $(".user-points-table table tbody").html('');
-             $.each(obj.categories, function(key, val) {
-                 if(val.instance_id == localStorage.instance_id)
-                 {
-                  var classcss="active" ;
-                 } 
-                 else
-                 {
-                    var classcss="" ;
-                 }
-                 
-                 var icon = '';
-                if(val.name == 'Bonus')
-                {
-                  icon = '<span class="icon"><i class="social-icon"></i></span>';
-                }
-                else if(val.name == 'Social')
-                {
-                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
-                }
-                else if(val.name == 'Seekergame')
-                {
-                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                }
-                else if(val.name == 'Course/Quiz')
-                {
-                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                }
-                else if(val.name == 'Communication')
-                {
-                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                }
-                 else if(val.name == 'Total')
-                {
-                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
-                
-                    
-                $(".user-points-table table tbody").append('<tr class='+classcss+'><td><a href="#" onclick="gotoyourteamdetail('+val.instance_id+')"><span class="num">'+val.position+'.</span>'+icon+val.name+'</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail('+val.instance_id+')">'+val.points+'<i class="fa fa-angle-right"></i></a></td></tr>');  
-                 
-             });
-            jQuery(".leaderboards-container").show();
-            jQuery(".loading_agenda_items").hide(); 
+                $(".user-points-table table tbody").html('');
+                $.each(obj.categories, function(key, val) {
+                    if (val.instance_id == localStorage.instance_id) {
+                        var classcss = "active";
+                    } else {
+                        var classcss = "";
+                    }
+
+                    var icon = '';
+                    if (val.name == 'Bonus') {
+                        icon = '<span class="icon"><i class="social-icon"></i></span>';
+                    } else if (val.name == 'Social') {
+                        icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                    } else if (val.name == 'Seekergame') {
+                        icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                    } else if (val.name == 'Course/Quiz') {
+                        icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                    } else if (val.name == 'Communication') {
+                        icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                    } else if (val.name == 'Total') {
+                        icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                    }
+
+
+                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')">' + val.points + '<i class="fa fa-angle-right"></i></a></td></tr>');
+
+                });
+                jQuery(".leaderboards-container").show();
+                jQuery(".loading_agenda_items").hide();
             }
         });
-        
-  });      
+
+    });
 }
 
 
 
 //function to fetch your team points
-function loadyourpoints()
-{
-   jQuery(document).ready(function($) {
+function loadyourpoints() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
         $(".leaderboards-container").hide();
-        importfooter('Your-team','your-team');
+        importfooter('Your-team', 'your-team');
         var main_url = server_url + 'your-team/?gvm_json=1';
-        
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            
-            var label = '';
-            $.each(obj.breadcrumbs, function(key, val) {
+
+                var label = '';
+                $.each(obj.breadcrumbs, function(key, val) {
                     //alert(val.text);
-                    label =  val.text;
-            }); 
-           // alert(label);
-              var imagedatalength = obj.categories.length;  
+                    label = val.text;
+                });
+                // alert(label);
+                var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');                                
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');
                     tx.executeSql('delete from OCEVENTS_yourteampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
-                       // alert(len_ag);
-                        if (imagedatalength == len_ag && len_ag != 0) {                            
+                        // alert(len_ag);
+                        if (imagedatalength == len_ag && len_ag != 0) {
                             showYourTeamPointsData();
-                        }
-                        else
-                        {
-                           db.transaction(function(tx) {
-                                 tx.executeSql('delete from OCEVENTS_yourteampoints');
+                        } else {
+                            db.transaction(function(tx) {
+                                tx.executeSql('delete from OCEVENTS_yourteampoints');
                             });
                             var co = 0;
                             $.each(obj.categories, function(key, val) {
                                 db.transaction(function(tx) {
-                                var green_count = 0;
-                                if(val.count != null && val.count != undefined && val.count != 'null' && val.count != '')
-                                {
-                                    green_count =  val.count;
-                                } 
-                                tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points+ "','" + green_count+ "','" + label+ "','" + val.instance_id+ "'  )");
-                                //alert(val.position);
-                                co++;
-                                  // alert(co);
-                                      //alert(imagedatalength); 
-                                if (imagedatalength == co) {
-                                      //alert(co);
-                                      //alert(imagedatalength);
-                                     // alert('going');
-                                      showYourTeamPointsData();
-                                  }
-                                });     
+                                    var green_count = 0;
+                                    if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
+                                        green_count = val.count;
+                                    }
+                                    tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points + "','" + green_count + "','" + label + "','" + val.instance_id + "'  )");
+                                    //alert(val.position);
+                                    co++;
+                                    // alert(co);
+                                    //alert(imagedatalength); 
+                                    if (imagedatalength == co) {
+                                        //alert(co);
+                                        //alert(imagedatalength);
+                                        // alert('going');
+                                        showYourTeamPointsData();
+                                    }
+                                });
                             });
                         }
-                        
+
                     });
-                    
-                    });    
+
+                });
             }
-            
-            });
-    });    
+
+        });
+    });
 }
 
 //function to show team points
@@ -1555,42 +1435,30 @@ function showYourTeamPointsData() {
             var len = results.rows.length;
             $(".table-striped tbody").html('&nbsp;');
             var label = results.rows.item(0).label;
-            
+
             $(".green-text").html(label);
             var group_title = '';
-            
+
             for (i = 0; i < len; i++) {
                 var icon = '';
-                if(results.rows.item(i).name == 'Bonus')
-                {
-                  icon = '<span class="icon"><i class="social-icon"></i></span>';
+                if (results.rows.item(i).name == 'Bonus') {
+                    icon = '<span class="icon"><i class="social-icon"></i></span>';
+                } else if (results.rows.item(i).name == 'Social') {
+                    icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                } else if (results.rows.item(i).name == 'Seekergame') {
+                    icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                } else if (results.rows.item(i).name == 'Course/Quiz') {
+                    icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                } else if (results.rows.item(i).name == 'Communication') {
+                    icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                } else if (results.rows.item(i).name == 'Total') {
+                    icon = '<span class="icon"><i class="gicon-points"></i></span>';
                 }
-                else if(results.rows.item(i).name == 'Social')
-                {
-                  icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                var green_count_html = '';
+                if (results.rows.item(i).green_count != 0) {
+                    var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
-                else if(results.rows.item(i).name == 'Seekergame')
-                {
-                  icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                }
-                else if(results.rows.item(i).name == 'Course/Quiz')
-                {
-                  icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                }
-                else if(results.rows.item(i).name == 'Communication')
-                {
-                  icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                }
-                 else if(results.rows.item(i).name == 'Total')
-                {
-                  icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
-                 var green_count_html = '';
-                if(results.rows.item(i).green_count != 0)
-                { 
-                  var green_count_html = '<span class="count">'+results.rows.item(i).green_count+'</span>';
-                }
-                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotoyourteamdetail('+results.rows.item(i).instance_id+');"><span class="num">'+results.rows.item(i).position+'.</span>'+icon+'<span class="icon"></span>&nbsp;'+results.rows.item(i).name+'</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail('+results.rows.item(i).instance_id+');">'+green_count_html+results.rows.item(i).userTotal+'<i class="fa fa-angle-right"></i></a></td></tr>');
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + results.rows.item(i).userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1603,11 +1471,11 @@ function showYourTeamPointsData() {
 function loadallagenda() {
     jQuery(document).ready(function($) {
         loadcommonthings();
-        importfooter('agenda','agenda');
+        importfooter('agenda', 'agenda');
         $(".agenda-container").hide();
         //showAgendaData();
         //http://www.oceventmanager.com/agenda/-/OCintranet-100041/?ajax=1&all=1&gvm_json=1
-        var main_url = server_url + 'agenda/-/OCintranet-'+static_event_id+'/?ajax=1&all=1&gvm_json=1';
+        var main_url = server_url + 'agenda/-/OCintranet-' + static_event_id + '/?ajax=1&all=1&gvm_json=1';
         // alert(main_url);
         $("#presentations-list").html('&nbsp;');
         $.ajax({
@@ -1615,54 +1483,86 @@ function loadallagenda() {
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            $.each(obj.data.presentations, function(key, val) {
-                if(val.group_title != null)
-                {
-                var group_title = '';
-                if(val.group_title != group_title)
-                {
-                  $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>'+val.group_title+'</p></div></div></div>');
-                }
-                group_title = val.group_title;
-                $.each(val.items, function(key1, val1) {
-              var duration = val1.duration; //7903980 =====  11978580
-              
-              var eta = val1.eta;   //3593396 ====   8691056
-              
-               if (Number(eta) > Number(duration)) {
-                // The event has not started yet.
-                var progress = 0;
-            } else {
-                // The event has started and is in progress.
-                var progress = ((duration - eta) / duration) * 100;
-            } 
-            
-            var c = Math.PI * 49.5 * 2;
-            var pct = ((100 - progress) / 100) * c;
-            pct = pct.toFixed(3)+'px';
-            //alert(pct);
-              //54.5368
-              //27.4450  
-          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
-           });
+                showcommonagendalist(obj);
+                jQuery(".agenda-container").show();
+                jQuery(".loading_agenda_items").hide();
             }
-            });
-            jQuery(".agenda-container").show();
-            jQuery(".loading_agenda_items").hide();
-            }
-        }); 
-    }); 
+        });
+    });
 }
 
 //function to fetch agenda items
 function loadagenda() {
     jQuery(document).ready(function($) {
         loadcommonthings();
-        importfooter('agenda','agenda');
+        importfooter('agenda', 'agenda');
+        $(".agenda-container").hide();
+        var main_url = server_url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
+        $("#presentations-list").html('&nbsp');
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+                showcommonagendalist(obj);
+                jQuery(".agenda-container").show();
+                jQuery(".loading_agenda_items").hide();
+            }
+        });
+    });
+}
+
+//function to show common agenda list
+function showcommonagendalist(obj) {
+    $.each(obj.data.presentations, function(key, val) {
+        //if(val.group_title != null)
+        // {
+        var group_title = '';
+        if (val.group_title != group_title && val.group_title != null && val.group_title != '' && val.group_title != undefined) {
+            $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>' + val.group_title + '</p></div></div></div>');
+        }
+        group_title = val.group_title;
+        $.each(val.items, function(key1, val1) {
+            var duration = val1.duration; //7903980 =====  11978580
+
+            var eta = val1.eta; //3593396 ====   8691056
+
+            if (Number(eta) > Number(duration)) {
+                // The event has not started yet.
+                var progress = 0;
+            } else {
+                // The event has started and is in progress.
+                var progress = ((duration - eta) / duration) * 100;
+            }
+
+            var c = Math.PI * 49.5 * 2;
+            var pct = ((100 - progress) / 100) * c;
+            pct = pct.toFixed(3) + 'px';
+            //alert(pct);
+            //54.5368
+            //27.4450  
+            var img_str = '';
+            if (checkdefined(val1.speaker_image) == 'yes') {
+                img_str = '<div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');">';
+            } else {
+                img_str = '<div class="agenda-img">';
+            }
+
+            $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda(' + val1.id + ')"><div class="agenda-info">' + img_str + '<svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="' + duration + '" data-eta="' + eta + '"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: ' + pct + ';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
+        });
+        // }
+    });
+}
+
+//function to load current sponsors
+function loadallsponsors() {
+    jQuery(document).ready(function($) {
+        loadcommonthings();
+        importfooter('sponsors/-/OCintranet-' + static_event_id, 'sponsors');
         $(".agenda-container").hide();
         //showAgendaData();
-        
-        var main_url = server_url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
+
+        var main_url = server_url + 'sponsors/-/OCintranet-' + static_event_id + '/?gvm_json=1&ajax=1&all=1';
         // alert(main_url);
         $("#presentations-list").html('&nbsp');
         $.ajax({
@@ -1670,125 +1570,38 @@ function loadagenda() {
             dataType: "json",
             method: "GET",
             success: function(obj) {
-               $.each(obj.data.presentations, function(key, val) {
-                if(val.group_title != null)
-                {
-                var group_title = '';
-                if(val.group_title != group_title)
-                {
-                  $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>'+val.group_title+'</p></div></div></div>');
-                }
-                group_title = val.group_title;
-                $.each(val.items, function(key1, val1) {
-              var duration = val1.duration; //7903980 =====  11978580
-              
-              var eta = val1.eta;   //3593396 ====   8691056
-              
-               if (Number(eta) > Number(duration)) {
-                // The event has not started yet.
-                var progress = 0;
-            } else {
-                // The event has started and is in progress.
-                var progress = ((duration - eta) / duration) * 100;
-            } 
-            
-            var c = Math.PI * 49.5 * 2;
-            var pct = ((100 - progress) / 100) * c;
-            pct = pct.toFixed(3)+'px';
-            //alert(pct);
-              //54.5368
-              //27.4450  
-          $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+val1.id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
-           });
+                showcommonagendalist(obj);
+                jQuery(".agenda-container").show();
+                jQuery(".loading_agenda_items").hide();
+
             }
-            });
-            jQuery(".agenda-container").show();
-            jQuery(".loading_agenda_items").hide();
-            
-               /*
-               // alert(obj.status+'---'+obj.data.page_title+'---'+obj.data.presentations)
-                var imagedatalength = obj.data.presentations_count;
-                db.transaction(function(tx) {
-                tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description LONGTEXT,embeded_html,event_time,duration,eta)');                                
-                    tx.executeSql('delete from OCEVENTS_agenda');
-                    tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
-                        var len_ag = results.rows.length;
-                       // alert(len_ag);
-                        if (imagedatalength == len_ag && len_ag != 0) {
-                            //alert(imagedatalength);
-                            //alert(len_ag);
-                            showAgendaData();
-                        } else {
-                            db.transaction(function(tx) {
-                                //tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_agenda (id integer primary key autoincrement,counter,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html)');
-                                tx.executeSql('delete from OCEVENTS_agenda');
-                            });
-                              var co = 0;
-                            $.each(obj.data.presentations, function(key, val) {
-                                if (val.group_title != null) {
-                                    //localStorage.group_title = val.group_title;
-                                
-                                
-                                $.each(val.items, function(key1, val1) {
+        });
+    });
+}
 
-                                    // alert(key1);
-                                    var DIR_Name = 'oc_photos';
-                                    var a = new DirManager();
-                                    a.create_r(DIR_Name, Log('created successfully'));
-                                    var b = new FileManager();
-                                    var img_src = val1.speaker_image.medium_url;
-                                    var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+//function to load all sponsors
+function loadsponsors() {
+    jQuery(document).ready(function($) {
+        loadcommonthings();
+        importfooter('sponsors/-/OCintranet-' + static_event_id, 'sponsors');
+        $(".agenda-container").hide();
+        //showAgendaData();
 
-                                    var image_name = getFileNameFromPath(img_src);
+        var main_url = server_url + 'sponsors/-/OCintranet-' + static_event_id + '/?gvm_json=1';
+        // alert(main_url);
+        $("#presentations-list").html('&nbsp');
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+                showcommonagendalist(obj);
+                jQuery(".agenda-container").show();
+                jQuery(".loading_agenda_items").hide();
 
-
-                                    //alert(imagedatalength);
-                                    jQuery.ajax({
-                                        url: STR,
-                                        dataType: "html",
-                                        success: function(DtatURL) {
-
-                                            //alert(DtatURL);  
-                                            //adb logcat *:E		 
-                                            //alert(obj.data.image.image_src);
-                                            //alert(image_name);
-                                            b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
-
-                                                var ImgFullUrl = '';
-                                                ImgFullUrl = theFile.toURI();
-                                                co++;
-                                                //alert(val1.title);
-                                                db.transaction(function(tx) {
-                                                var descr = val1.description.replace(/'/g, "");
-                                                //var descr = "<p>The comments here should flow freely, and can be about everything...<br /><br />Click the <a href=\"#\" target=\"_self\">Comments</a> below to get started&nbsp;</p>\r\n<p>General principles of making friends</p>\r\n<p>&nbsp;</p>\r\n<p>The basic structure of Meet People &gt; Hang Out With Them &gt; Keep Hanging Out &gt; Repeat. Now I'll go into some broader concepts that apply to making friends as a whole.&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>If you want a social life, you've got to make it happen for yourself.</p>\r\n<p>&nbsp;</p>";
-                                                descr = descr.replace(/'/g, "\\");
-                                                    //alert(descr);
-                                                    tx.executeSql("insert into OCEVENTS_agenda (group_title,user_id,agenda_id,event_id,title,speaker_name,speaker_image,start_time,end_time,description,embeded_html,event_time,duration,eta) values ('"+val.group_title+"','" + localStorage.user_id + "','" + val1.id + "','" + val1.event_id + "','" + val1.title + "','" + val1.speaker_name + "','" + ImgFullUrl + "','" + val1.start_time + "','" + val1.end_time + "', '" + descr + "','" + val1.embeded_html + "','" + val1.time + "','" + val1.duration + "','" + val1.eta + "')");
-                                                
-                                                  
-                                                if (imagedatalength == co) {
-                                                    //alert(co);
-                                                    //alert(imagedatalength);
-                                                    //alert(imagedatalength);
-                                                    //alert(co);
-                                                   // alert('going');
-                                                    showAgendaData();
-                                                }
-                                                });
-
-                                                 
-                                            });
-                                        }
-                                    });
-                                });
-                              }
-                            });
-                        }
-                    });
-                }); */
             }
-        }); 
-    }); 
+        });
+    });
 }
 
 //function to show agenda items
@@ -1802,32 +1615,31 @@ function showAgendaData() {
             $("#presentations-list").html('&nbsp;');
             var group_title = '';
             for (i = 0; i < len; i++) {
-            //alert(results.rows.item(i).description);
-                if(results.rows.item(i).group_title != group_title)
-                {
-                  $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>'+results.rows.item(i).group_title+'</p></div></div></div>');
+                
+                if (results.rows.item(i).group_title != group_title) {
+                    $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>' + results.rows.item(i).group_title + '</p></div></div></div>');
                 }
                 group_title = results.rows.item(i).group_title;
-                
-              var duration = results.rows.item(i).duration; //7903980 =====  11978580
-              
-              var eta = results.rows.item(i).eta;   //3593396 ====   8691056
-              
-               if (Number(eta) > Number(duration)) {
-                // The event has not started yet.
-                var progress = 0;
-            } else {
-                // The event has started and is in progress.
-                var progress = ((duration - eta) / duration) * 100;
-            } 
-            
-            var c = Math.PI * 49.5 * 2;
-            var pct = ((100 - progress) / 100) * c;
-            pct = pct.toFixed(3)+'px';
-            //alert(pct);
-              //54.5368
-              //27.4450  
-                $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda('+results.rows.item(i).agenda_id+')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + results.rows.item(i).speaker_image + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="'+duration+'" data-eta="'+eta+'"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: '+pct+';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + results.rows.item(i).title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + results.rows.item(i).speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + results.rows.item(i).event_time + '</div></div></div></div></div>');
+
+                var duration = results.rows.item(i).duration; //7903980 =====  11978580
+
+                var eta = results.rows.item(i).eta; //3593396 ====   8691056
+
+                if (Number(eta) > Number(duration)) {
+                    // The event has not started yet.
+                    var progress = 0;
+                } else {
+                    // The event has started and is in progress.
+                    var progress = ((duration - eta) / duration) * 100;
+                }
+
+                var c = Math.PI * 49.5 * 2;
+                var pct = ((100 - progress) / 100) * c;
+                pct = pct.toFixed(3) + 'px';
+                //alert(pct);
+                //54.5368
+                //27.4450  
+                $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda(' + results.rows.item(i).agenda_id + ')"><div class="agenda-info"><div class="agenda-img" style="background-image: url(' + results.rows.item(i).speaker_image + ');"><svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="' + duration + '" data-eta="' + eta + '"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: ' + pct + ';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + results.rows.item(i).title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + results.rows.item(i).speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location">' + results.rows.item(i).event_time + '</div></div></div></div></div>');
             }
             jQuery(".agenda-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1836,656 +1648,317 @@ function showAgendaData() {
     });
 }
 
-function viewfriend(user_id)
-{
+function viewfriend(user_id) {
     //alert(user_id)
     localStorage.friend_id = user_id;
     window.location.href = 'view_friend.html';
 }
 
 //function to fetch user detail 
-function loadfrienddetail()
-{
-  jQuery(document).ready(function($) {
+function loadfrienddetail() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
         $(".add-friends-container").hide();
-        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id,'friends');
-        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/view/'+localStorage.friend_id+'?gvm_json=1';
-        
+        importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/view/' + localStorage.friend_id, 'friends');
+        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/view/' + localStorage.friend_id + '?gvm_json=1';
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            
-               var label = '';
-            $.each(obj.breadcrumbs, function(key, val) {
-                    
-                    if(key == 0)
-                    {
-                       $(".breadcrumbs a").html(val.text) 
+
+                var label = '';
+                $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
                     }
-                    if(key == 1)
-                    {
-                      $(".green-text").html(val.text)  
-                    }                    
-            });
-            if(checkdefined(obj.prevFriendLink) == 'yes')
-            {
-                var prev_link = obj.prevFriendLink;
-                var split_it = prev_link.split('view/');
-                var prev_friend_id = split_it[1];
-              //  alert(prev_friend_id);
-                $('.prev').attr('onclick','viewfriend('+prev_friend_id+')'); 
-            }
-            else
-            {
-              $('.prev').hide();
-            }
-            if(checkdefined(obj.nextFriendLink) == 'yes')
-            {
-                var next_link = obj.nextFriendLink;
-                var split_it = next_link.split('view/');
-                var next_friend_id = split_it[1];
-                //  alert(next_friend_id);
-               // $('.next').attr('onclick','viewfriend("'+next_friend_id+'")');
-               $('.next').attr('onclick','viewfriend('+next_friend_id+')'); 
-            }
-            else
-            {
-              $('.nextFriendLink').hide();
-            }
-            $('.friends-item-img').attr('style','background-image: url('+obj.userImageSrc+');');
-            $('.fa-user').after(obj.fullName);
-            if(checkdefined(obj.userTeam) == 'yes')
-            {
-                $('.friends-item-inner h6').html('&lt;'+obj.userTeam+'&gt;');
-            }
-            if(checkdefined(obj.mobile) == 'yes')
-            {
-                $('.call_button').attr('href','tel:'+obj.mobile);
-                $('.em').html(obj.mob);
-            }
-            if(checkdefined(obj.eMail) == 'yes')
-            {
-                $('.email_button').attr('href','mailto:'+obj.eMail);
-                $('.em').html(obj.eMail);
-            }
-            if(checkdefined(obj.downloadVCardLink) == 'yes')
-            {
-                $('.vcard').attr('onclick','downloadVcard("'+obj.downloadVCardLink+'")');
-            }
-            if(checkdefined(obj.gender) == 'yes')
-            {
-                $('.gender').html(obj.gender);
-            }
-            $.each(obj.userQA, function(i, dataVal) {
-                
-                if (i != 0 && dataVal.question != undefined && dataVal.answer != undefined) {
-                   $('.qa').append('<p>'+dataVal.question+'<span class="green-text">'+dataVal.answer+'</span></p>');
+                    if (key == 1) {
+                        $(".green-text").html(val.text)
+                    }
+                });
+                if (checkdefined(obj.prevFriendLink) == 'yes') {
+                    var prev_link = obj.prevFriendLink;
+                    var split_it = prev_link.split('view/');
+                    var prev_friend_id = split_it[1];
+                    //  alert(prev_friend_id);
+                    $('.prev').attr('onclick', 'viewfriend(' + prev_friend_id + ')');
+                } else {
+                    $('.prev').hide();
                 }
-                
-            });    
-            
+                if (checkdefined(obj.nextFriendLink) == 'yes') {
+                    var next_link = obj.nextFriendLink;
+                    var split_it = next_link.split('view/');
+                    var next_friend_id = split_it[1];
+                    //  alert(next_friend_id);
+                    // $('.next').attr('onclick','viewfriend("'+next_friend_id+'")');
+                    $('.next').attr('onclick', 'viewfriend(' + next_friend_id + ')');
+                } else {
+                    $('.nextFriendLink').hide();
+                }
+                $('.friends-item-img').attr('style', 'background-image: url(' + obj.userImageSrc + ');');
+                $('.fa-user').after(obj.fullName);
+                if (checkdefined(obj.userTeam) == 'yes') {
+                    $('.friends-item-inner h6').html('&lt;' + obj.userTeam + '&gt;');
+                }
+                if (checkdefined(obj.mobile) == 'yes') {
+                    $('.call_button').attr('href', 'tel:' + obj.mobile);
+                    $('.em').html(obj.mob);
+                }
+                if (checkdefined(obj.eMail) == 'yes') {
+                    $('.email_button').attr('href', 'mailto:' + obj.eMail);
+                    $('.em').html(obj.eMail);
+                }
+                if (checkdefined(obj.downloadVCardLink) == 'yes') {
+                    $('.vcard').attr('onclick', 'downloadVcard("' + obj.downloadVCardLink + '")');
+                }
+                if (checkdefined(obj.gender) == 'yes') {
+                    $('.gender').html(obj.gender);
+                }
+                $.each(obj.userQA, function(i, dataVal) {
+
+                    if (i != 0 && dataVal.question != undefined && dataVal.answer != undefined) {
+                        $('.qa').append('<p>' + dataVal.question + '<span class="green-text">' + dataVal.answer + '</span></p>');
+                    }
+
+                });
+
                 $(".add-friends-container").show();
                 $(".loading_agenda_items").hide();
             }
-            });
-  });
+        });
+    });
 }
 
 //function to download vCard
-function downloadVcard(url)
-{
-   var download_url = server_url + url;
-   //alert(download_url)
-   var fileTransfer = new FileTransfer();
-   var store = cordova.file.dataDirectory;
-   fileTransfer.download(
-   download_url,
-   store + "theFile.vcf",
-   function(theFile) {
-   alert("File Downloaded Successfully on your device, check it here : " + theFile.toURI());
-   //showLink(theFile.toURI());
-   },
-   function(error) {
-   alert("download error source " + error.source);
-   alert("download error target " + error.target);
-   alert("upload error code: " + error.code);
-   }
-   );                                 
+function downloadVcard(url) {
+    var download_url = server_url + url;
+    //alert(download_url)
+    var fileTransfer = new FileTransfer();
+    var store = cordova.file.dataDirectory;
+    fileTransfer.download(
+        download_url,
+        store + "theFile.vcf",
+        function(theFile) {
+            alert("File Downloaded Successfully on your device, check it here : " + theFile.toURI());
+            //showLink(theFile.toURI());
+        },
+        function(error) {
+            alert("download error source " + error.source);
+            alert("download error target " + error.target);
+            alert("upload error code: " + error.code);
+        }
+    );
 }
 
-function showLink(url){
-        //alert(url);
-        /*var divEl = document.getElementById("ready");
-        var aElem = document.createElement("a");
-        aElem.setAttribute("target", "_blank");
-        aElem.setAttribute("href", url);
-        aElem.appendChild(document.createTextNode("Ready! Click To Open."))
-        divEl.appendChild(aElem); */
-        //jQuery('#ready').html('<a target="_blank" href='+url+' />Ready! Click To Open.</a>');
- 
-    } 
-    
-    
+function showLink(url) {
+    //alert(url);
+    /*var divEl = document.getElementById("ready");
+    var aElem = document.createElement("a");
+    aElem.setAttribute("target", "_blank");
+    aElem.setAttribute("href", url);
+    aElem.appendChild(document.createTextNode("Ready! Click To Open."))
+    divEl.appendChild(aElem); */
+    //jQuery('#ready').html('<a target="_blank" href='+url+' />Ready! Click To Open.</a>');
+
+}
+
+
 // function to cancel friend request
-function cancelRequest(player_code) 
-{
-  jQuery(document).ready(function($) {
-  $(".add-friends-container").hide();
-  $(".loading_cancel").show();
-     var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/cancel/'+player_code+'?gvm_json=1';
-      $(".all_conts").html('&nbsp');
-      var icon_class = '';
-        var link = '';
-        var team = '';
-        var divider = '';
-        var first_letter = '';
-        
-        var ficon_class = '';
-        var flink = '';
-        var fteam = '';
-        var fdivider = '';
-        var ffirst_letter = '';
+function cancelRequest(player_code) {
+    jQuery(document).ready(function($) {
+        $(".add-friends-container").hide();
+        $(".loading_cancel").show();
+        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/cancel/' + player_code + '?gvm_json=1';
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
-            success: function(obj) {   
-              //alert(obj.receivedFriendsRequests.length)
-              if(obj.receivedFriendsRequests.length > 0)
-              {
-                  $('.contacts_request').show();
-                  $('.friends-requests-container').show();
-              }
-              else
-              {
-                 $('.contacts_request').hide();
-                  $('.friends-requests-container').hide();
-              }
-              $('.friends-requests-container').html('&nbsp;');
-            $.each( obj.receivedFriendsRequests, function( key, val ) {
-                if(checkdefined(val.event_user_id) == 'yes')
-                {
-                    
-                     ficon_class = '';
-                     flink = '';
-                     fteam = '';
-                     fdivider = '';
-                      // alert(val.fName[0].toUpperCase());
-                   if(ffirst_letter != val.fName[0].toUpperCase())
-                   {
-                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-                   }
-                   
-                   ffirst_letter = val.fName[0].toUpperCase();
-                 
-                   
-                   if(checkdefined(val.team) == 'yes')
-                   {
-                      fteam = '&lt;'+val.team+'&gt;';
-                   }
-                    ficon_class = 'pending';
-                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=acceptRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
-                
-                 
-                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
-                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
-                
-               }
-            });
-            
-            
-             $.each( obj.eventUserFriends, function( key, val ) {
-             icon_class = '';
-             link = '';
-             team = '';
-             divider = '';
-             
-             if(first_letter != val.fName[0].toUpperCase())
-             {
-                   //alert(first_letter)
-                  //alert(val.fName[0].toUpperCase())
-                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-             }
-             
-             first_letter = val.fName[0].toUpperCase();
-             
-             if(key == 0 && val.fName[0] != 'A')
-             {
-                 divider = '<div class="friends-item-title"> </div>';
-             }
-             
-              
-             if(checkdefined(val.team) == 'yes')
-             {
-                team = '&lt;'+val.team+'&gt;';
-             }
-             
-             if(val.is_friend == 1 && val.status == 1)
-             {
-                icon_class = 'pending';
-                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
-             }
-             if(val.is_friend == 1 && val.status == 2)
-             {
-                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
-             }
-             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
-             {
-                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
-             }
-             
-             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
-             {
-                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
-             }
-             
-            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
-            $(".loading_agenda_items").hide();
-            $(".add-friends-container").show();
-             
-             });
-              $('.form-container').prepend('<div class="alert alert-success">Contact request canceled</div>');
-              $(".add-friends-container").show();
-              $(".loading_cancel").hide();
-              $( ".alert-success" ).fadeOut( 5000 );
-           }
-           
-           });  
-  });  
+            success: function(obj) {
+                showcommoncontacts(obj);
+                $('.form-container').prepend('<div class="alert alert-success">Contact request canceled</div>');
+                $(".add-friends-container").show();
+                $(".loading_cancel").hide();
+                $(".alert-success").fadeOut(5000);
+            }
+
+        });
+    });
 }
 
 
 // function to approve friend request
-function approveRequest(player_code) 
-{
-  jQuery(document).ready(function($) {
-     var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/approve/'+player_code+'?gvm_json=1';
-      $(".all_conts").html('&nbsp');
-      $(".add-friends-container").hide();
-      $(".loading_approve").show();
-      var icon_class = '';
-        var link = '';
-        var team = '';
-        var divider = '';
-        var first_letter = '';
-        
-        var ficon_class = '';
-        var flink = '';
-        var fteam = '';
-        var fdivider = '';
-        var ffirst_letter = '';
+function approveRequest(player_code) {
+    jQuery(document).ready(function($) {
+        $(".add-friends-container").hide();
+        $(".loading_approve").show();
+        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/approve/' + player_code + '?gvm_json=1';
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
-            success: function(obj) {   
-              //alert(obj.receivedFriendsRequests.length)
-              if(obj.receivedFriendsRequests.length > 0)
-              {
-                  $('.contacts_request').show();
-                  $('.friends-requests-container').show();
-              }
-              else
-              {
-                 $('.contacts_request').hide();
-                  $('.friends-requests-container').hide();
-              }
-              $('.friends-requests-container').html('&nbsp;');
-            $.each( obj.receivedFriendsRequests, function( key, val ) {
-                if(checkdefined(val.event_user_id) == 'yes')
-                {
-                    
-                     ficon_class = '';
-                     flink = '';
-                     fteam = '';
-                     fdivider = '';
-                      // alert(val.fName[0].toUpperCase());
-                   if(ffirst_letter != val.fName[0].toUpperCase())
-                   {
-                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-                   }
-                   
-                   ffirst_letter = val.fName[0].toUpperCase();
-                 
-                   
-                   if(checkdefined(val.team) == 'yes')
-                   {
-                      fteam = '&lt;'+val.team+'&gt;';
-                   }
-                    ficon_class = 'pending';
-                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=approveRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
-                
-                 
-                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
-                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
-                
-               }
-            });
-            
-            
-             $.each( obj.eventUserFriends, function( key, val ) {
-             icon_class = '';
-             link = '';
-             team = '';
-             divider = '';
-             
-             if(first_letter != val.fName[0].toUpperCase())
-             {
-                   //alert(first_letter)
-                  //alert(val.fName[0].toUpperCase())
-                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-             }
-             
-             first_letter = val.fName[0].toUpperCase();
-             
-             if(key == 0 && val.fName[0] != 'A')
-             {
-                 divider = '<div class="friends-item-title"> </div>';
-             }
-             
-              
-             if(checkdefined(val.team) == 'yes')
-             {
-                team = '&lt;'+val.team+'&gt;';
-             }
-             
-             if(val.is_friend == 1 && val.status == 1)
-             {
-                icon_class = 'pending';
-                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
-             }
-             if(val.is_friend == 1 && val.status == 2)
-             {
-                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
-             }
-             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
-             {
-                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
-             }
-             
-             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
-             {
-                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
-             }
-             
-            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
-            $(".loading_agenda_items").hide();
-            $(".add-friends-container").show();
-             
-             });
-             $('.form-container').prepend('<div class="alert alert-success">Contact Request Approved</div>');
-             $(".add-friends-container").show();
-             $(".loading_approve").hide();
-             $( ".alert-success" ).fadeOut( 5000 );
-           }
-           
-           });  
-  });  
+            success: function(obj) {
+                showcommoncontacts(obj);
+                $('.form-container').prepend('<div class="alert alert-success">Contact Request Approved</div>');
+                $(".add-friends-container").show();
+                $(".loading_approve").hide();
+                $(".alert-success").fadeOut(5000);
+            }
+
+        });
+    });
 }
 
 
 // function to send friend request
-function sendRequest(player_code) 
-{
-  jQuery(document).ready(function($) {
-     $(".add-friends-container").hide();
-     $(".loading_send").show();
-     var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/add/'+player_code+'?gvm_json=1';
-      $(".all_conts").html('&nbsp');
-      var icon_class = '';
-        var link = '';
-        var team = '';
-        var divider = '';
-        var first_letter = '';
-        
-        var ficon_class = '';
-        var flink = '';
-        var fteam = '';
-        var fdivider = '';
-        var ffirst_letter = '';
-        $.ajax({
-            url: main_url,
-            dataType: "json",
-            method: "GET",
-            success: function(obj) {   
-              //alert(obj.receivedFriendsRequests.length)
-              if(obj.receivedFriendsRequests.length > 0)
-              {
-                  $('.contacts_request').show();
-                  $('.friends-requests-container').show();
-              }
-              else
-              {
-                 $('.contacts_request').hide();
-                  $('.friends-requests-container').hide();
-              }
-              $('.friends-requests-container').html('&nbsp;');
-            $.each( obj.receivedFriendsRequests, function( key, val ) {
-                if(checkdefined(val.event_user_id) == 'yes')
-                {
-                    
-                     ficon_class = '';
-                     flink = '';
-                     fteam = '';
-                     fdivider = '';
-                      // alert(val.fName[0].toUpperCase());
-                   if(ffirst_letter != val.fName[0].toUpperCase())
-                   {
-                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-                   }
-                   
-                   ffirst_letter = val.fName[0].toUpperCase();
-                 
-                   
-                   if(checkdefined(val.team) == 'yes')
-                   {
-                      fteam = '&lt;'+val.team+'&gt;';
-                   }
-                    ficon_class = 'pending';
-                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=approveRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
-                
-                 
-                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
-                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
-                
-               }
-            });
-            
-            
-             $.each( obj.eventUserFriends, function( key, val ) {
-             icon_class = '';
-             link = '';
-             team = '';
-             divider = '';
-             
-             if(first_letter != val.fName[0].toUpperCase())
-             {
-                   //alert(first_letter)
-                  //alert(val.fName[0].toUpperCase())
-                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-             }
-             
-             first_letter = val.fName[0].toUpperCase();
-             
-             if(key == 0 && val.fName[0] != 'A')
-             {
-                 divider = '<div class="friends-item-title"> </div>';
-             }
-             
-              
-             if(checkdefined(val.team) == 'yes')
-             {
-                team = '&lt;'+val.team+'&gt;';
-             }
-             
-             if(val.is_friend == 1 && val.status == 1)
-             {
-                icon_class = 'pending';
-                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
-             }
-             if(val.is_friend == 1 && val.status == 2)
-             {
-                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
-             }
-             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
-             {
-                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="#" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
-             }
-             
-             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
-             {
-                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
-             }
-             
-            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
-            $(".loading_agenda_items").hide();
-            $(".add-friends-container").show();
-             
-             });
-             $('.form-container').prepend('<div class="alert alert-success">Contact Request Sent</div>');
-             $(".add-friends-container").show();
-             $(".loading_send").hide();
-             $( ".alert-success" ).fadeOut( 5000 );
-           }
-           
-           });  
-  });  
-}             
-
-//function to load contacts
-function loadcontacts()
-{
-   jQuery(document).ready(function($) {
-        loadcommonthings();
-        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/','friends');
+function sendRequest(player_code) {
+    jQuery(document).ready(function($) {
         $(".add-friends-container").hide();
-        //showAgendaData();
-        
-        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/?gvm_json=1';
-        $(".all_conts").html('&nbsp');
-        var icon_class = '';
-        var link = '';
-        var team = '';
-        var divider = '';
-        var first_letter = '';
-        
-        var ficon_class = '';
-        var flink = '';
-        var fteam = '';
-        var fdivider = '';
-        var ffirst_letter = '';
+        $(".loading_send").show();
+        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/add/' + player_code + '?gvm_json=1';
+
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
-            success: function(obj) {    
-              //alert(obj.receivedFriendsRequests.length)
-              if(obj.receivedFriendsRequests.length > 0)
-              {
-                  $('.contacts_request').show();
-                  $('.friends-requests-container').show();
-              }
-            $.each( obj.receivedFriendsRequests, function( key, val ) {
-                if(checkdefined(val.event_user_id) == 'yes')
-                {
-                    
-                     ficon_class = '';
-                     flink = '';
-                     fteam = '';
-                     fdivider = '';
-                      // alert(val.fName[0].toUpperCase());
-                   if(ffirst_letter != val.fName[0].toUpperCase())
-                   {
-                        fdivider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-                   }
-                   
-                   ffirst_letter = val.fName[0].toUpperCase();
-                 
-                   
-                   if(checkdefined(val.team) == 'yes')
-                   {
-                      fteam = '&lt;'+val.team+'&gt;';
-                   }
-                    ficon_class = 'pending';
-                    flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+fteam+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">Decline</a><a href="#" onclick=approveRequest("'+val.player_code+'") class="success send-friend-request">Approve</a></div></div>';
-                
-                 
-                $('.friends-requests-container').append(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>'); 
-                //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
-                
-               }
-            });
-            
-            
-             $.each( obj.eventUserFriends, function( key, val ) {
-             icon_class = '';
-             link = '';
-             team = '';
-             divider = '';
-             
-             if(first_letter != val.fName[0].toUpperCase())
-             {
-                   //alert(first_letter)
-                  //alert(val.fName[0].toUpperCase())
-                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-             }
-             
-             first_letter = val.fName[0].toUpperCase();
-             
-             if(key == 0 && val.fName[0] != 'A')
-             {
-                 divider = '<div class="friends-item-title"> </div>';
-             }
-             
-              
-             if(checkdefined(val.team) == 'yes')
-             {
-                team = '&lt;'+val.team+'&gt;';
-             }
-             
-             if(val.is_friend == 1 && val.status == 1)
-             {
-                icon_class = 'pending';
-                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
-             }
-             if(val.is_friend == 1 && val.status == 2)
-             {
-                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
-             }
-             if(val.is_friend == 0 && obj.enableFriendsRequests == true)
-             {
-                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
-             }
-             
-             if(val.is_friend == 0 && obj.enableFriendsRequests != true)
-             {
-                 link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> ';
-             }
-             
-            $('.all_conts').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
-            $(".loading_agenda_items").hide();
-            $(".add-friends-container").show();
-             
-             });
-           }
-           
-           });
-  });            
+            success: function(obj) {
+                showcommoncontacts(obj);
+                $('.form-container').prepend('<div class="alert alert-success">Contact Request Sent</div>');
+                $(".add-friends-container").show();
+                $(".loading_send").hide();
+                $(".alert-success").fadeOut(5000);
+            }
+
+        });
+    });
+}
+
+function showcommoncontacts(obj) {
+    var icon_class = '';
+    var link = '';
+    var team = '';
+    var divider = '';
+    var first_letter = '';
+    $(".all_conts").html('&nbsp');
+    var ficon_class = '';
+    var flink = '';
+    var fteam = '';
+    var fdivider = '';
+    var ffirst_letter = '';
+    //alert(obj.receivedFriendsRequests.length)
+    if (obj.receivedFriendsRequests.length > 0) {
+        $('.contacts_request').show();
+        $('.friends-requests-container').show();
+    }
+    $.each(obj.receivedFriendsRequests, function(key, val) {
+        if (checkdefined(val.event_user_id) == 'yes') {
+
+            ficon_class = '';
+            flink = '';
+            fteam = '';
+            fdivider = '';
+            // alert(val.fName[0].toUpperCase());
+            if (ffirst_letter != val.fName[0].toUpperCase()) {
+                fdivider = '<div class="friends-item-title"> ' + val.fName[0].toUpperCase() + ' </div>';
+            }
+
+            ffirst_letter = val.fName[0].toUpperCase();
+
+
+            if (checkdefined(val.team) == 'yes') {
+                fteam = '&lt;' + val.team + '&gt;';
+            }
+            ficon_class = 'pending';
+            flink = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + fteam + '</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Incoming contact request</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("' + val.player_code + '") class="danger cancel-friend-request">Decline</a><a href="#" onclick=approveRequest("' + val.player_code + '") class="success send-friend-request">Approve</a></div></div>';
+
+
+            $('.friends-requests-container').append(fdivider + '<div class="friends-item-wrapper ' + ficon_class + '">  ' + flink + '  </div>');
+            //alert(fdivider+'<div class="friends-item-wrapper '+ficon_class+'">  '+flink+'  </div>')  
+
+        }
+    });
+
+
+    $.each(obj.eventUserFriends, function(key, val) {
+        icon_class = '';
+        link = '';
+        team = '';
+        divider = '';
+        //alert(val.fName)
+        if (first_letter != val.fName[0].toUpperCase()) {
+            //alert(first_letter)
+            //alert(val.fName[0].toUpperCase())
+            divider = '<div class="friends-item-title"> ' + val.fName[0].toUpperCase() + ' </div>';
+        }
+
+        first_letter = val.fName[0].toUpperCase();
+        //alert(first_letter)
+        if (key == 0 && val.fName[0] != 'A') {
+            divider = '<div class="friends-item-title"> </div>';
+        }
+
+
+        if (checkdefined(val.team) == 'yes') {
+            team = '&lt;' + val.team + '&gt;';
+        }
+
+        if (val.is_friend == 1 && val.status == 1) {
+            icon_class = 'pending';
+            link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + team + '</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("' + val.player_code + '") class="danger cancel-friend-request">No</a></div></div>';
+        }
+        if (val.is_friend == 1 && val.status == 2) {
+            link = '<div class="friends-item"><a onclick="viewfriend(' + val.event_user_id + ')" href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + team + '</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
+        }
+        if (val.is_friend == 0 && obj.enableFriendsRequests == true) {
+            link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + team + '</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("' + val.player_code + '") class="success send-friend-request">Yes</a></div></div>';
+        }
+
+        if (val.is_friend == 0 && obj.enableFriendsRequests != true) {
+            link = '<div class="friends-item"><a href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + team + '</h6><span><i class="gicon-friends"></i></span></a></div> ';
+        }
+
+        $('.all_conts').append(divider + '<div class="friends-item-wrapper ' + icon_class + '">  ' + link + '  </div>');
+        $(".loading_agenda_items").hide();
+        $(".add-friends-container").show();
+        // alert(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>')
+    });
+
 }
 
 //function to load contacts
-function loadyourcontacts()
-{
-   jQuery(document).ready(function($) {
+function loadcontacts() {
+    jQuery(document).ready(function($) {
         loadcommonthings();
-        importfooter('user-add-friend/-/OCintranet-'+static_event_id+'/friends','friends');
+        importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/', 'friends');
         $(".add-friends-container").hide();
         //showAgendaData();
-        
-        var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/friends?gvm_json=1';
+
+        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+                showcommoncontacts(obj);
+            }
+
+        });
+    });
+}
+
+//function to load your friends
+function loadyourcontacts() {
+    jQuery(document).ready(function($) {
+        loadcommonthings();
+        importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/friends', 'friends');
+        $(".add-friends-container").hide();
+        //showAgendaData();
+
+        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/friends?gvm_json=1';
         $(".friends-items-container").html('&nbsp');
         var icon_class = '';
         var link = '';
@@ -2497,62 +1970,56 @@ function loadyourcontacts()
             dataType: "json",
             method: "GET",
             success: function(obj) {
-             $.each( obj.eventUserFriends, function( key, val ) {
-             icon_class = '';
-             link = '';
-             team = '';
-             divider = '';
-             
-             if(first_letter != val.fName[0].toUpperCase())
-             {
-                   //alert(first_letter)
-                  //alert(val.fName[0].toUpperCase())
-                  divider = '<div class="friends-item-title"> '+val.fName[0].toUpperCase()+' </div>';
-             }
-             
-             first_letter = val.fName[0].toUpperCase();
-             
-             if(key == 0 && val.fName[0] != 'A')
-             {
-                 divider = '<div class="friends-item-title"> </div>';
-             }
-             
-              
-             if(checkdefined(val.team) == 'yes')
-             {
-                team = '&lt;'+val.team+'&gt;';
-             }
-             
-             if(val.is_friend == 1 && val.status == 1)
-             {
-                icon_class = 'pending';
-                link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("'+val.player_code+'") class="danger cancel-friend-request">No</a></div></div>';
-             }
-             if(val.is_friend == 1 && val.status == 2)
-             {
-                link = '<div class="friends-item"><a onclick="viewfriend('+val.event_user_id+')" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
-             }
-             if(val.is_friend == 0)
-             {
-                 link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url('+val.image+');"></div><h2> '+val.fullName+'</h2><h6>'+team+'</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("'+val.player_code+'") class="success send-friend-request">Yes</a></div></div>';
-             }
-             
-            $('.friends-items-container').append(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>');   
-            $(".loading_agenda_items").hide();
-            $(".add-friends-container").show();
-             
-             });
-           }
-           
-           });
-  });            
+                $.each(obj.eventUserFriends, function(key, val) {
+                    icon_class = '';
+                    link = '';
+                    team = '';
+                    divider = '';
+
+                    if (first_letter != val.fName[0].toUpperCase()) {
+                        //alert(first_letter)
+                        //alert(val.fName[0].toUpperCase())
+                        divider = '<div class="friends-item-title"> ' + val.fName[0].toUpperCase() + ' </div>';
+                    }
+
+                    first_letter = val.fName[0].toUpperCase();
+
+                    if (key == 0 && val.fName[0] != 'A') {
+                        divider = '<div class="friends-item-title"> </div>';
+                    }
+
+
+                    if (checkdefined(val.team) == 'yes') {
+                        team = '&lt;' + val.team + '&gt;';
+                    }
+
+                    if (val.is_friend == 1 && val.status == 1) {
+                        icon_class = 'pending';
+                        link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + team + '</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Keep waiting for response?</h4><div class="confirm-btn-wrapper"><a href="#" onclick=cancelRequest("' + val.player_code + '") class="danger cancel-friend-request">No</a></div></div>';
+                    }
+                    if (val.is_friend == 1 && val.status == 2) {
+                        link = '<div class="friends-item"><a onclick="viewfriend(' + val.event_user_id + ')" href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + team + '</h6><span><i class="fa fa-angle-right"></i></span></a></div>';
+                    }
+                    if (val.is_friend == 0) {
+                        link = '<div class="friends-item"><a class="toggle-friend-request-confirmation" href="#"><div class="friends-item-img" style="background-image: url(' + val.image + ');"></div><h2> ' + val.fullName + '</h2><h6>' + team + '</h6><span><i class="gicon-friends"></i></span></a></div> <div class="friend-request-confirm-wrapper"><h4>Send contact request?</h4><div class="confirm-btn-wrapper"><a href="" class="danger cancel">No</a><a href="#" onclick=sendRequest("' + val.player_code + '") class="success send-friend-request">Yes</a></div></div>';
+                    }
+
+                    $('.friends-items-container').append(divider + '<div class="friends-item-wrapper ' + icon_class + '">  ' + link + '  </div>');
+                    $(".loading_agenda_items").hide();
+                    $(".add-friends-container").show();
+
+                });
+            }
+
+        });
+    });
 }
 
 //Load profile page variables
 function loadprofile() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
 
-    importfooter('user-profile','profile');
+    importfooter('user-profile', 'profile');
     db.transaction(function(tx) {
 
         tx.executeSql("SELECT * FROM OCEVENTS_qa where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
@@ -2577,11 +2044,11 @@ function loadprofile() {
                 $(".selfie_button").html('<button class="pic-remove" onclick="removeprofileimage();" type="button" name="remove_pic" value="1">Remove Selfie From Your Profile</button>');
             }
             $(".facebook-link").show();
-           // alert(results.rows.item(0).fb_user_id);
+            // alert(results.rows.item(0).fb_user_id);
             if (results.rows.item(0).fb_user_id != null && results.rows.item(0).fb_user_id != 'null' && results.rows.item(0).fb_user_id != '' && results.rows.item(0).fb_user_id != undefined) {
                 //alert('here')
                 $(".facebook-link").hide();
-                 $("#unlinkfacebook").show(); 
+                $("#unlinkfacebook").show();
             }
 
 
@@ -2611,10 +2078,10 @@ function loadprofile() {
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
             var len = results.rows.length;
-            
-                $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
-            
-         
+
+            $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
+
+
 
         });
     });
@@ -2627,24 +2094,22 @@ function loadcommonthings() {
             $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $(".log-info p").html(results.rows.item(0).first_name + " " + results.rows.item(0).last_name);
-            if(results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null')
-            {
-              $(".log-info p").append("<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br />");
-            }            
+            if (results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null') {
+                $(".log-info p").append("<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br />");
+            }
             //$(".log-info p").append("</p>");
             $(".firstname a").html(results.rows.item(0).first_name);
-            if(results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null')
-            {
-              $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
+            if (results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null') {
+                $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
             }
-            
+
             $(".lastname a").html(results.rows.item(0).last_name);
             $(".fa-trophy").html("<span>#</span>" + results.rows.item(0).position);
         });
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
-            var len = results.rows.length;            
-                $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);            
+            var len = results.rows.length;
+            $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
         });
     });
 }
@@ -2677,15 +2142,14 @@ function login_process() {
         }
 
     });
-    
+
 }
 
-function importhomepage()
-{
-    
-         
-    
-    var main_url = server_url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id='+static_event_id;
+function importhomepage() {
+
+
+
+    var main_url = server_url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + static_event_id;
     // alert('here');
     jQuery.ajax({
         url: main_url,
@@ -2787,9 +2251,9 @@ function importhomepage()
                     }
 
                 } else if (obj.data.type == 'url') {
-                      
-                      downloadLogoFile(obj.data.url,obj.data.type,obj.data.main_logo_image.small_url);
-                      
+
+                    downloadLogoFile(obj.data.url, obj.data.type, obj.data.main_logo_image.small_url);
+
                 } else {
                     db.transaction(function(tx) {
                         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
@@ -2801,7 +2265,7 @@ function importhomepage()
             }
         }
     });
-    
+
 }
 
 var pictureSource; // picture source
@@ -2819,221 +2283,190 @@ function onDeviceReady() {
 }
 
 //function to download logo from server
-function downloadLogoFile(url,type,img_src)
-{
-  var DIR_Name = 'oc_photos';
-  //alert(img_src);
-  var a = new DirManager();
-  a.create_r(DIR_Name, Log('created successfully'));
-  var b = new FileManager();
-  var image_name = getFileNameFromPath(img_src);
-  var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src; 
-  jQuery.ajax({
-      url: STR,
-      dataType: "html",
-      success: function(DtatURL) {
-      b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {      
-        var img_uri = theFile.toURI();
-        //alert(img_uri);
-        db.transaction(function(tx) {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
-        tx.executeSql("delete from OCEVENTS_homepage");
-        tx.executeSql("INSERT INTO OCEVENTS_homepage (user_id,iframe_url,type,main_logo_small_image) VALUES ('" + localStorage.user_id + "','" + url + "','" + type + "','" + img_uri + "')");
-        window.location.href = "gamification.html";
-      });
-      });
-    }
-  });
+function downloadLogoFile(url, type, img_src) {
+    var DIR_Name = 'oc_photos';
+    //alert(img_src);
+    var a = new DirManager();
+    a.create_r(DIR_Name, Log('created successfully'));
+    var b = new FileManager();
+    var image_name = getFileNameFromPath(img_src);
+    var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+    jQuery.ajax({
+        url: STR,
+        dataType: "html",
+        success: function(DtatURL) {
+            b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                var img_uri = theFile.toURI();
+                //alert(img_uri);
+                db.transaction(function(tx) {
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
+                    tx.executeSql("delete from OCEVENTS_homepage");
+                    tx.executeSql("INSERT INTO OCEVENTS_homepage (user_id,iframe_url,type,main_logo_small_image) VALUES ('" + localStorage.user_id + "','" + url + "','" + type + "','" + img_uri + "')");
+                    window.location.href = "gamification.html";
+                });
+            });
+        }
+    });
 }
 
 //function to import footer links
-function importfooter(page,active)
-{
-  //alert(page);
-  //alert(active);
-  var main_url = server_url + page + '/?gvm_json=1&event_id='+static_event_id;
+function importfooter(page, active) {
+    //alert(page);
+    //alert(active);
+    var main_url = server_url + page + '/?gvm_json=1&event_id=' + static_event_id;
     db.transaction(function(tx) {
 
-            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
-            tx.executeSql("delete from OCEVENTS_footerlinks");
-            
-            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
-            tx.executeSql("delete from OCEVENTS_footermorelinks");
-     });                   
+        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+        tx.executeSql("delete from OCEVENTS_footerlinks");
+
+        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+        tx.executeSql("delete from OCEVENTS_footermorelinks");
+    });
     jQuery.ajax({
         url: main_url,
         dataType: "json",
         method: "GET",
         success: function(data) {
-        if(data._footerMenuData != undefined && data._footerMenuData != 'undefined')
-        {
-           var getdata =   data._footerMenuData;
-        }
-        else
-        {
-           var getdata =   data.data._footerMenuData;
-        }
-            jQuery.each( getdata.mainButtons, function( key, val ) {
-                       //alert(val.name);
-                     db.transaction(function(tx) {
-                     var friend_count = 0;
-                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
-                         {
-                            friend_count = val.friends_requests_count;
-                         }
-                         tx.executeSql("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
-                         //alert("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
-                     });
-            });
-             jQuery.each( getdata.moreButtons, function( key, val ) {
-             
-                    db.transaction(function(tx) {
-                         var mfriend_count = 0;
-                         if(val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined')
-                         {
-                            mfriend_count = val.friends_requests_count;
-                         }
-                         tx.executeSql("insert into OCEVENTS_footermorelinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+mfriend_count+"','"+val.text+"')");
-                    });
-              });
-              showfooter(active);
+            if (data._footerMenuData != undefined && data._footerMenuData != 'undefined') {
+                var getdata = data._footerMenuData;
+            } else {
+                var getdata = data.data._footerMenuData;
             }
-        });
+            jQuery.each(getdata.mainButtons, function(key, val) {
+                //alert(val.name);
+                db.transaction(function(tx) {
+                    var friend_count = 0;
+                    if (val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined') {
+                        friend_count = val.friends_requests_count;
+                    }
+                    tx.executeSql("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('" + val.name + "','" + val.icon_class + "','" + friend_count + "','" + val.text + "')");
+                    //alert("insert into OCEVENTS_footerlinks (name,icon,friends_requests_count,menu_text) values ('"+val.name+"','"+val.icon_class+"','"+friend_count+"','"+val.text+"')");
+                });
+            });
+            jQuery.each(getdata.moreButtons, function(key, val) {
+
+                db.transaction(function(tx) {
+                    var mfriend_count = 0;
+                    if (val.friends_requests_count != '' && val.friends_requests_count != undefined && val.friends_requests_count != null && val.friends_requests_count != 'null' && val.friends_requests_count != 'undefined') {
+                        mfriend_count = val.friends_requests_count;
+                    }
+                    tx.executeSql("insert into OCEVENTS_footermorelinks (name,icon,friends_requests_count,menu_text) values ('" + val.name + "','" + val.icon_class + "','" + mfriend_count + "','" + val.text + "')");
+                });
+            });
+            showfooter(active);
+        }
+    });
 }
 
 //function to show footer links
-function showfooter(active)
-{
+function showfooter(active) {
     db.transaction(function(tx) {
-      tx.executeSql("SELECT * FROM OCEVENTS_footerlinks", [], function(tx, results) {
-          var len = results.rows.length;
-          //alert(len)
-          if(len > 0)
-          {
-            jQuery('.footer-menu').html('');
-            var link = '';
-            var name = '';
-            var menu_text = '';
-            var icon = '';
-            var active_class = '';            
-            for (i = 0; i < len; i++) {
-              name = results.rows.item(i).name;
-              if(name == active)
-              {
-                 active_class = 'active'; 
-              }
-              else
-              {
-                active_class = '';  
-              }
-              if(name == 'home')
-              {
-                link = 'gamification.html';
-              }
-              else if(name == 'agenda')
-              {
-                link = 'agenda.html';
-              }
-              else if(name == 'friends')
-              {
-                link = 'contacts.html';
-              }
-              else if(name == 'points')
-              {
-                link = 'points.html';
-              }
-              
-              var friends_requests_count = results.rows.item(i).friends_requests_count;
-              if(friends_requests_count > 0)
-              {
-                var count_label = '<span class="count-label">'+friends_requests_count+'</span>';
-              }
-              else
-              {
-                var count_label = '';
-              }
-              menu_text = results.rows.item(i).menu_text;
-              
-              icon = results.rows.item(i).icon;            
-              jQuery('.footer-menu').append("<div class='label-container "+active_class+"'><a href="+link+"><label>"+count_label+"<i class="+icon+"></i><p>"+menu_text+"</p></label></a></div>");  
+        tx.executeSql("SELECT * FROM OCEVENTS_footerlinks", [], function(tx, results) {
+            var len = results.rows.length;
+            //alert(len)
+            if (len > 0) {
+                jQuery('.footer-menu').html('');
+                var link = '';
+                var name = '';
+                var menu_text = '';
+                var icon = '';
+                var active_class = '';
+                for (i = 0; i < len; i++) {
+                    name = results.rows.item(i).name;
+                    if (results.rows.item(i).icon == 'gicon-sponsors') {
+                        name = 'sponsors';
+                    }
+
+                    if (name == active) {
+                        active_class = 'active';
+                    } else {
+                        active_class = '';
+                    }
+                    if (name == 'home') {
+                        link = 'gamification.html';
+                    } else if (name == 'agenda') {
+                        link = 'agenda.html';
+                    } else if (name == 'friends') {
+                        link = 'contacts.html';
+                    } else if (name == 'points') {
+                        link = 'points.html';
+                    } else if (name == 'sponsors') {
+                        link = 'sponsors.html';
+                    }
+
+                    var friends_requests_count = results.rows.item(i).friends_requests_count;
+                    if (friends_requests_count > 0) {
+                        var count_label = '<span class="count-label">' + friends_requests_count + '</span>';
+                    } else {
+                        var count_label = '';
+                    }
+                    menu_text = results.rows.item(i).menu_text;
+
+                    icon = results.rows.item(i).icon;
+                    jQuery('.footer-menu').append("<div class='label-container " + active_class + "'><a href=" + link + "><label>" + count_label + "<i class=" + icon + "></i><p>" + menu_text + "</p></label></a></div>");
+                }
             }
-          }          
-      });
-      tx.executeSql("SELECT * FROM OCEVENTS_footermorelinks", [], function(tx, results) {
-          var len = results.rows.length; 
-          //alert(len)          
-           if(len > 0)
-           {
-              jQuery('.footer-menu').append('<div class="more-btn label-container"><label><i class="gicon-more"></i><p>More</p></label></div> ');
-           
-              var more_wrapper = '<div class="more-wrapper"><div class="footer-menu-opened"><ul><li><label><a id="home" href="gamification.html"><i class="gicon-welcome"></i><span>Home</span></a></label></li></ul><ul class="divider"><li><i class="gicon-gamification"></i><span class="line"></span></li></ul><ul>';
-              //jQuery('.footer-menu').html('');
-            var link = '';
-            var name = '';
-            var menu_text = '';
-            var icon = '';
-            var active_class = '';            
-            for (i = 0; i < len; i++) {
-              name = results.rows.item(i).name;
-              if(name == active)
-              {
-                 active_class = 'active'; 
-              }
-              else
-              {
-                active_class = '';  
-              }
-              if(name == 'home')
-              {
-                link = 'gamification.html';
-              }
-              else if(name == 'agenda')
-              {
-                link = 'agenda.html';
-              }
-              else if(name == 'friends')
-              {
-                link = 'contacts.html';
-              }
-              else if(name == 'points')
-              {
-                link = 'points.html';
-              }
-              menu_text = results.rows.item(i).menu_text;               
-              icon = results.rows.item(i).icon; 
-              more_wrapper += '<li><label><a href='+link+'><i class='+icon+'></i><span>'+menu_text+'</span></a></label></li>';
-          }    
-              
-              
-              more_wrapper += '</ul></div></div>';
-               //more_wrapper += '';
-              // alert(more_wrapper);
-              
-              jQuery('.footer-menu').prepend(more_wrapper); 
-              jQuery('.more-btn').on('click', function ()
-              {	
-          		  jQuery('.footer-menu').toggleClass('footer-menu-open');
-          	  });
-           }
-      });    
+        });
+        tx.executeSql("SELECT * FROM OCEVENTS_footermorelinks", [], function(tx, results) {
+            var len = results.rows.length;
+            //alert(len)          
+            if (len > 0) {
+                jQuery('.footer-menu').append('<div class="more-btn label-container"><label><i class="gicon-more"></i><p>More</p></label></div> ');
+
+                var more_wrapper = '<div class="more-wrapper"><div class="footer-menu-opened"><ul><li><label><a id="home" href="gamification.html"><i class="gicon-welcome"></i><span>Home</span></a></label></li></ul><ul class="divider"><li><i class="gicon-gamification"></i><span class="line"></span></li></ul><ul>';
+                //jQuery('.footer-menu').html('');
+                var link = '';
+                var name = '';
+                var menu_text = '';
+                var icon = '';
+                var active_class = '';
+                for (i = 0; i < len; i++) {
+                    name = results.rows.item(i).name;
+                    if (name == active) {
+                        active_class = 'active';
+                    } else {
+                        active_class = '';
+                    }
+                    if (name == 'home') {
+                        link = 'gamification.html';
+                    } else if (name == 'agenda') {
+                        link = 'agenda.html';
+                    } else if (name == 'friends') {
+                        link = 'contacts.html';
+                    } else if (name == 'points') {
+                        link = 'points.html';
+                    }
+                    menu_text = results.rows.item(i).menu_text;
+                    icon = results.rows.item(i).icon;
+                    more_wrapper += '<li><label><a href=' + link + '><i class=' + icon + '></i><span>' + menu_text + '</span></a></label></li>';
+                }
+
+
+                more_wrapper += '</ul></div></div>';
+                //more_wrapper += '';
+                // alert(more_wrapper);
+
+                jQuery('.footer-menu').prepend(more_wrapper);
+                jQuery('.more-btn').on('click', function() {
+                    jQuery('.footer-menu').toggleClass('footer-menu-open');
+                });
+            }
+        });
     });
 }
 
 //function to delete entries from all the tables
-function truncatealltables()
-{
-  db.transaction(function(tx) {
-    tx.executeSql('delete from OCEVENTS_user');
-    tx.executeSql('delete from OCEVENTS_ticket');
-    tx.executeSql('delete from OCEVENTS_points');
-    tx.executeSql('delete from OCEVENTS_agenda');
-    tx.executeSql('delete from OCEVENTS_qa');
-    tx.executeSql('delete from OCEVENTS_homepage');
-    tx.executeSql('delete from OCEVENTS_teampoints');
-    tx.executeSql('delete from OCEVENTS_yourteampoints');
-    tx.executeSql('delete from OCEVENTS_footerlinks');
-    tx.executeSql('delete from OCEVENTS_footermorelinks');
-  });        
+function truncatealltables() {
+    db.transaction(function(tx) {
+        tx.executeSql('delete from OCEVENTS_user');
+        tx.executeSql('delete from OCEVENTS_ticket');
+        tx.executeSql('delete from OCEVENTS_points');
+        tx.executeSql('delete from OCEVENTS_agenda');
+        tx.executeSql('delete from OCEVENTS_qa');
+        tx.executeSql('delete from OCEVENTS_homepage');
+        tx.executeSql('delete from OCEVENTS_teampoints');
+        tx.executeSql('delete from OCEVENTS_yourteampoints');
+        tx.executeSql('delete from OCEVENTS_footerlinks');
+        tx.executeSql('delete from OCEVENTS_footermorelinks');
+    });
 }
-
-
