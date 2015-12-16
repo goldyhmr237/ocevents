@@ -1780,7 +1780,7 @@ function loadfrienddetail() {
 //function to download vCard
 function downloadVcard(url) {
     var download_url = server_url + url;
-    //alert(download_url)
+    alert(download_url)
     navigator.app.loadUrl(download_url, { openExternal:true });
     //window.open(download_url, '_system');
     //alert(download_url)
