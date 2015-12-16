@@ -2078,7 +2078,7 @@ function loadprofile() {
             $("#mobile_edit").val(results.rows.item(0).mobile);
             $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
 
-            $(".fa-trophy").html("<span>#</span>" + results.rows.item(0).position);
+            $(".fa-trophy").html("<span> # </span>" + results.rows.item(0).position);
         });
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
@@ -2109,7 +2109,7 @@ function loadcommonthings() {
             }
 
             $(".lastname a").html(results.rows.item(0).last_name);
-            $(".fa-trophy").html("<span>#</span>" + results.rows.item(0).position);
+            $(".fa-trophy").html("<span> # </span>" + results.rows.item(0).position);
         });
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
