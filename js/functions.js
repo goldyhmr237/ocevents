@@ -985,13 +985,41 @@ function showPointsData() {
                 if (results.rows.item(i).green_count != 0) {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');">' + green_count_html + results.rows.item(i).userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
+               var id = results.rows.item(i).userTotal ;
+                var user_total = formatpoints(id);
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
 
         });
     });
+}
+
+//function to format points string
+function formatpoints(id)
+{
+  if(id.length == 7)
+   {
+      var user_total = id[0]+id[1]+id[2]+id[3]+' '+id[4]+id[5]+id[6];
+   }
+   else if(id.length == 6)
+   {
+      var user_total = id[0]+id[1]+id[2]+' '+id[3]+id[4]+id[5];
+   } 
+   else if(id.length == 5)
+   {
+      var user_total = id[0]+id[1]+' '+id[2]+id[3]+id[4];
+   } 
+   else if(id.length == 4)
+   {
+      var user_total = id[0]+' '+id[1]+id[2]+id[3];
+   }
+   else
+   {
+      var user_total = id;
+   }
+   return user_total;
 }
 
 //function to go to user point detail page
@@ -1040,7 +1068,9 @@ function loaduserdetail() {
                         var newtd = '<td class="avatar-col"></td>';
                     }
                     i++;
-                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + val.total + '</td></tr>');
+                     var id = val.total ;
+                 var user_total = formatpoints(id);
+                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + user_total + '</td></tr>');
 
                 });
                 var difference = Number(10) - Number(i);
@@ -1075,8 +1105,9 @@ function loaduserdetail() {
                     } else {
                         var cnt = '';
                     }
-
-                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotopoints(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + val.instance_id + ')">' + cnt + val.userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
+                    var id = val.userTotal ;
+                 var user_total = formatpoints(id);
+                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotopoints(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + val.instance_id + ')">' + cnt + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
 
                 });
                 jQuery(".leaderboards-container").show();
@@ -1182,7 +1213,9 @@ function showTeamPointsData() {
                 if (results.rows.item(i).green_count != 0) {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gototeamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gototeamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + results.rows.item(i).userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
+                 var id = results.rows.item(i).userTotal ;
+                 var user_total = formatpoints(id);
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gototeamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gototeamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1230,7 +1263,9 @@ function loaddetailteampoints() {
                     } else {
                         var classcss = "";
                     }
-                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + val.pos + '</span></td><td><span class="name">' + key + '</span></td><td class="point">' + val.points + '</td></tr>');
+                    var id = val.points ;
+                 var user_total = formatpoints(id);
+                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + val.pos + '</span></td><td><span class="name">' + key + '</span></td><td class="point">' + user_total + '</td></tr>');
 
 
                     i++;
@@ -1262,8 +1297,9 @@ function loaddetailteampoints() {
                     } else if (val.name == 'Total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
                     }
-
-                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gototeamdetail(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gototeamdetail(' + val.instance_id + ')">' + val.points + '<i class="fa fa-angle-right"></i></a></td></tr>');
+                    var id = val.points ;
+                 var user_total = formatpoints(id);
+                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gototeamdetail(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gototeamdetail(' + val.instance_id + ')">' + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
 
                 });
                 jQuery(".leaderboards-container").show();
@@ -1316,14 +1352,16 @@ function loadyourdetailteampoints() {
                     } else {
                         var classcss = "";
                     }
-                    i++;
+                    i++;  
+                    var id = val.total ;
+                 var user_total = formatpoints(id);
                     if (val.image != '') {
                         var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url(' + val.image + ');"></div></span></td>';
                     } else {
                         var newtd = '<td class="avatar-col"></td>';
                     }
                     //alert(newtd)        
-                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + val.total + '</td></tr>');
+                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + user_total + '</td></tr>');
 
                 });
                 var difference = Number(10) - Number(i);
@@ -1353,9 +1391,10 @@ function loadyourdetailteampoints() {
                     } else if (val.name == 'Total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
                     }
-
-
-                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')">' + val.points + '<i class="fa fa-angle-right"></i></a></td></tr>');
+                    
+                      var id = val.points ;
+                 var user_total = formatpoints(id);
+                    $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')">' + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
 
                 });
                 jQuery(".leaderboards-container").show();
@@ -1463,7 +1502,9 @@ function showYourTeamPointsData() {
                 if (results.rows.item(i).green_count != 0) {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
-                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + results.rows.item(i).userTotal + '<i class="fa fa-angle-right"></i></a></td></tr>');
+                var id = results.rows.item(i).userTotal ;
+                 var user_total = formatpoints(id);
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -1740,7 +1781,10 @@ function loadfrienddetail() {
 function downloadVcard(url) {
     var download_url = server_url + url;
     //alert(download_url)
-    var fileTransfer = new FileTransfer();
+    navigator.app.loadUrl(download_url, { openExternal:true });
+    //window.open(download_url, '_system');
+    //alert(download_url)
+    /*var fileTransfer = new FileTransfer();
     var store = cordova.file.dataDirectory;
     fileTransfer.download(
         download_url,
@@ -1754,7 +1798,7 @@ function downloadVcard(url) {
             alert("download error target " + error.target);
             alert("upload error code: " + error.code);
         }
-    );
+    ); */
 }
 
 function showLink(url) {
