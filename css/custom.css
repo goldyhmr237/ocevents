@@ -285,23 +285,7 @@
     color: inherit;
 }
 
-#homepage-content {
-   width: 100%;
-    height: 100%;   position: absolute;
-    /*display: block;
-   
-    padding-top: 70px;
-    padding-bottom: 90px;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border: none;
-   
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    min-height:100%;*/
-}
+
 .breadcrumbs a {
     color: #fff;
 }
@@ -884,4 +868,27 @@ header, footer {
     -moz-transition: all 0.3s linear;
     -o-transition: all 0.3s linear;
     transition: all 0.3s linear;
+}
+
+/*Added By Rahul*/
+#homepage-content {
+   width: 100%;
+    height: 100%;   position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    /*display: block;
+   
+    padding-top: 70px;
+    padding-bottom: 90px;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border: none;
+   
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    min-height:100%;*/
 }
