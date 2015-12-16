@@ -8048,10 +8048,11 @@ ul {
 }
 .main-container .header-title p .breadcrumbs {
     padding: 0 10px;
-    width: 90%;
+    width: auto;/* Width Modified from rahul width: 90%; */
 }
 .main-container .header-title p .nav-arrow {
-    width: 5%;
+  /* Width Modified from rahul width: 5%; */
+    width: auto;
 }
 .main-container .header-title p i {
   font-size: 26px;
@@ -13070,7 +13071,7 @@ padding:12px;
 {
    position:relative;bottom:250px;
 }
-
+  /*
 .label-container {
   height: 50px !important;
 }
@@ -13080,4 +13081,4 @@ padding:12px;
 footer .footer-menu .label-container label {
   
   line-height: 30px;
-} 
+} */

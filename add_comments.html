@@ -29,14 +29,13 @@
             <script type="text/javascript">
                 document.addEventListener("deviceready", onDeviceReady, false);
                function onDeviceReady() {
-        //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
-           jQuery(document).ready(function($)
+             jQuery(document).ready(function($)
             {
-                  //loadagenda();
+                  showcomments();
             });
     }
     var localLink = '/';
-                var GHomepageLink = "profile.html";
+                var GHomepageLink = "add_comments.html";
             </script>
             </head>
     <body class="">
@@ -80,81 +79,141 @@
                             </div>
         </div>
     </div>
-</header>            
-<div align="center" class="container loading_agenda_items main-container">
-       <br />
-        Loading current agenda items...
-        <br />
-        <img src="img/loading.gif" />
-</div>
-<div class="container main-container agenda-container">
-	<div class="row">
-		<div class="agenda-header-wrapper">
+</header>
+
+ <div class="container main-container questions-container">
+	<div class="header-title row">
+		<p class="presentation-item-header">
 			
-			<div class="calendar-icon-wrapper col-xs-4">
-				<i class="gicon-agenda"></i>
-			</div>
-			<div class="header-title col-xs-4">
-                <h1>Agenda</h1>
-			</div>
-			<div class="see-all-wrapper col-xs-4">
-				<span>
-                    <a style="color: #fff;text-decoration: none;" href="agenda_all.html" data-type="all">
-                        <span>See All</span>
-                        <i class="fa fa-clock-o"></i>
-                    </a>
-                </span>
+<a class="nav-arrow prev" href="#" title="Back to presentation"><i class="fa fa-angle-left"></i></a>
+
+<span class="breadcrumbs"><a href="agenda_item.html"></a> / 
+<span class="green-text"></span></span>		</p>
+	</div>
+			<div class="questions-heading-title row">
+			<div class="votes-count col-xs-6">
+				<i class="fa fa-comment"></i>
+                <span class="green-text">6</span> 
+                All comments			</div>
+			<div class="votes-sort col-xs-6">
+				<span>Sort by:</span>
+                <a class="active" href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/sort/timestamp/desc">
+                                        <i class="fa fa-caret-up"></i> 
+                                        Time                </a>
+                <a href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/sort/likes/asc">
+                                        <i class="fa fa-caret-up"></i> 
+                                        Likes                </a>
 			</div>
 		</div>
-	</div>
-    <div id="presentations-list">
-                        <div class="row">
-                        <div class="date-wrapper ">
-                            <div class="date">
-                                <p>Torsdag 26. Juni</p>
+                    <div id="comment_281" class="questions-item-container row">
+        <div class="clearfix">
+            <div class="col-xs-2 questions-item-img">
+                                    <div class="img-wrapper" style="background-image:url('/resources/files/event/images/thumb_1442450115.jpg')"></div>
                             </div>
-                        </div>
-                    </div>
-                
-                <div class="row">
-                    <div class="agenda-content">
-                        <div class="agenda-item col-xs-12">
-                            <a href="http://beta.oceventmanager.com/View-presentation/-/100000/51">
-                                <div class="agenda-info">
-                                                        <div class="agenda-img" style="background-image: url(/resources/files/images/100176_6_a7068995c922ce0b0b839fcdf33d77de_medium.jpg);">
-                                                        <svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="" data-eta="">
-                        <circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle>
-                        <circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="0"></circle>   
-                    </svg>
+            <div class="col-xs-10 question-item-info">
+                <h3 class="clearfix">
+                    Christian Nytvedt                    <span>
+                        <i class="fa fa-clock-o"></i> 
+                        1 month                    </span>
+                </h3>
+                <div class="question-inner">
+                    <div><i class="fa fa-comment"></i></div>
+                    <p>
+                        I like to talk about, the bose headset, it has 
+an idiotic minijack plug...Meaning that to will need to have The phone 
+upside down in your pocket. Next you need tovhave the biiig po          
+          </p>
                 </div>
-                                    <div class="agenda-wrapper">
-                                        <span class="agenda-slogan">
-                                            1. Quiz test + rating                                        </span>
-                                        <i class="fa fa-angle-right"></i>
-                                                                                    <div class="agenda-person-info">
-                                                <span class="name">Quiz test subtitle</span>
-                                            </div>
-                                                                            </div>
-                                </div>
-                            </a>
-                            <div class="agenda-footer">
-                                                                &nbsp;
-                                                                <div class="meeting-location">
-                                    <i class="fa fa-map-marker"></i>
-                                    Barcelona                                </div>
-                                                            </div>
-                        </div>
-                    </div>
-                </div>
-                 
-                        </div>
+            </div>
+        </div>
+                        <div class="clearfix">
+                        <div class="likes-container">
+                                                        <a class="like-btn" href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/?action=like&amp;c_id=281&amp;like=1">
+                        <i class="fa fa-heart"></i> 
+                        like                    </a>
+                                        <a class="liked-btn">
+                        <i class="fa fa-heart"></i> 
+                        Liked                    </a>
+                    <div class="likes-count">
+                        <i class="fa fa-heart"></i> 
+                        0 
+                        Likes                    </div>
+                                            <div class="dislikes-count">
+                            - 0 
+                                                            <a href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/?action=like&amp;c_id=281&amp;like=0">
+                                    dislike                                </a>
+                                                    </div>
+                                                    <a class="reply-to-comment" href="">
+                    <i class="fa fa-reply"></i>
+                    Reply                </a>
+                            </div>
+        </div>
+        <div class="questions-filter-items reply-form clearfix hide">
+            
+<form id="replyform-281" method="post" action="/Add-comment/-/OCintranet-100041/163/submit" class="has-file-upload" enctype="multipart/form-data" data-max-number-of-files="30">
+
+<input name="submit_form" value="1" type="hidden">
+<input name="form_noresubmit_code" value="1450080084" type="hidden">
+
+<div data-role="fieldcontain" class="form-group hidden c281_comment_id"><input id="c281_comment_id" name="comment_id" value="281" type="hidden"></div><div data-role="fieldcontain" class="form-group hidden c281_action"><input id="c281_action" name="action" value="post_comment" type="hidden"></div><div data-role="fieldcontain" class="form-group fileupload c281_files"><i class="gicon-camera file-upload"><input id="c281_files" name="files[]" multiple="" type="file"></i></div><div data-role="fieldcontain" class="form-group textarea c281_comment"><textarea class="form-control" id="c281_comment" name="comment" maxlength="4096" placeholder="Partisipate, write a post"></textarea><span><i class="fa fa-comment"></i></span></div><div data-role="fieldcontain" class="form-group hidden c281_presentation_id"><input id="c281_presentation_id" name="presentation_id" value="163" type="hidden"></div>
+<div class="success-status hide">
+    <div class="success-icon-wrapper">
+        <i class="icon-check"></i>
+    </div>
+    <p></p>
 </div>
+
+<div class="error-status hide">
+    <div class="error-icon-wrapper">
+        <i class="fa fa-ban"></i>
+    </div>
+    <p></p>
+</div>
+
+<div class="clearfix">
+        <div data-role="fieldcontain" class="frm_field submit">
+        <button type="submit" name="submit">Send</button>
+                    <button type="submit" class="btn-danger reply-cancel" name="cancel">Cancel</button>
+            </div>
+    
+        <!-- The template to display files available for upload -->
+    <script id="template-upload" type="text/x-tmpl">
+  
+        <div class="template-upload swiper-slide fade">
+            <div class="name"></div>
+            <div class="preview"></div>
+            <i class="fa fa-times cancel"></i>
+        </div>
+    
+    </script>
+    <!-- The global progress state -->
+    <div class="col-xs-6 fileupload-progress fade">
+        <!-- The global progress bar -->
+        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+        </div>
+    </div>
+    </div>
+
+<div class="swiper-container swiper-container-horizontal">
+    <div class="files swiper-wrapper">
+    </div>
+</div>
+
+</form>
+        </div>
+    </div>
+        
+       
+</div>
+
 
                <footer>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 footer-menu">
-                 </div>
+                                                                        
+                    </div>
         </div>
     </div>
 </footer>     </div>
@@ -186,7 +245,7 @@
                         <p class="my-events-title">My events</p>
                                                 <p>
                             <a href="index.html" class="active">
-                                OCintranet</a>
+                              OCintranet                        </a>
                         </p>
                                             </div>
                 </div>
@@ -203,12 +262,12 @@
                                 Profile                            </a>
                         </li>
                                                 <li>
-                            <a href="ticket.html">
+                            <a class="active" href="ticket.html">
                                 <i class="gicon-my-ticket"></i>
                                 My ticket                            </a>
                         </li>
                                                 <li>
-                            <a class="active" href="agenda.html">
+                            <a href="agenda.html">
                                 <i class="gicon-agenda"></i>
                                 Agenda                            </a>
                         </li>
@@ -221,7 +280,7 @@
                             <a href="contacts.html">
                                 <i class="gicon-friends">
                                                                     </i>
-                               Add Contacts                          </a>
+                                Add Contacts                          </a>
                         </li>
                                                 <li>
                             To install, tap <span></span> and choose<br> "Add to Home Screen"

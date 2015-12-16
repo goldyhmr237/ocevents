@@ -726,7 +726,7 @@ function checkdefined(str) {
 function loadagendaitem() {
     jQuery(document).ready(function($) {
         loadcommonthings();
-        $(".agenda-item-container").hide();
+        //$(".agenda-item-container").hide();
         importfooter('View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda-item');
         var main_url = server_url + 'View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
         $.ajax({
@@ -746,6 +746,11 @@ function loadagendaitem() {
                 }
                 $(".green-text").html(data.presentation.title.value);
                 $(".agenda-item-img-info h5").html(data.presentation.title.value);
+                if(checkdefined(data.presentation.location) == 'yes')
+                {
+                   $(".agenda-item-img-info h5").after('<p><i class="fa fa-map-marker"></i>'+data.presentation.location+'</p>');
+                }
+                
                 $(".date p").html(data.presentation.group_item);
                 $(".future-title").html(data.presentation.speaker_name.value);
                 $(".future-info").html(data.presentation.description.value);
@@ -1548,7 +1553,7 @@ function showcommonagendalist(obj) {
                 img_str = '<div class="agenda-img">';
             }
 
-            $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda(' + val1.id + ')"><div class="agenda-info">' + img_str + '<svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="' + duration + '" data-eta="' + eta + '"><circle class="agenda-item-progress-bg" r="47.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="49.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: ' + pct + ';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
+            $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda(' + val1.id + ')"><div class="agenda-info">' + img_str + '<svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="' + duration + '" data-eta="' + eta + '"><circle class="agenda-item-progress-bg" r="42.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="298.45130209103036" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="44.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="311.01767270538954" stroke-dashoffset="" style="stroke-dashoffset: ' + pct + ';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
         });
         // }
     });
@@ -2420,6 +2425,7 @@ function showfooter(active) {
                 var menu_text = '';
                 var icon = '';
                 var active_class = '';
+                var onclick = '';
                 for (i = 0; i < len; i++) {
                     name = results.rows.item(i).name;
                     if (name == active) {
@@ -2436,15 +2442,25 @@ function showfooter(active) {
                     } else if (name == 'points') {
                         link = 'points.html';
                     }
+                    else
+                    {
+                      link = '#';
+                    }
+                    onclick = '';
+                    if(name == 'comments')
+                    {
+                      onclick = 'onclick=add_comments()';
+                    }
+                    //alert(onclick);
                     menu_text = results.rows.item(i).menu_text;
                     icon = results.rows.item(i).icon;
-                    more_wrapper += '<li><label><a href=' + link + '><i class=' + icon + '></i><span>' + menu_text + '</span></a></label></li>';
+                    more_wrapper += '<li><label><a href="' + link + '" '+onclick+'><i class=' + icon + '></i><span>' + menu_text + '</span></a></label></li>';
                 }
 
 
                 more_wrapper += '</ul></div></div>';
                 //more_wrapper += '';
-                // alert(more_wrapper);
+                 //alert(more_wrapper);
 
                 jQuery('.footer-menu').prepend(more_wrapper);
                 jQuery('.more-btn').on('click', function() {
@@ -2453,6 +2469,46 @@ function showfooter(active) {
             }
         });
     });
+}
+
+//function to redirect to comments
+function add_comments()
+{
+    //alert(id)
+    window.location.href="add_comments.html"
+}
+
+//function to show comments
+function showcomments()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".questions-container").hide();
+        alert('hi')
+        importfooter('Add-comment/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = server_url + 'Add-comment/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+
+                var label = '';
+                $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs .green-text").html(val.text)
+                    }
+                });
+              $(".loading_agenda_items").hide();  
+              $(".questions-container").show();
+            }
+       }); 
+   });             
 }
 
 //function to delete entries from all the tables
