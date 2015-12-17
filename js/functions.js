@@ -1885,13 +1885,17 @@ function sendRequest(player_code) {
     });
 }
 
-function showcommoncontacts(obj) {
+function showcommoncontacts(obj,checkhide) {
     var icon_class = '';
     var link = '';
     var team = '';
     var divider = '';
     var first_letter = '';
-    $(".all_conts").html('&nbsp');
+    if(checkhide != 'yes')
+    {
+       $(".all_conts").html('&nbsp');
+    }
+    
     var ficon_class = '';
     var flink = '';
     var fteam = '';
@@ -1945,10 +1949,12 @@ function showcommoncontacts(obj) {
 
         first_letter = val.fName[0].toUpperCase();
         //alert(first_letter)
+        if(checkhide != 'yes')
+        {
         if (key == 0 && val.fName[0] != 'A') {
             divider = '<div class="friends-item-title"> </div>';
         }
-
+        }
 
         if (checkdefined(val.team) == 'yes') {
             team = '&lt;' + val.team + '&gt;';

@@ -154,9 +154,10 @@ jQuery(function ($)
 	
 	$(window).bind('scroll', function () 
 	{
-	/*	if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && nextPageLink != null) {
-			   getAjaxMoreUsers(nextPageLink);
-		}  */
+		//alert(localStorage.nextPageLink)
+    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && localStorage.nextPageLink != null) {
+			   getAjaxMoreUsers(localStorage.nextPageLink);
+		}  
 	});
     
     // Disable the form submit if we press the enter key inside the input.
@@ -197,6 +198,7 @@ jQuery(function ($)
           method: "GET",
           success: function(obj) {
              showcommoncontacts(obj);
+            
           }
           }); 
           });
@@ -242,7 +244,7 @@ jQuery(function ($)
 	 */
 	function getAjaxMoreUsers(link) 
 	{
-		var usersList = $('.friends-items-container');
+		/*var usersList = $('.friends-items-container');
 		
 		if (usersList.hasClass('ni_loading')) {
             return false;
@@ -250,22 +252,19 @@ jQuery(function ($)
 		
 		history.pushState(null, null, link);
 		
-		usersList.addClass('ni_loading');
-		
+		usersList.addClass('ni_loading'); */
+    //history.pushState(null, null, link);
+		 //alert(link)
+     var main_url = server_url + "user-add-friend/-/OCintranet-" + static_event_id + "/p-"+localStorage.nextPageLink+"?gvm_json=1";
 		$.ajax({
 			type: 'POST',
-			url: link,
-			data: {
-                is_ajax: 1, 
-                last_letter: lastLetter, 
-                load_more: 1
-            },
-			success: function (html) 
-            {
-				html = $(html).hide();
-				usersList.append(html);
-				html.fadeIn('fast');
-				usersList.removeClass('ni_loading');
+			url: main_url,
+      datatype:'json',
+			success: function (obj) 
+      {
+				 showcommoncontacts(obj,'yes'); 
+         localStorage.nextPageLink = Number(localStorage.nextPageLink) + Number(1);
+         //alert(localStorage.nextPageLink)       
 			}
 		});
 	}
