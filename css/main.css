@@ -13082,3 +13082,12 @@ footer .footer-menu .label-container label {
   
   line-height: 30px;
 } */
+.questions-container .likes-container > .reply-to-comment {
+  background: #e7e7e7;
+  display: inline-block;
+  float: left;
+  text-decoration: none;
+  color: #939598;
+  padding: 2px 10px;
+  font-size: 14px;
+}

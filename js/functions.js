@@ -779,8 +779,13 @@ function loadagendaitem() {
                     var container_class = val.container_class;
                     var icon_class = val.icon_class;
                     var text = val.text;
+                    var onclick = '';
+                    if(val.name == 'comments')
+                    {
+                        onclick = 'onclick=add_comments()';
+                    }
                     //alert(text)
-                    $(".presentation-modules").append('<a href="#"><i class="' + icon_class + '"></i>' + text + '</a>')
+                    $(".presentation-modules").append('<a href="#" '+onclick+'><i class="' + icon_class + '"></i>' + text + '</a>')
 
                 });
 
@@ -2238,7 +2243,7 @@ function importhomepage() {
                         var image_name = getFileNameFromPath(img_src);
 
                         var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
-
+                                   
 
                         jQuery.ajax({
                             url: STR,
@@ -2534,7 +2539,7 @@ function showcomments()
    jQuery(document).ready(function($) {
         loadcommonthings();
         $(".questions-container").hide();
-        alert('hi')
+        //alert('hi')
         importfooter('Add-comment/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
         var main_url = server_url + 'Add-comment/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
 
@@ -2551,14 +2556,97 @@ function showcomments()
                         $(".breadcrumbs a").html(val.text)
                     }
                     if (key == 1) {
-                        $(".breadcrumbs .green-text").html(val.text)
+                        $(".breadcrumbs .green-text").html(val.text);
                     }
                 });
+              $('.votes-count .green-text').html(obj.countCommentInstances);
+              $('.comment_loop').html('&nbsp;');
+              $.each(obj.commentInstances, function(key, val) {
+              var image_url = server_url+'resources/gamification/img/avatar-placeholder.png';
+              if(checkdefined(val.image) == "yes")
+              {
+                  image_url = server_url+'resources/files/event/images/thumb_'+val.image+'.jpg';
+              }
+              var name = 'anonymous';
+              if(checkdefined(val.fName) == "yes")
+              {
+                  name = val.fName;
+              }
+              if(checkdefined(val.lName) == "yes")
+              {
+                  name += ' '+val.lName;
+              }
+              var like_string = '';
+              var dislike_link = '<a href="#" onclick=likedislikecomment('+val.instance_id+',0)>dislike</a>';
+              if(val.like == 1)
+              {
+                like_string = '<a class="liked-btn show"><i class="fa fa-heart"></i>Liked</a>';
+                dislike_link = 'Dislikes';  
+              }
+              else if(val.like == 0)
+              {
+                like_string = '<a class="liked-btn show">Disliked</a>';
+                dislike_link = 'Dislikes';
+              }
+              else
+              {
+                like_string = '<a class="like-btn" href="#" onclick=likedislikecomment('+val.instance_id+',1)><i class="fa fa-heart"></i>like</a>';
+              }
+              if(val.event_user_id == localStorage.user_id)
+              {
+                 like_string = ''; 
+                 dislike_link = 'Dislikes';
+              }
+              $('.comment_loop').append('<div id="comment_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div><div class="clearfix"><div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-heart"></i>'+val.likes+' Likes</div><div class="dislikes-count">- '+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment reply_'+val.instance_id+'" onclick="showhidereplyform('+val.instance_id+');" href=""><i class="fa fa-reply"></i>Reply</div></div></div><div class="questions-filter-items reply-form clearfix hide"><form id="replyform-'+val.instance_id+'" method="post" action="/Add-comment/-/OCintranet-100041/163/submit" class="has-file-upload" enctype="multipart/form-data" data-max-number-of-files="30"><input name="submit_form" value="1" type="hidden"><input name="form_noresubmit_code" value="1450080084" type="hidden"><div data-role="fieldcontain" class="form-group hidden c'+val.instance_id+'_comment_id"><input id="c'+val.instance_id+'_comment_id" name="comment_id" value="'+val.instance_id+'" type="hidden"></div><div data-role="fieldcontain" class="form-group hidden c'+val.instance_id+'_action"><input id="c'+val.instance_id+'_action" name="action" value="post_comment" type="hidden"></div><div data-role="fieldcontain" class="form-group fileupload c'+val.instance_id+'_files"><i class="gicon-camera file-upload"><input id="c'+val.instance_id+'_files" name="files[]" multiple="" type="file"></i></div><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder="Partisipate, write a post"></textarea><span><i class="fa fa-comment"></i></span></div><div data-role="fieldcontain" class="form-group hidden c'+val.instance_id+'_presentation_id"><input id="c'+val.instance_id+'_presentation_id" name="presentation_id" value="163" type="hidden"></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" name="submit">Send</button><button type="submit" class="btn-danger reply-cancel" name="cancel">Cancel</button></div></form></div></div>');
+        });
               $(".loading_agenda_items").hide();  
               $(".questions-container").show();
             }
        }); 
    });             
+}
+
+//function to like comment
+function likedislikecomment(id,like)
+{
+  //alert(id)
+  //alert(like)
+  jQuery(document).ready(function($)
+  {
+    $(".loading_cancel").show();  
+    $(".questions-container").hide();
+  var main_url = server_url + 'Add-comment/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
+       //  alert(main_url);
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            window.location.href = 'add_comments.html';
+            }
+            });
+   });
+  //http://oceventmanager.com/Add-comment/-/OCintranet-100041/163/?action=like&c_id=283&like=1
+}
+
+//function to toogle replyform
+function showhidereplyform(id)
+{
+  jQuery(document).ready(function($)
+  {
+   
+//        e.preventDefault();
+         //alert(id)
+        $('.reply-to-comment,.reply-cancel').on('click', function (e) 
+    {
+        e.preventDefault();
+         alert('hi')
+        var container = $(this).parents('.questions-item-container');
+        container.find('.reply-form').toggleClass('hide');
+    });
+       // $( ".reply_"+id ).next('.questions-filter-items').toogle();
+   
+  });
 }
 
 //function to delete entries from all the tables

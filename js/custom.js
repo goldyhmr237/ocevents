@@ -50,7 +50,7 @@ $(function ()
     $('.reply-to-comment,.reply-cancel').on('click', function (e) 
     {
         e.preventDefault();
-        
+         alert('hi')
         var container = $(this).parents('.questions-item-container');
         container.find('.reply-form').toggleClass('hide');
     });

@@ -80,6 +80,19 @@
         </div>
     </div>
 </header>
+<div align="center" class="container loading_agenda_items main-container">
+       <br />
+        Loading Comments...
+        <br />
+        <img src="img/loading.gif" />
+</div>
+
+<div align="center" class="container loading_cancel main-container">
+       <br />
+        Action in Progress...
+        <br />
+        <img src="img/loading.gif" />
+</div>
 
  <div class="container main-container questions-container">
 	<div class="header-title row">
@@ -93,18 +106,19 @@
 			<div class="questions-heading-title row">
 			<div class="votes-count col-xs-6">
 				<i class="fa fa-comment"></i>
-                <span class="green-text">6</span> 
+                <span class="green-text">0</span> 
                 All comments			</div>
 			<div class="votes-sort col-xs-6">
 				<span>Sort by:</span>
-                <a class="active" href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/sort/timestamp/desc">
+                <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
                                         <i class="fa fa-caret-up"></i> 
                                         Time                </a>
-                <a href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/sort/likes/asc">
+                <a href="#" onclick="sortcomments('sort/likes/asc');">
                                         <i class="fa fa-caret-up"></i> 
                                         Likes                </a>
 			</div>
 		</div>
+                     <div class="comment_loop">
                     <div id="comment_281" class="questions-item-container row">
         <div class="clearfix">
             <div class="col-xs-2 questions-item-img">
@@ -203,7 +217,7 @@ upside down in your pocket. Next you need tovhave the biiig po
 </form>
         </div>
     </div>
-        
+    </div>    
        
 </div>
 
