@@ -111,65 +111,27 @@
 			<div class="votes-sort col-xs-6">
 				<span>Sort by:</span>
                 <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
-                                        <i class="fa fa-caret-up"></i> 
+                                        <i class="fa fa-caret-down"></i> 
                                         Time                </a>
                 <a href="#" onclick="sortcomments('sort/likes/asc');">
-                                        <i class="fa fa-caret-up"></i> 
+                                        <i class="fa fa-caret-down"></i> 
                                         Likes                </a>
 			</div>
 		</div>
                      <div class="comment_loop">
-                    <div id="comment_281" class="questions-item-container row">
-        <div class="clearfix">
-            <div class="col-xs-2 questions-item-img">
-                                    <div class="img-wrapper" style="background-image:url('/resources/files/event/images/thumb_1442450115.jpg')"></div>
-                            </div>
-            <div class="col-xs-10 question-item-info">
-                <h3 class="clearfix">
-                    Christian Nytvedt                    <span>
-                        <i class="fa fa-clock-o"></i> 
-                        1 month                    </span>
-                </h3>
-                <div class="question-inner">
-                    <div><i class="fa fa-comment"></i></div>
-                    <p>
-                        I like to talk about, the bose headset, it has 
-an idiotic minijack plug...Meaning that to will need to have The phone 
-upside down in your pocket. Next you need tovhave the biiig po          
-          </p>
-                </div>
-            </div>
-        </div>
-                        <div class="clearfix">
-                        <div class="likes-container">
-                                                        <a class="like-btn" href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/?action=like&amp;c_id=281&amp;like=1">
-                        <i class="fa fa-heart"></i> 
-                        like                    </a>
-                                        <a class="liked-btn">
-                        <i class="fa fa-heart"></i> 
-                        Liked                    </a>
-                    <div class="likes-count">
-                        <i class="fa fa-heart"></i> 
-                        0 
-                        Likes                    </div>
-                                            <div class="dislikes-count">
-                            - 0 
-                                                            <a href="http://www.oceventmanager.com/Add-comment/-/OCintranet-100041/163/?action=like&amp;c_id=281&amp;like=0">
-                                    dislike                                </a>
-                                                    </div>
-                                                    <a class="reply-to-comment" href="">
-                    <i class="fa fa-reply"></i>
-                    Reply                </a>
-                            </div>
-        </div>
-        <div class="questions-filter-items reply-form clearfix hide">
-            
-<form id="replyform-281" method="post" action="/Add-comment/-/OCintranet-100041/163/submit" class="has-file-upload" enctype="multipart/form-data" data-max-number-of-files="30">
-
-<input name="submit_form" value="1" type="hidden">
-<input name="form_noresubmit_code" value="1450080084" type="hidden">
-
-<div data-role="fieldcontain" class="form-group hidden c281_comment_id"><input id="c281_comment_id" name="comment_id" value="281" type="hidden"></div><div data-role="fieldcontain" class="form-group hidden c281_action"><input id="c281_action" name="action" value="post_comment" type="hidden"></div><div data-role="fieldcontain" class="form-group fileupload c281_files"><i class="gicon-camera file-upload"><input id="c281_files" name="files[]" multiple="" type="file"></i></div><div data-role="fieldcontain" class="form-group textarea c281_comment"><textarea class="form-control" id="c281_comment" name="comment" maxlength="4096" placeholder="Partisipate, write a post"></textarea><span><i class="fa fa-comment"></i></span></div><div data-role="fieldcontain" class="form-group hidden c281_presentation_id"><input id="c281_presentation_id" name="presentation_id" value="163" type="hidden"></div>
+                     <div class="questions-filter-items main-questions-form-container">
+		
+<div class="has-file-upload" id="createdform">
+<div class="form-group fileupload frmfld_files" data-role="fieldcontain">
+<i class="gicon-camera file-upload">
+</i></div>
+<div class="form-group textarea frmfld_comment" data-role="fieldcontain">
+<textarea placeholder="Partisipate, write a post" maxlength="4096" name="comment" id="frmfld_comment" class="form-control">
+</textarea>
+<span><i class="fa fa-comment"></i></span></div>
+<div class="form-group hidden frmfld_presentation_id" data-role="fieldcontain">
+  <input type="hidden" value="142" name="presentation_id" id="frmfld_presentation_id">
+</div>
 <div class="success-status hide">
     <div class="success-icon-wrapper">
         <i class="icon-check"></i>
@@ -185,26 +147,26 @@ upside down in your pocket. Next you need tovhave the biiig po
 </div>
 
 <div class="clearfix">
-        <div data-role="fieldcontain" class="frm_field submit">
-        <button type="submit" name="submit">Send</button>
-                    <button type="submit" class="btn-danger reply-cancel" name="cancel">Cancel</button>
+        <div class="frm_field submit" data-role="fieldcontain">
+        <button name="submit" onclick="submitcomment();" class="submit_com" type="submit">Send</button>
+        <button name="submits" class="loading_send" style="display:none" type="submit">Sending...</button>
             </div>
     
         <!-- The template to display files available for upload -->
-    <script id="template-upload" type="text/x-tmpl">
-  
-        <div class="template-upload swiper-slide fade">
-            <div class="name"></div>
-            <div class="preview"></div>
-            <i class="fa fa-times cancel"></i>
-        </div>
-    
+    <script type="text/x-tmpl" id="template-upload">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+        &lt;div class="template-upload swiper-slide fade"&gt;
+            &lt;div class="name"&gt;{%=file.name%}&lt;/div&gt;
+            &lt;div class="preview"&gt;&lt;/div&gt;
+            &lt;i class="fa fa-times cancel"&gt;&lt;/i&gt;
+        &lt;/div&gt;
+    {% } %}
     </script>
     <!-- The global progress state -->
     <div class="col-xs-6 fileupload-progress fade">
         <!-- The global progress bar -->
-        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+        <div aria-valuemax="100" aria-valuemin="0" role="progressbar" class="progress progress-striped active">
+            <div style="width:0%;" class="progress-bar progress-bar-success"></div>
         </div>
     </div>
     </div>
@@ -214,9 +176,9 @@ upside down in your pocket. Next you need tovhave the biiig po
     </div>
 </div>
 
-</form>
-        </div>
-    </div>
+</div>
+	</div>                   
+                    
     </div>    
        
 </div>
@@ -247,8 +209,8 @@ upside down in your pocket. Next you need tovhave the biiig po
                             <a href="profile.html">
                                 Manea                            </a>
                         </p>
-                                                    <span class="team-name">&lt; test &gt;</span>
-                                                <div class="edit-btn-wrapper">
+                         <span class="team-name">&lt; test &gt;</span>
+                        <div class="edit-btn-wrapper">
                             <a href="#">Edit User</a>
                         </div>
                     </div>
