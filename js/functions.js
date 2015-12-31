@@ -611,10 +611,6 @@ function getPhoto(source) {
     });
 }
 
-function showbuttons() {
-    jQuery('.hidden_button').attr('style', 'display:block !important');
-    jQuery('.selfie_capture').hide();
-}
 // Called when a photo is successfully retrieved
 function onPhotoURISuccess(imageURI) {
 
@@ -699,6 +695,53 @@ function onPhotoURISuccess(imageURI) {
         alert("upload error target " + error.target);
     }
 }
+
+function captureImage() {
+    // Take picture using device camera and retrieve image as base64-encoded string
+    navigator.camera.getPicture(onImageURISuccess, onFail, {
+        quality: 100,
+        allowEdit: true,
+        destinationType: destinationType.FILE_URI,
+        saveToPhotoAlbum: false
+    });
+}
+
+
+function uploadImage(source) {
+    // Retrieve image file location from specified source
+    navigator.camera.getPicture(onImageURISuccess, onFail, {
+        quality: 50,
+        destinationType: destinationType.NATIVE_URI,
+        sourceType: source
+    });
+}
+
+// Called when an image from comment is successfully retrieved
+function onImageURISuccess(imageURI) {
+//alert(imageURI);
+jQuery('.swiper-container').show();
+jQuery('.preview').html('<img src = '+imageURI+' width="80" height="80" />');
+localStorage.imageURI = imageURI;
+    
+}
+
+function hidethumb()
+{
+  localStorage.imageURI = '';
+  jQuery('.swiper-container').hide();
+}
+
+function showbuttons() {
+    jQuery('.hidden_button').attr('style', 'display:block !important');
+    jQuery('.selfie_capture').hide();
+}
+
+function showimagebuttons()
+{
+    jQuery('.captureimage').show();
+    jQuery('.uploadimage').show();
+}
+
 
 //function to play video
 function playvideo(videoUrl) {
@@ -2683,9 +2726,8 @@ function deletecomment(instance_id)
 //function to submit a comment
 function submitcomment(instance_id)
 {
-  //e.preventDefault();
-  var submit_form = 1;
-  var form_noresubmit_code = localStorage.resubmit_code;
+    var submit_form = 1;
+    var form_noresubmit_code = localStorage.resubmit_code;
   //alert(form_noresubmit_code)
   var comment_id = 0;
   var comment = jQuery('#frmfld_comment').val();
@@ -2698,7 +2740,55 @@ function submitcomment(instance_id)
   var action = 'post_comment';
   
   jQuery(".submit_com").hide();
-  jQuery(".loading_send").show();
+  jQuery(".loading_send").show(); 
+  if(checkdefined(localStorage.imageURI) == 'yes')
+  {
+    var imageData = localStorage.imageURI;
+   
+    //  alert(imageData);          
+    var photo_ur = imageData;
+    var options = new FileUploadOptions();
+    var imageURI = photo_ur;
+    options.fileKey = "files[]";
+    if (imageURI.substr(imageURI.lastIndexOf('/') + 1).indexOf(".") >= 0) {
+        var newfname = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+    } else {
+        var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.jpg';
+    }
+    options.fileName = newfname;
+    //alert(newfname);
+    options.mimeType = "image/jpeg";
+    var params = new Object();    
+    params.submit_form = submit_form;
+    params.form_noresubmit_code = form_noresubmit_code;
+    params.comment_id = comment_id;
+    params.action = action;
+    params.comment = comment;
+    //options.headers = "Content-Type: multipart/form-data; boundary=38516d25820c4a9aad05f1e42cb442f4";
+    options.params = params;
+    options.chunkedMode = false;
+    var ft = new FileTransfer();
+    //alert(imageURI);
+    var main_url = server_url + 'Add-comment/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+    ft.upload(imageURI, encodeURI(main_url), win, fail, options);
+
+    function win(r) {
+      localStorage.imageURI = '';
+       window.location.href="add_comments.html"
+    }
+
+    function fail(error) {
+        alert("An error has occurred: Code = " + error.code);
+        alert("upload error source " + error.source);
+        alert("upload error target " + error.target);
+        jQuery(".submit_com").show();
+        jQuery(".loading_send").hide();
+    }
+    
+   }
+   else
+   { 
+    
   //alert(comment)
   var main_url = server_url + 'Add-comment/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
     jQuery.ajax({
@@ -2717,6 +2807,7 @@ function submitcomment(instance_id)
             window.location.href="add_comments.html"
         }
     });
+    }
 } 
 
 function sortResults(prop, asc) {

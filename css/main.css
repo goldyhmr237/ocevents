@@ -13063,7 +13063,7 @@ padding:12px;
 {
   color:#fff;
 }
-.teampoints , .yourteam , .future-video , .contacts_request , .friends-requests-container , .loading_cancel , .loading_approve , .loading_send
+.captureimage , .uploadimage , .teampoints , .yourteam , .future-video , .contacts_request , .friends-requests-container , .loading_cancel , .loading_approve , .loading_send , .swiper-container
 {
    display:none;
 }
