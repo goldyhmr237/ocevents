@@ -827,6 +827,10 @@ function loadagendaitem() {
                     {
                         onclick = 'onclick=add_comments()';
                     }
+                    if(val.name == 'q_and_a')
+                    {
+                        onclick = 'onclick=add_questions()';
+                    }
                     //alert(text)
                     $(".presentation-modules").append('<a href="#" '+onclick+'><i class="' + icon_class + '"></i>' + text + '</a>')
 
@@ -2549,6 +2553,10 @@ function showfooter(active) {
                     {
                       onclick = 'onclick=add_comments()';
                     }
+                    if(name == 'q_and_a')
+                    {
+                      onclick = 'onclick=add_questions()';
+                    }
                     //alert(onclick);
                     menu_text = results.rows.item(i).menu_text;
                     icon = results.rows.item(i).icon;
@@ -2574,6 +2582,13 @@ function add_comments()
 {
     //alert(id)
     window.location.href="add_comments.html"
+}
+
+//function to redirect to questions
+function add_questions()
+{
+    //alert(id)
+    window.location.href="add_questions.html"
 }
 
 //function to show comments
@@ -2700,6 +2715,103 @@ function showcomments()
                   $('#createdform').toggle();
                  
               });
+            }
+       }); 
+   });             
+}
+
+
+//function to show comments
+function showquestions()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".questions-container").hide();
+        
+        //alert('hi')
+        importfooter('Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = server_url + 'Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+
+                var label = '';
+                $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs .green-text").html(val.text);
+                    }
+                });
+              $('.votes-count .green-text').html(obj.countQuestionInstances);
+              $('.votes-count .small-text').html(obj.countAnswerInstances.answers+' add question answers');
+              
+              $.each( obj.qForm, function( key, val ) {
+                 localStorage.resubmit_code = val.noResubmitCode;
+              });
+              
+              $.each(obj.questionInstances, function(key, val) {
+              var image_url = server_url+'resources/gamification/img/avatar-placeholder.png';
+              if(checkdefined(val.image) == "yes")
+              {
+                  image_url = server_url+'resources/files/event/images/thumb_'+val.image+'.jpg';
+              }
+              var name = 'anonymous';
+              if(checkdefined(val.fName) == "yes")
+              {
+                  name = val.fName;
+              }
+              if(checkdefined(val.lName) == "yes")
+              {
+                  name += ' '+val.lName;
+              }
+              var like_string = '';
+              var dislike_link = '<a href="#" onclick=likedislikequestion('+val.instance_id+',0)>dislike</a>';
+              if(val.like == 1)
+              {
+                like_string = '<a class="liked-btn show"><i class="fa fa-heart"></i>Liked</a>';
+                dislike_link = 'Dislikes';  
+              }
+              else if(val.like == 0)
+              {
+                like_string = '<a class="liked-btn show">Disliked</a>';
+                dislike_link = 'Dislikes';
+              }
+              else
+              {
+                like_string = '<a class="like-btn" href="#" onclick=likedislikequestion('+val.instance_id+',1)><i class="fa fa-heart"></i>like</a>';
+              } 
+              
+              if(val.event_user_id == localStorage.user_id)
+              {
+                 like_string = ''; 
+                 dislike_link = 'Dislikes';
+               
+              }
+              var answer = '';
+              if(checkdefined(val.answer) == 'yes')
+              {
+                  answer = '<div class="answer-inner"><div>A:</div><p>'+val.answer+'</p></div>';
+              }
+              
+              $('.comment_loop').prepend('<div id="question_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div>Q:</div><p>'+val.question+' </p></div></div></div>'+answer+'<div class="clearfix"><div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-heart"></i>'+val.likes+' Likes</div><div class="dislikes-count">- '+val.dislikes+' '+dislike_link+'</div></div></div></div>');
+             
+              
+             
+        });
+              $(".loading_agenda_items").hide();  
+              $(".questions-container").show();
+        if(checkdefined(localStorage.message) == 'yes')
+        {
+            $('.comment_loop').before('<div class="alert alert-success">Deleted</div>');
+            $('.alert-success').fadeOut(3000);
+            localStorage.message = '';
+        }
             }
        }); 
    });             
@@ -2832,6 +2944,26 @@ function likedislikecomment(id,like)
             method: "GET",
             success: function(obj) {
             window.location.href = 'add_comments.html';
+            }
+            });
+   });
+}
+
+//function to like and dislike question
+function likedislikequestion(id,like)
+{
+  jQuery(document).ready(function($)
+  {
+    $(".loading_cancel").show();  
+    $(".questions-container").hide();
+  var main_url = server_url + 'Add-question/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
+       //  alert(main_url);
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            window.location.href = 'add_questions.html';
             }
             });
    });

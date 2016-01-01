@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://www.oceventmanager.com/gamification?tc=1 -->
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Gamification</title>
+        <meta name="title" content="Gamification ">
+        <meta name="keywords" content="">
+        <meta name="author" content="One Communication - www.onecom.no">
+        <meta name="publisher" content="© 2008 - One Communication">
+        <meta name="copyright" content="© 2008 - One Communication">
+        <meta name="distribution" content="global">
+        <meta name="revisit-after" content="2 days">
+        <meta name="robots" content="index,follow,noarchive">
+        <meta name="googlebot" content="noarchive">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+
+        <meta name="apple-touch-fullscreen" content="yes">
+
+                   
+            <link rel="stylesheet" href="css/main.css">
+            <link rel="stylesheet" href="css/custom.css">
+            <link href="css/mediaelementplayer.css" rel="stylesheet" type="text/css">
+            <script src="js/config_db.js"></script>
+            <script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+            <script src="js/jquery-1.10.1.min.js"></script>
+           
+            <script src="js/jquery.countdown.js" type="text/javascript"></script>
+            <script type="text/javascript">
+                document.addEventListener("deviceready", onDeviceReady, false);
+               function onDeviceReady() {
+             jQuery(document).ready(function($)
+            {
+                  showquestions();
+            });
+    }
+    var localLink = '/';
+                var GHomepageLink = "add_questions.html";
+            </script>
+            </head>
+    <body class="">
+        <div class="main-wrapper">
+    <header>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-1 header-dropdown-menu-wrapper">
+                <a class="dropdown-btn" href="#" target="_self">
+                    <div class="menu">
+                        <i class="menu-icon">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </i>
+                    </div>
+                </a>
+            </div>
+                        <div class="col-xs-3 header-cup">
+                <a href="#" onclick="gotopoints(1);">
+                    <i class="fa fa-trophy"> <span>#</span> 4</i>
+                </a>
+            </div>
+                        <div class="col-xs-4 clearfix">
+                <div class="header-logo-container">
+                    <a href="#">
+                                                    <img class="logo_inner" src="img/logo_inner.png">
+                                            </a>
+                </div>
+            </div>
+            <div class="col-xs-4 header-login-wrapper">
+                                    <a href="profile.html">
+                        <div class="log-info">
+                            <p>
+                                                             <!--br>
+                                                                    <strong>&lt; Oslo, Norway &gt; </strong><br-->
+                                                            </p>
+                        </div>
+                         <div class="img-wrapper" id="profile_pic" style=""></div>
+                    </a>
+                            </div>
+        </div>
+    </div>
+</header>
+<div align="center" class="container loading_agenda_items main-container">
+       <br />
+        Loading Questions...
+        <br />
+        <img src="img/loading.gif" />
+</div>
+
+<div align="center" class="container loading_cancel main-container">
+       <br />
+        Action in Progress...
+        <br />
+        <img src="img/loading.gif" />
+</div>
+
+ <div class="container main-container questions-container">
+	<div class="header-title row">
+		<p class="presentation-item-header">
+			
+<a class="nav-arrow prev" href="#" title="Back to presentation"><i class="fa fa-angle-left"></i></a>
+
+<span class="breadcrumbs"><a href="agenda_item.html"></a> / 
+<span class="green-text"></span></span>		</p>
+	</div>
+			<div class="questions-heading-title row">
+			<div class="votes-count col-xs-6">
+				<i class="fa fa-question"></i>
+                <span class="green-text">3</span> 
+                Questions / 
+                <span class="small-text">2 
+                add question answers</span>
+			</div>
+			<div class="votes-sort col-xs-6">
+				<span>Sort by:</span>
+                <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
+                                        <i class="fa fa-caret-down"></i> 
+                                        Time                </a>
+                <a href="#" onclick="sortcomments('sort/likes/asc');">
+                                        <i class="fa fa-caret-down"></i> 
+                                        Likes                </a>
+			</div>
+		</div>
+                     <div class="comment_loop">
+                     <div class="questions-filter-items main-questions-form-container">
+		
+<div class="has-file-upload" id="createdform">
+
+<div data-role="fieldcontain" class="form-group textarea frmfld_question">
+<textarea class="form-control" id="frmfld_question" name="question" maxlength="4096" placeholder="Write a question"></textarea>
+<span>
+<i class="fa fa-question"></i>
+</span></div>
+<div class="form-group hidden frmfld_presentation_id" data-role="fieldcontain">
+  <input type="hidden" value="142" name="presentation_id" id="frmfld_presentation_id">
+</div>
+<div class="success-status hide">
+    <div class="success-icon-wrapper">
+        <i class="icon-check"></i>
+    </div>
+    <p></p>
+</div>
+
+<div class="error-status hide">
+    <div class="error-icon-wrapper">
+        <i class="fa fa-ban"></i>
+    </div>
+    <p></p>
+</div>
+
+<div class="clearfix">
+        <div class="frm_field submit" data-role="fieldcontain">
+        <button name="submit" onclick="submitcomment();" class="submit_com" type="submit">Send</button>
+        <button name="submits" class="loading_send" style="display:none" type="submit">Sending...</button>
+        </div>
+ 
+    </div>
+    <div class="swiper-container swiper-container-horizontal">
+    <div class="files swiper-wrapper">
+    <div class="template-upload swiper-slide fade in swiper-slide-active" style="width: 98.3333px; margin-right: 5px;">
+            <div class="name"></div>
+            <div class="preview"><canvas width="80" height="80"></canvas></div>
+            <i class="fa fa-times cancel" onclick="hidethumb();"></i>
+        </div></div>
+</div>
+
+<div class="swiper-container swiper-container-horizontal">
+    <div class="files swiper-wrapper">
+    </div>
+</div>
+
+</div>
+	</div>                   
+                    
+    </div>    
+       
+</div>
+
+
+               <footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 footer-menu">
+                                                                        
+                    </div>
+        </div>
+    </div>
+</footer>     </div>
+
+    <div class="dropdown-menu custom-dropdown" role="menu" aria-labelledby="dLabel">
+                <div class="user-profile-info">
+                    <div class="img-wrapper" id="medium_profile_pic" style="background-image: url('')">
+                        <a href="profile.html">
+                            Profile                        </a>
+                    </div>
+                    <div class="user-info">
+                        <span class="firstname">
+                            <a href="profile.html">
+                                Felix                            </a>
+                        </span>
+                        <p class="lastname">
+                            <a href="profile.html">
+                                Manea                            </a>
+                        </p>
+                         <span class="team-name">&lt; test &gt;</span>
+                        <div class="edit-btn-wrapper">
+                            <a href="#">Edit User</a>
+                        </div>
+                    </div>
+                </div>
+                                <div class="events-wrapper">
+                    <i class="icon-oc-event-manager"></i>
+                    <div class="events">
+                        <p class="my-events-title">My events</p>
+                                                <p>
+                            <a href="index.html" class="active">
+                              OCintranet                        </a>
+                        </p>
+                                            </div>
+                </div>
+                                <div class="menu-items-wrapper">
+                    <ul class="">
+                        <li>
+                            <a href="gamification.html">
+                                <i class="gicon-welcome"></i>
+                                Welcome                            </a>
+                        </li>
+                                                <li>
+                            <a href="profile.html">
+                                <i class="gicon-my-profile"></i>
+                                Profile                            </a>
+                        </li>
+                                                <li>
+                            <a class="active" href="ticket.html">
+                                <i class="gicon-my-ticket"></i>
+                                My ticket                            </a>
+                        </li>
+                                                <li>
+                            <a href="agenda.html">
+                                <i class="gicon-agenda"></i>
+                                Agenda                            </a>
+                        </li>
+                                                                        <li>
+                            <a href="points.html">
+                                <i class="gicon-points"></i>
+                                Points                            </a>
+                        </li>
+                                                                        <li>
+                            <a href="contacts.html">
+                                <i class="gicon-friends">
+                                                                    </i>
+                                Add Contacts                          </a>
+                        </li>
+                                                <li>
+                            To install, tap <span></span> and choose<br> "Add to Home Screen"
+                        </li>
+                    </ul>
+                </div>
+                <div class="line"></div>
+                <div class="logout-btn-wrapper">
+                    <ul>
+                        <li>
+                            <a href="#" onclick="logout();">
+                                <i class="gicon-logout"></i> Log out                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        
+        
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/mediaelement-and-player.min.js"></script>
+
+        <!-- Main js file -->
+        <script src="js/main.js"></script>
+        <script src="js/custom.js"></script>
+
+        <!-- Page specific js files -->
+        <script src="js/home.js"></script>
+
+        <script src="js/jquery.endless-scroll.js"></script>
+        <script src="js/overlay_mobile.js"></script>
+        <script src="js/overlay_quiz.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script src="js/facebookConnectPlugin.js"></script>
+        <script src="js/painlessfs.js"></script>        
+        <script src="js/functions.js"></script>
+</body></html>
