@@ -41,8 +41,6 @@ function removeprofileimage() {
                 var b = new FileManager();
 
                 var img_src = resp.data.image.image_src;
-                //alert(img_src);		
-                //var img_src = 'http://weknowyourdreams.com/images/love/love-09.jpg';
                 var image_name = getFileNameFromPath(img_src);
 
                 var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
@@ -830,6 +828,10 @@ function loadagendaitem() {
                     if(val.name == 'q_and_a')
                     {
                         onclick = 'onclick=add_questions()';
+                    }
+                    if(val.name == 'quiz')
+                    {
+                        onclick = 'onclick=add_quiz()';
                     }
                     //alert(text)
                     $(".presentation-modules").append('<a href="#" '+onclick+'><i class="' + icon_class + '"></i>' + text + '</a>')
@@ -2557,6 +2559,10 @@ function showfooter(active) {
                     {
                       onclick = 'onclick=add_questions()';
                     }
+                    if(name == 'quiz')
+                    {
+                      onclick = 'onclick=add_quiz()';
+                    }
                     //alert(onclick);
                     menu_text = results.rows.item(i).menu_text;
                     icon = results.rows.item(i).icon;
@@ -2577,18 +2583,297 @@ function showfooter(active) {
     });
 }
 
-//function to redirect to comments
-function add_comments()
+//function to redirect to quiz
+function add_quiz()
 {
-    //alert(id)
-    window.location.href="add_comments.html"
+    window.location.href="add_quiz.html"
+}
+
+//function to show quiz
+function showquiz()
+{
+     jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".quiz-container").hide();
+        
+        //alert('hi')
+        importfooter('Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+               $('.quiz-number').html(obj.questionNumber+' / '+obj.numQuestions);
+               $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs .green-text").html(val.text);
+                    }
+                });
+                if(checkdefined(obj.correctAnswerPositions) == 'yes' && obj.questionNumber != obj.numQuestions)
+                {
+                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1">Next question</button>'); 
+                }
+                $('.quiz-question').html(obj.question.question);
+                //alert(obj.question.answers);
+                var arr = obj.question.answers.split('\r\n');
+                $('.quiz-answer-container').html('');
+                for(i=0; i < arr.length; i++)
+                {
+                    var label_class='';
+                    var value = i + 1;
+                    var dis = '';
+                    if(checkdefined(obj.correctAnswerPositions) == 'yes')
+                    {
+                      
+                       label_class = 'disabled';
+                       dis = 'disabled';
+                       if(obj.correctAnswerPositions == value)
+                       {
+                          label_class = 'correct-answer disabled';
+                       } 
+                    }
+                    
+                    if(obj.questionMultipleAnswers == 'true' || obj.questionMultipleAnswers == true)
+                    {
+                        var radio_button = '<label><div class="poeng-options"><input type="checkbox" class="ipt_quiz_a"  name="answer_position" id="ipt_quiz_a_1" value="'+value+'"><span class="check"></span><div class="text">'+arr[i]+'</div></div></label>';
+                        $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="submitmultipleanswers('+obj.question.instance_id+')" name="next_question" value="1">Submit</button>');  
+                    }
+                    else
+                    {
+                        var radio_button = '<label class="'+label_class+'"><div class="poeng-options"><input '+dis+' type="radio" class="ipt_quiz_a" onclick="submitanswer('+obj.question.instance_id+','+value+')" name="answer_position" id="ipt_quiz_a_1" value="'+value+'"><span class="check"></span><div class="text">'+arr[i]+'</div></div></label>';
+                    }
+                     
+                    
+                     //alert(radio_button)
+                    $('.quiz-answer-container').append(radio_button);
+                    //alert(arr[i]);
+                }
+                var timer = Number(obj.question.question_time+'000');
+                quizInit(timer);
+                
+                $.each( obj.questionData, function( key, val ) {
+                  if(checkdefined(val.__extra) == 'yes')
+                  {
+                    if(checkdefined(val.__extra.large_file_name) == 'yes')
+                    {
+                      $('.quiz-question-container').prepend('<img src="'+server_url+'resources/files/images/'+val.__extra.large_file_name+'" class="img-responsive" />')
+                    }
+                  }
+                
+                });
+               $(".quiz-container").show(); 
+               $(".loading_agenda_items").hide();  
+            }
+           });
+      });      
+}
+
+//function to submit multiple answers
+function submitmultipleanswers(question_id)
+{
+  alert(question_id)
+}
+
+//function to submit answer
+function submitanswer(question_id,answer)
+{
+  var countdown_box = Number($('#countdown_box').html()+'000');
+  var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data: {
+              submit_answer: 1,
+              question_id:question_id,
+              answer_position:answer,
+              countdown:countdown_box
+          },
+            success: function(obj) {
+              window.location.href='add_quiz.html';
+            }
+            });
+}
+
+//function to go to next question
+function gotonextquestion(question_id)
+{
+    var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data: {
+              question_id:question_id,
+              next_question:'1'
+              
+          },
+            success: function(obj) {
+              window.location.href='add_quiz.html';
+            }
+            });
 }
 
 //function to redirect to questions
 function add_questions()
 {
-    //alert(id)
     window.location.href="add_questions.html"
+}
+
+//function to show comments
+function showquestions()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".questions-container").hide();
+        
+        //alert('hi')
+        importfooter('Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = server_url + 'Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+
+                var label = '';
+                $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs .green-text").html(val.text);
+                    }
+                });
+              $('.votes-count .green-text').html(obj.countQuestionInstances);
+              $('.votes-count .small-text').html(obj.countAnswerInstances.answers+' add question answers');
+              
+              
+                 localStorage.resubmit_code = obj.qForm.noResubmitCode;
+              
+              
+              $.each(obj.questionInstances, function(key, val) {
+              var image_url = server_url+'resources/gamification/img/avatar-placeholder.png';
+              if(checkdefined(val.image) == "yes")
+              {
+                  image_url = server_url+'resources/files/event/images/thumb_'+val.image+'.jpg';
+              }
+              var name = 'anonymous';
+              if(checkdefined(val.fName) == "yes")
+              {
+                  name = val.fName;
+              }
+              if(checkdefined(val.lName) == "yes")
+              {
+                  name += ' '+val.lName;
+              }
+              var like_string = '';
+              var dislike_link = '<a href="#" onclick=likedislikequestion('+val.instance_id+',0)>dislike</a>';
+              if(val.like == 1)
+              {
+                like_string = '<a class="liked-btn show"><i class="fa fa-heart"></i>Liked</a>';
+                dislike_link = 'Dislikes';  
+              }
+              else if(val.like == 0)
+              {
+                like_string = '<a class="liked-btn show">Disliked</a>';
+                dislike_link = 'Dislikes';
+              }
+              else
+              {
+                like_string = '<a class="like-btn" href="#" onclick=likedislikequestion('+val.instance_id+',1)><i class="fa fa-heart"></i>like</a>';
+              } 
+              
+              if(val.event_user_id == localStorage.user_id)
+              {
+                 like_string = ''; 
+                 dislike_link = 'Dislikes';
+               
+              }
+              var answer = '';
+              if(checkdefined(val.answer) == 'yes')
+              {
+                  answer = '<div class="answer-inner"><div>A:</div><p>'+val.answer+'</p></div>';
+              }
+              
+              $('.comment_loop').prepend('<div id="question_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div>Q:</div><p>'+val.question+' </p></div></div></div>'+answer+'<div class="clearfix"><div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-heart"></i>'+val.likes+' Likes</div><div class="dislikes-count">- '+val.dislikes+' '+dislike_link+'</div></div></div></div>');
+             
+              
+             
+        });
+              $(".loading_agenda_items").hide();  
+              $(".questions-container").show();
+        if(checkdefined(localStorage.message) == 'yes')
+        {
+            $('.comment_loop').before('<div class="alert alert-success">Deleted</div>');
+            $('.alert-success').fadeOut(3000);
+            localStorage.message = '';
+        }
+            }
+       }); 
+   });             
+}
+
+
+//function to submit a question
+function submitquestion(instance_id)
+{
+    var submit_form = 1;
+    var form_noresubmit_code = localStorage.resubmit_code;
+    var question = jQuery('#frmfld_question').val();
+    jQuery(".submit_com").hide();
+    jQuery(".loading_send").show(); 
+    var main_url = server_url + 'Add-question/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+      jQuery.ajax({
+          url: main_url,
+          dataType: "json",
+          method: "POST",
+          data: {
+              submit_form: submit_form,
+              form_noresubmit_code:form_noresubmit_code,
+              question:question
+          },
+          success: function(resp) {
+              localStorage.resubmit_code = '';
+              window.location.href="add_questions.html"
+          }
+      });
+}
+
+//function to like and dislike question
+function likedislikequestion(id,like)
+{
+  jQuery(document).ready(function($)
+  {
+    $(".loading_cancel").show();  
+    $(".questions-container").hide();
+  var main_url = server_url + 'Add-question/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
+       //  alert(main_url);
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+            window.location.href = 'add_questions.html';
+            }
+            });
+   });
+}
+
+//function to redirect to comments
+function add_comments()
+{
+    window.location.href="add_comments.html"
 }
 
 //function to show comments
@@ -2720,103 +3005,6 @@ function showcomments()
    });             
 }
 
-
-//function to show comments
-function showquestions()
-{
-   jQuery(document).ready(function($) {
-        loadcommonthings();
-        $(".questions-container").hide();
-        
-        //alert('hi')
-        importfooter('Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
-        var main_url = server_url + 'Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
-
-        $.ajax({
-            url: main_url,
-            dataType: "json",
-            method: "GET",
-            success: function(obj) {
-
-                var label = '';
-                $.each(obj.breadcrumbs, function(key, val) {
-
-                    if (key == 0) {
-                        $(".breadcrumbs a").html(val.text)
-                    }
-                    if (key == 1) {
-                        $(".breadcrumbs .green-text").html(val.text);
-                    }
-                });
-              $('.votes-count .green-text').html(obj.countQuestionInstances);
-              $('.votes-count .small-text').html(obj.countAnswerInstances.answers+' add question answers');
-              
-              $.each( obj.qForm, function( key, val ) {
-                 localStorage.resubmit_code = val.noResubmitCode;
-              });
-              
-              $.each(obj.questionInstances, function(key, val) {
-              var image_url = server_url+'resources/gamification/img/avatar-placeholder.png';
-              if(checkdefined(val.image) == "yes")
-              {
-                  image_url = server_url+'resources/files/event/images/thumb_'+val.image+'.jpg';
-              }
-              var name = 'anonymous';
-              if(checkdefined(val.fName) == "yes")
-              {
-                  name = val.fName;
-              }
-              if(checkdefined(val.lName) == "yes")
-              {
-                  name += ' '+val.lName;
-              }
-              var like_string = '';
-              var dislike_link = '<a href="#" onclick=likedislikequestion('+val.instance_id+',0)>dislike</a>';
-              if(val.like == 1)
-              {
-                like_string = '<a class="liked-btn show"><i class="fa fa-heart"></i>Liked</a>';
-                dislike_link = 'Dislikes';  
-              }
-              else if(val.like == 0)
-              {
-                like_string = '<a class="liked-btn show">Disliked</a>';
-                dislike_link = 'Dislikes';
-              }
-              else
-              {
-                like_string = '<a class="like-btn" href="#" onclick=likedislikequestion('+val.instance_id+',1)><i class="fa fa-heart"></i>like</a>';
-              } 
-              
-              if(val.event_user_id == localStorage.user_id)
-              {
-                 like_string = ''; 
-                 dislike_link = 'Dislikes';
-               
-              }
-              var answer = '';
-              if(checkdefined(val.answer) == 'yes')
-              {
-                  answer = '<div class="answer-inner"><div>A:</div><p>'+val.answer+'</p></div>';
-              }
-              
-              $('.comment_loop').prepend('<div id="question_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div>Q:</div><p>'+val.question+' </p></div></div></div>'+answer+'<div class="clearfix"><div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-heart"></i>'+val.likes+' Likes</div><div class="dislikes-count">- '+val.dislikes+' '+dislike_link+'</div></div></div></div>');
-             
-              
-             
-        });
-              $(".loading_agenda_items").hide();  
-              $(".questions-container").show();
-        if(checkdefined(localStorage.message) == 'yes')
-        {
-            $('.comment_loop').before('<div class="alert alert-success">Deleted</div>');
-            $('.alert-success').fadeOut(3000);
-            localStorage.message = '';
-        }
-            }
-       }); 
-   });             
-}
-
 //function to delete a comment
 function deletecomment(instance_id)
 {
@@ -2886,6 +3074,7 @@ function submitcomment(instance_id)
 
     function win(r) {
       localStorage.imageURI = '';
+      localStorage.resubmit_code = '';      
        window.location.href="add_comments.html"
     }
 
@@ -2916,18 +3105,12 @@ function submitcomment(instance_id)
         },
         success: function(resp) {
             //alert(resp)
+            localStorage.resubmit_code = '';            
             window.location.href="add_comments.html"
         }
     });
     }
 } 
-
-function sortResults(prop, asc) {
-    arr = arr.sort(function(a, b) {
-        if (asc) return (a[prop] > b[prop]);
-        else return (b[prop] > a[prop]);
-    });
-}
 
 //function to like and dislike comment
 function likedislikecomment(id,like)
@@ -2949,26 +3132,12 @@ function likedislikecomment(id,like)
    });
 }
 
-//function to like and dislike question
-function likedislikequestion(id,like)
-{
-  jQuery(document).ready(function($)
-  {
-    $(".loading_cancel").show();  
-    $(".questions-container").hide();
-  var main_url = server_url + 'Add-question/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
-       //  alert(main_url);
-        $.ajax({
-            url: main_url,
-            dataType: "json",
-            method: "GET",
-            success: function(obj) {
-            window.location.href = 'add_questions.html';
-            }
-            });
-   });
+function sortResults(prop, asc) {
+    arr = arr.sort(function(a, b) {
+        if (asc) return (a[prop] > b[prop]);
+        else return (b[prop] > a[prop]);
+    });
 }
-
 
 //function to delete entries from all the tables
 function truncatealltables() {

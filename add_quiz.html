@@ -15,7 +15,7 @@
         <meta name="googlebot" content="noarchive">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
-        <meta name="apple-touch-fullscreen" content="yes">
+         <meta name="apple-touch-fullscreen" content="yes">
 
                    
             <link rel="stylesheet" href="css/main.css">
@@ -29,13 +29,14 @@
             <script type="text/javascript">
                 document.addEventListener("deviceready", onDeviceReady, false);
                function onDeviceReady() {
-             jQuery(document).ready(function($)
+        //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
+           jQuery(document).ready(function($)
             {
-                  showquestions();
+                  showquiz();
             });
     }
     var localLink = '/';
-                var GHomepageLink = "add_questions.html";
+    var GHomepageLink = "add_quiz.html";
             </script>
             </head>
     <body class="">
@@ -70,8 +71,8 @@
                                     <a href="profile.html">
                         <div class="log-info">
                             <p>
-                                                             <!--br>
-                                                                    <strong>&lt; Oslo, Norway &gt; </strong><br-->
+                                <!--br>
+                                      <strong>&lt; Oslo, Norway &gt; </strong><br-->
                                                             </p>
                         </div>
                          <div class="img-wrapper" id="profile_pic" style=""></div>
@@ -80,108 +81,74 @@
         </div>
     </div>
 </header>
+
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading Questions...
+        Loading quiz...
         <br />
         <img src="img/loading.gif" />
-</div>
-
-<div align="center" class="container loading_cancel main-container">
-       <br />
-        Action in Progress...
-        <br />
-        <img src="img/loading.gif" />
-</div>
-
- <div class="container main-container questions-container">
-	<div class="header-title row">
-		<p class="presentation-item-header">
+</div>            
+<div class="container main-container quiz-container">
+<div class="quiz-header-title row">
+        <p class="presentation-item-header">
 			
-<a class="nav-arrow prev" href="#" title="Back to presentation"><i class="fa fa-angle-left"></i></a>
+<a class="nav-arrow prev" href="agenda_item.html" title="Back to presentation"><i class="fa fa-angle-left"></i></a>
 
-<span class="breadcrumbs"><a href="agenda_item.html"></a> / 
-<span class="green-text"></span></span>		</p>
-	</div>
-			<div class="questions-heading-title row">
-			<div class="votes-count col-xs-6">
-				<i class="fa fa-question"></i>
-                <span class="green-text">3</span> 
-                Questions / 
-                <span class="small-text">2 
-                add question answers</span>
-			</div>
-			<div class="votes-sort col-xs-6">
-				<span>Sort by:</span>
-                <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
-                                        <i class="fa fa-caret-down"></i> 
-                                        Time                </a>
-                <a href="#" onclick="sortcomments('sort/likes/asc');">
-                                        <i class="fa fa-caret-down"></i> 
-                                        Likes                </a>
-			</div>
-		</div>
-                     <div class="comment_loop">
-                     <div class="questions-filter-items main-questions-form-container">
-		
-<div class="has-file-upload" id="createdform">
-
-<div data-role="fieldcontain" class="form-group textarea frmfld_question">
-<textarea class="form-control" id="frmfld_question" name="question" maxlength="4096" placeholder="Write a question"></textarea>
-<span>
-<i class="fa fa-question"></i>
-</span></div>
-<div class="form-group hidden frmfld_presentation_id" data-role="fieldcontain">
-  <input type="hidden" value="142" name="presentation_id" id="frmfld_presentation_id">
-</div>
-<div class="success-status hide">
-    <div class="success-icon-wrapper">
-        <i class="icon-check"></i>
+<span class="breadcrumbs">
+<a href="agenda_item.html">Weekly Contest - Shitty user experiences</a> / 
+<span class="green-text">3. Weekly Contest - Shitty user experiences</span></span>		</p>
     </div>
-    <p></p>
-</div>
-
-<div class="error-status hide">
-    <div class="error-icon-wrapper">
-        <i class="fa fa-ban"></i>
+    <div class="quiz-timer-container row">
+        <span class="quiz-icon-wrapper">
+            <i class="icon-quiz"></i>
+        </span>
+        <span class="quiz-number">
+            1 / 1        </span>
+        
+                <span class="timer-icon">
+            <i class="fa fa-clock-o"></i>
+            <span id="countdown_box">1787</span>
+        </span>
+        
+        <span class="quiz-questions">
+            <ul class="questions-bar">
+                                                        <li class="active"></li>
+                                                </ul>
+        </span>	
     </div>
-    <p></p>
-</div>
-
-<div class="clearfix">
-        <div class="frm_field submit" data-role="fieldcontain">
-        <button name="submit" onclick="submitquestion();" class="submit_com" type="submit">Send</button>
-        <button name="submits" class="loading_send" style="display:none" type="submit">Sending...</button>
-        </div>
- 
-    </div>
-    <div class="swiper-container swiper-container-horizontal">
-    <div class="files swiper-wrapper">
-    <div class="template-upload swiper-slide fade in swiper-slide-active" style="width: 98.3333px; margin-right: 5px;">
-            <div class="name"></div>
-            <div class="preview"><canvas width="80" height="80"></canvas></div>
-            <i class="fa fa-times cancel" onclick="hidethumb();"></i>
-        </div></div>
-</div>
-
-<div class="swiper-container swiper-container-horizontal">
-    <div class="files swiper-wrapper">
-    </div>
-</div>
-
-</div>
-	</div>                   
+    <div class="quiz-question-container">
                     
-    </div>    
+                <div class="quiz-question">
+                  </div>
+        <h4></h4>
+    </div>
+    <div id="quiz_form" action="" method="post">
        
-</div>
+                   
+                    
+       
+              
+                <div class="quiz-answer-container">
+                                   
+                    </div>
+                <div class="quiz-btn-wrapper">
+                        
+            
+                        
+                    </div>
+    </div>
+    <div class="quiz-btn-wrapper hidden">
+        <button id="show_questions_btn" class="btn btn-primary">Show questions</button>
+    </div>
+    </div>
 
 
                <footer>
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 footer-menu">
-                                                                        
+            <div class="col-xs-12 footer-menu">  
+                                                                               
+                   
                     </div>
         </div>
     </div>
@@ -202,8 +169,8 @@
                             <a href="profile.html">
                                 Manea                            </a>
                         </p>
-                         <span class="team-name">&lt; test &gt;</span>
-                        <div class="edit-btn-wrapper">
+                                                    <span class="team-name">&lt; test &gt;</span>
+                                                <div class="edit-btn-wrapper">
                             <a href="#">Edit User</a>
                         </div>
                     </div>
@@ -214,7 +181,7 @@
                         <p class="my-events-title">My events</p>
                                                 <p>
                             <a href="index.html" class="active">
-                              OCintranet                        </a>
+                               OCintranet</a>
                         </p>
                                             </div>
                 </div>
@@ -231,12 +198,12 @@
                                 Profile                            </a>
                         </li>
                                                 <li>
-                            <a class="active" href="ticket.html">
+                            <a href="ticket.html">
                                 <i class="gicon-my-ticket"></i>
                                 My ticket                            </a>
                         </li>
-                                                <li>
-                            <a href="agenda.html">
+                        <li>
+                            <a class="active" href="agenda.html">
                                 <i class="gicon-agenda"></i>
                                 Agenda                            </a>
                         </li>
@@ -249,7 +216,7 @@
                             <a href="contacts.html">
                                 <i class="gicon-friends">
                                                                     </i>
-                                Add Contacts                          </a>
+                               Add Contacts                          </a>
                         </li>
                                                 <li>
                             To install, tap <span></span> and choose<br> "Add to Home Screen"
