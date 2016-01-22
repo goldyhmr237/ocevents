@@ -43,7 +43,7 @@ $(function ()
     $('.item-interaction-rate a').on('click', function (e) 
     {	
         e.preventDefault();
-	});
+	  });
     
 	$('.item-interaction-rate:not(.readonly) a').on('click', function (e) 
     {	
@@ -181,6 +181,7 @@ $(function ()
 
 	$('.voting-content-item > ul > li > a, .voting-content-item > ul > li a.cancel , .voting-content-item > ul > li a.voting-toggle-btn').on('click', function (e)
     {
+    alert('hi')
 		e.preventDefault();
         
         var btn = $(this);

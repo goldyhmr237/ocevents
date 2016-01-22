@@ -613,8 +613,6 @@ function getPhoto(source) {
 function onPhotoURISuccess(imageURI) {
 
     var imageData = imageURI;
-
-    //  alert(imageData);          
     var photo_ur = imageData;
     var options = new FileUploadOptions();
     var imageURI = photo_ur;
@@ -680,11 +678,6 @@ function onPhotoURISuccess(imageURI) {
                 }
             });
         }
-        //alert("Response = " + r.response.status.toString());
-        //alert("Response = " + r.status);
-
-        //alert(r.response.status);
-        //alert("Sent = " + r.bytesSent.toString());
     }
 
     function fail(error) {
@@ -832,6 +825,10 @@ function loadagendaitem() {
                     if(val.name == 'quiz')
                     {
                         onclick = 'onclick=add_quiz()';
+                    }
+                    if(val.name == 'voting')
+                    {
+                        onclick = 'onclick=voting()';
                     }
                     //alert(text)
                     $(".presentation-modules").append('<a href="#" '+onclick+'><i class="' + icon_class + '"></i>' + text + '</a>')
@@ -2563,6 +2560,10 @@ function showfooter(active) {
                     {
                       onclick = 'onclick=add_quiz()';
                     }
+                    if(name == 'voting')
+                    {
+                      onclick = 'onclick=voting()';
+                    }
                     //alert(onclick);
                     menu_text = results.rows.item(i).menu_text;
                     icon = results.rows.item(i).icon;
@@ -2583,12 +2584,156 @@ function showfooter(active) {
     });
 }
 
+
+
+//function to redirect to voting
+function voting()
+{
+    window.location.href="voting.html"
+}
+
+//function to show voting
+function showvoting()
+{
+   jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".voting-page-container").hide();
+        
+        //alert('hi')
+        importfooter('Add-vote/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = server_url + 'Add-vote/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+               
+               $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs .green-text").html(val.text);
+                    }
+                });
+                //$.each( obj.votesCount, function( k, v ) {
+                   
+                         $('.votes-count .green-text').html(obj.totalCount);
+                    
+                  
+                   //});
+                   $('.voting-content-item').html('<ul>');
+                   var is_answer = 0;
+                   $.each(obj.voteItems, function( key, val ) {
+                    if(checkdefined(val.is_active) == 'yes')
+                    {
+                       is_answer = 1;
+                    }
+                   });
+                   
+                    $.each( obj.voteItems, function( key, val ) {
+                    var classcss='';
+                    var classcssli='';
+                    
+                    if(checkdefined(val.is_active) == 'yes')
+                    {
+                       classcss = 'style="background-color:#2c3139"'; 
+                      
+                      
+                    }
+                    if(is_answer == 1 && checkdefined(val.is_active) != 'yes')
+                    {
+                        classcssli = 'style="opacity:0.3"';
+                        //alert(classcssli)
+                    }
+                                                            
+                    
+                      $('.voting-content-item ul').append('<li '+classcssli+'><a '+classcss+' href="#"><h4 class="vote-item-title">'+val.title.value+'</h4><p class="vote-item-subtitle"></p><div class="voting-item-count"><i class="icon-voting"></i>'+val.votes_count+' votes</div></a><div class="voting-confirm-wrapper"><h4>Give your vote!</h4><div class="confirm-btn-wrapper"><a href="" class="cancel">Cancel</a><a href="#" onclick="givevote('+val.instance_id.value+');" class="voting-toggle-btn">Yes</a></div></div></li>');
+                          //alert('<li '+classcssli+'><a href="#"><h4 class="vote-item-title">'+val.title.value+'</h4><p class="vote-item-subtitle"></p><div class="voting-item-count"><i class="icon-voting"></i>'+val.votes_count+' votes</div></a><div class="voting-confirm-wrapper"><h4>Give your vote!</h4><div class="confirm-btn-wrapper"><a href="" class="cancel">Cancel</a><a href="#" onclick="givevote('+val.instance_id.value+');" class="voting-toggle-btn">Yes</a></div></div></li>')
+                      });
+                     
+                     $('.voting-content-item').append('</ul>'); 
+                     if(is_answer != 1)
+                    {
+                                         
+                     $('.voting-content-item > ul > li > a, .voting-content-item > ul > li a.cancel , .voting-content-item > ul > li a.voting-toggle-btn').on('click', function (e)
+                      {
+                          e.preventDefault();
+                          var btn = $(this);
+                          var votingContentWrapper = $('.voting-content-wrapper');
+                          var isInactiveWrapper = votingContentWrapper.hasClass('inactive');
+                          var isClosedWrapper = votingContentWrapper.hasClass('closed');
+                          var isDisabledItem = btn.closest('li').hasClass('disabled');
+                              
+                      		if (isInactiveWrapper || isClosedWrapper || isDisabledItem) {
+                      			return false;
+                      		}
+                              
+                      		btn.closest('li:not(.active)').toggleClass('opened');
+                  	});
+                    $('.voting-content-item > ul > li .voting-toggle-btn').on('click', function (e)
+                    {
+                		e.preventDefault();
+                        
+                        var btn = $(this);
+                		btn.closest('li').toggleClass('active');
+                        
+                        setTimeout(function () 
+                        {
+                            window.location = btn.attr('href');
+                        }, 500);
+                	});
+                  }                  
+                $('#vote-items-filter').on('keyup', function () 
+                {
+                    var val = $(this).val().toLowerCase();
+                    
+                    $('.voting-content-item li').each(function () 
+                    {
+                        var el = $(this);
+                        
+                        var inTitle = el.find('.vote-item-title').text().toLowerCase().indexOf(val) != -1;
+                        var inSubtitle = el.find('.vote-item-subtitle').text().toLowerCase().indexOf(val) != -1;
+                        
+                        if (inTitle || inSubtitle) {
+                            el.removeClass('hidden');
+                        } else {
+                            el.addClass('hidden');
+                        }
+                    });
+                });
+         
+                $(".voting-page-container").show();
+                $(".loading_agenda_items").hide();
+             }
+          });
+          });      
+}
+
+
+
+//function to give vote
+function givevote(instance_id)
+{
+    var main_url = server_url + 'Add-vote/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/'+instance_id+'/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+              window.location.href='voting.html';
+            }
+            });
+}
+
 //function to redirect to quiz
 function add_quiz()
 {
     window.location.href="add_quiz.html"
 }
-
 //function to show quiz
 function showquiz()
 {
@@ -2605,7 +2750,7 @@ function showquiz()
             dataType: "json",
             method: "GET",
             success: function(obj) {
-               $('.quiz-number').html(obj.questionNumber+' / '+obj.numQuestions);
+               
                $.each(obj.breadcrumbs, function(key, val) {
 
                     if (key == 0) {
@@ -2615,10 +2760,15 @@ function showquiz()
                         $(".breadcrumbs .green-text").html(val.text);
                     }
                 });
-                if(checkdefined(obj.correctAnswerPositions) == 'yes' && obj.questionNumber != obj.numQuestions)
+                if(checkdefined(obj.results) == 'yes')
                 {
-                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1">Next question</button>'); 
+                    $('.questionsdiv').hide();
+                    $('.quiz-header-title').after('<div class="quiz-results-wrapper"><div class="quiz-results"><h3 class="green-text">Results</h3><p>'+obj.results+'</p><span class="score green-text">'+obj.quizPoints+'</span></div><div class="quiz-btn-wrapper"><a class="btn btn-primary" href="javascript:resetquiz();">Try again</a><a class="btn btn-primary scoreboard"  href="javascript:gotoscorecard();">Scoreboard</a></div></div>');
                 }
+                else
+                { 
+                $('.questionsdiv').show();
+                $('.quiz-number').html(obj.questionNumber+' / '+obj.numQuestions);
                 $('.quiz-question').html(obj.question.question);
                 //alert(obj.question.answers);
                 var arr = obj.question.answers.split('\r\n');
@@ -2628,27 +2778,51 @@ function showquiz()
                     var label_class='';
                     var value = i + 1;
                     var dis = '';
+                    
                     if(checkdefined(obj.correctAnswerPositions) == 'yes')
                     {
-                      
                        label_class = 'disabled';
                        dis = 'disabled';
-                       if(obj.correctAnswerPositions == value)
+                       var sp = obj.correctAnswerPositions.length;
+                       //alert(sp)
+                       if(sp == 1)
+                       {                       
+                         if(obj.correctAnswerPositions == value)
+                         {
+                            label_class = 'correct-answer disabled';
+                         } 
+                       }
+                       if(sp > 1)
                        {
-                          label_class = 'correct-answer disabled';
-                       } 
+                          for(j = 0; j < sp; j++){
+                            if(value == obj.correctAnswerPositions[j])
+                            {
+                               label_class = 'correct-answer disabled';
+                               //alert(obj.correctAnswerPositions[j])
+                            }
+                            //document.write("<br /> Element " + i + " = " + obj.correctAnswerPositions[i]); 
+                          }
+                       }  
                     }
+                   
                     
                     if(obj.questionMultipleAnswers == 'true' || obj.questionMultipleAnswers == true)
                     {
-                        var radio_button = '<label><div class="poeng-options"><input type="checkbox" class="ipt_quiz_a"  name="answer_position" id="ipt_quiz_a_1" value="'+value+'"><span class="check"></span><div class="text">'+arr[i]+'</div></div></label>';
+                        var radio_button = '<label class="'+label_class+'"><div class="poeng-options"><input type="checkbox" class="ipt_quiz_a"  name="answer_position" id="ipt_quiz_a_1" value="'+value+'"><span class="check"></span><div class="text">'+arr[i]+'</div></div></label>';
                         $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="submitmultipleanswers('+obj.question.instance_id+')" name="next_question" value="1">Submit</button>');  
                     }
                     else
                     {
                         var radio_button = '<label class="'+label_class+'"><div class="poeng-options"><input '+dis+' type="radio" class="ipt_quiz_a" onclick="submitanswer('+obj.question.instance_id+','+value+')" name="answer_position" id="ipt_quiz_a_1" value="'+value+'"><span class="check"></span><div class="text">'+arr[i]+'</div></div></label>';
                     }
-                     
+                    if(checkdefined(obj.correctAnswerPositions) == 'yes' && obj.questionNumber != obj.numQuestions)
+                {
+                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1">Next question</button>'); 
+                }
+                   if(checkdefined(obj.correctAnswerPositions) == 'yes' && obj.questionNumber == obj.numQuestions)
+                {
+                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1">Results Page</button>'); 
+                }  
                     
                      //alert(radio_button)
                     $('.quiz-answer-container').append(radio_button);
@@ -2667,6 +2841,7 @@ function showquiz()
                   }
                 
                 });
+                }
                $(".quiz-container").show(); 
                $(".loading_agenda_items").hide();  
             }
@@ -2674,10 +2849,120 @@ function showquiz()
       });      
 }
 
+//function to go to score card
+function gotoscorecard()
+{
+  window.location.href = 'scorecard.html'
+}
+
+//function to load score card
+function loadscorecard()
+{
+    jQuery(document).ready(function($) {
+        loadcommonthings();
+        $(".leaderboards-container").hide();
+        
+        //alert('hi')
+        importfooter('Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id+'/scorecard', 'agenda');
+                                    
+        var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/scoreboard/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+               $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs #b1").html(val.text);
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs #b2").html(val.text);
+                    }
+                    if (key == 2) {
+                        $(".breadcrumbs .green-text").html(val.text);
+                    }
+                });
+                $(".team-points-table table tbody").html('');
+                
+                $.each(obj.items, function(key, val) {
+                
+                      var cur_userclass = '';
+                     if(val.is_current_user == 'true' || val.is_current_user == true)
+                     {
+                        cur_userclass = 'current-user';
+                     }
+                     var avatar = '';
+                     if(val.image != 'false' && val.image != false)
+                     {
+                        avatar = '<div class="img img-circle" style="background-image:url('+val.image+');"></div>';
+                     }
+                   $(".team-points-table table tbody").append('<tr class='+cur_userclass+'><td class="num-col"><span class="num">'+val.position+'</span></td><td class="avatar-col"><span class="avatar">'+avatar+'</span></td><td><span class="name">'+val.name+'</span></td><td class="point">'+val.points+'</td></tr>');
+                   
+                });
+               
+                
+                     
+               /* var difference = Number(10) - Number(k);
+                for (v = 0; v < difference; v++) {
+                    k++;
+                    $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">' + k + '</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>');
+                } */
+                $(".leaderboards-container").show(); 
+                $(".loading_agenda_items").hide();
+            }
+            });
+            });
+}
+
+
+
+//function to reset the quiz
+function resetquiz()
+{
+    var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/reset_quiz/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+              window.location.href='add_quiz.html';
+            }
+            });
+}
+
 //function to submit multiple answers
 function submitmultipleanswers(question_id)
 {
-  alert(question_id)
+    //alert(question_id)
+    var arr = [];
+    jQuery('input:checkbox:checked').each(function() {        
+         //checkboxes += 'answer_position[]:'+jQuery(this).val();
+          arr.push(jQuery(this).val());
+          
+    });
+   // alert(checkboxes);
+    
+    var countdown_box = Number(jQuery('#countdown_box').html()+'000');
+    var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        jQuery.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data: {
+              submit_answer: 1,
+              question_id:question_id, 
+              answer_position: arr,            
+              countdown:countdown_box,
+              //checkboxes
+          },
+            success: function(obj) {
+              window.location.href='add_quiz.html';
+            }
+            });
 }
 
 //function to submit answer

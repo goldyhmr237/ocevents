@@ -32,11 +32,11 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  showquiz();
+                  loadscorecard();
             });
     }
     var localLink = '/';
-    var GHomepageLink = "add_quiz.html";
+                var GHomepageLink = "scorecard.html";
             </script>
             </head>
     <body class="">
@@ -71,8 +71,8 @@
                                     <a href="profile.html">
                         <div class="log-info">
                             <p>
-                                <!--br>
-                                      <strong>&lt; Oslo, Norway &gt; </strong><br-->
+                                                             <!--br>
+                                                                    <strong>&lt; Oslo, Norway &gt; </strong><br-->
                                                             </p>
                         </div>
                          <div class="img-wrapper" id="profile_pic" style=""></div>
@@ -81,76 +81,81 @@
         </div>
     </div>
 </header>
-
 <div align="center" class="container loading_agenda_items main-container">
        <br />
-        Loading quiz...
+        Loading Scores...
         <br />
         <img src="img/loading.gif" />
 </div>            
-<div class="container main-container quiz-container">
-<div class="quiz-header-title row">
-        <p class="presentation-item-header">
-			
-<a class="nav-arrow prev" href="agenda_item.html" title="Back to presentation"><i class="fa fa-angle-left"></i></a>
-
+<div class="container main-container leaderboards-container">
+	<div class="header-title row">
+    <p>
 <span class="breadcrumbs">
-<a href="agenda_item.html"></a> / 
-<span class="green-text"></span></span>		</p>
-    </div>
-    <div class="questionsdiv">
-    <div class="quiz-timer-container row">
-        <span class="quiz-icon-wrapper">
-            <i class="icon-quiz"></i>
-        </span>
-        <span class="quiz-number">
-                    </span>
-        
-                <span class="timer-icon">
-            <i class="fa fa-clock-o"></i>
-            <span id="countdown_box">1787</span>
-        </span>
-        
-        <span class="quiz-questions">
-            <ul class="questions-bar">
-                                                        <li class="active"></li>
-                                                </ul>
-        </span>	
-    </div>
-    <div class="quiz-question-container">
-                    
-                <div class="quiz-question">
-                  </div>
-        <h4></h4>
-    </div>
-    <div id="quiz_form" action="" method="post">
-       
-                   
-                    
-       
-              
-                <div class="quiz-answer-container">
-                                   
-                    </div>
-                <div class="quiz-btn-wrapper">
-                        
-            
-                        
-                    </div>
-    </div>
-    <div class="quiz-btn-wrapper hidden">
-        <button id="show_questions_btn" class="btn btn-primary">Show questions</button>
-    </div>
-    </div>
-    </div>
+<a href="agenda_item.html" id="b1"></a> / <a id="b2" href="add_quiz.html"></a> / <span class="green-text"></span></span></p>	</div>
+	<div class="subheader-grey row"></div>
+	<div class="top-results-table-container row">
+		<div class="team-points-table">
+			<table class="table table-striped">
+				<tbody>
+                                        <tr class="current-user">
+                            <td class="num-col">
+                                <span class="num">1</span>
+                            </td>
+                            <td class="avatar-col">
+                                <span class="avatar">
+                                    <div class="img img-circle" style="background-image:url('');"></div>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="name">
+                                    Rahul Chhabra                                </span>
+                            </td>
+                            <td class="point">
+                                2 698 500                            </td>
+                        </tr>
+                                            <tr>
+                            <td class="num-col">
+                                <span class="num">2</span>
+                            </td>
+                            <td class="avatar-col">
+                                <span class="avatar">
+                                    <div class="img img-circle" style="background-image:url('');"></div>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="name">
+                                    Marian Bucur                                </span>
+                            </td>
+                            <td class="point">
+                                1 774 000                            </td>
+                        </tr>
+                                            
+                                            <tr>
+                            <td class="num-col">
+                                <span class="num">4</span>
+                            </td>
+                            <td class="avatar-col">
+                                <span class="avatar"></span>
+                            </td>
+                            <td>
+                                <span class="name">-</span>
+                            </td>
+                            <td class="point">0</td>
+                        </tr>
+                                            
+                    				</tbody>
+			</table>
+		</div>
+	</div>
+</div>  
+
 
 
                <footer>
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 footer-menu">  
-                                                                               
-                   
+            <div class="col-xs-12 footer-menu">
+                                                                         
                     </div>
         </div>
     </div>
@@ -204,13 +209,13 @@
                                 <i class="gicon-my-ticket"></i>
                                 My ticket                            </a>
                         </li>
-                        <li>
-                            <a class="active" href="agenda.html">
+                                                <li>
+                            <a href="agenda.html">
                                 <i class="gicon-agenda"></i>
                                 Agenda                            </a>
                         </li>
                                                                         <li>
-                            <a href="points.html">
+                            <a class="active" href="points.html">
                                 <i class="gicon-points"></i>
                                 Points                            </a>
                         </li>
@@ -218,7 +223,7 @@
                             <a href="contacts.html">
                                 <i class="gicon-friends">
                                                                     </i>
-                               Add Contacts                          </a>
+                                Add Contacts                            </a>
                         </li>
                                                 <li>
                             To install, tap <span></span> and choose<br> "Add to Home Screen"
