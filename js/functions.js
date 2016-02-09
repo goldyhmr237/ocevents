@@ -830,6 +830,10 @@ function loadagendaitem() {
                     {
                         onclick = 'onclick=voting()';
                     }
+                    if(val.name == 'seeker')
+                    {
+                      onclick = 'onclick=gotoseeker()';
+                    }
                     //alert(text)
                     $(".presentation-modules").append('<a href="#" '+onclick+'><i class="' + icon_class + '"></i>' + text + '</a>')
 
@@ -2564,6 +2568,10 @@ function showfooter(active) {
                     {
                       onclick = 'onclick=voting()';
                     }
+                    if(name == 'seeker')
+                    {
+                      onclick = 'onclick=gotoseeker()';
+                    }
                     //alert(onclick);
                     menu_text = results.rows.item(i).menu_text;
                     icon = results.rows.item(i).icon;
@@ -2584,13 +2592,253 @@ function showfooter(active) {
     });
 }
 
+//function to redirect to seeker
+function gotoseeker()
+{
+  window.location.href="seeker.html"
+}
 
+function showseekerresults(ur)
+{
+    //alert(ur)
+    jQuery(document).ready(function($) {
+        loadcommonthings();        
+        $(".seeker-game-container").hide();
+        $(".loading_agenda_items").show(); 
+        importfooter('seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id+'/'+ur, 'agenda'); 
+        var main_url = server_url + 'seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/' + ur + '/?gvm_json=1';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+                $.each(obj.breadcrumbs, function(key, val) {
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs .green-text").html(val.text);
+                    }
+                });
+                $('.congratsText').html(obj.congratsText);
+                $('.table tbody').html('');
+                $.each(obj.items, function(key, val) {
+                var cssofclass = '';
+                var tdcssofclass = '';
+                if(val.is_current_user == 'true' || val.is_current_user == true)
+                {
+                   cssofclass = 'class="current-user"';
+                   tdcssofclass = 'class="player-name"';
+                } 
+                
+                if(val.correct_answers == '-')
+                {
+                    var str = '-';
+                }
+                else
+                {
+                    var str = val.correct_answers+'/'+obj.floormapsCount;
+                }
+                               
+                    $('.table tbody').append('<tr '+cssofclass+'><td '+tdcssofclass+'><div class="player-name-wrapper"><span class="player-position">'+val.position+'.</span>'+val.name+'</div></td><td class="correct-answers">'+str+'</td><td class="seeker-hints-col"><span class="hints-count-label label label-danger">'+val.hints+'</span></td><td class="points">'+val.no_1_count+'</td><td class="points">'+val.no_2_count+'</td><td class="points">'+val.no_3_count+'</td><td>'+val.points+'</td></tr>');    
+                });
+                if(checkdefined(ur) == 'yes')
+                {
+                    $('.seeall').html('Top Scores');
+                    $('.seeall').attr('href','javascript:showseekerresults();');
+                }
+                else
+                {
+                   $('.seeall').html('See All');
+                    $('.seeall').attr('href','javascript:showseekerresults("l-full");');
+                }
+                $(".seeker-game-container").show();
+                $(".loading_agenda_items").hide();  
+           }
+        });               
+    });    
+                    //4,981
+}
+
+//function to reset seeker game
+function reset_seeker()
+{                         
+    var main_url = server_url + 'seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/reset_seeker?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+              window.location.href = 'seeker.html';
+            }
+        });
+}        
+
+function showseeker()
+{
+    jQuery(document).ready(function($) {
+        loadcommonthings();
+        
+        $(".seeker-game-container").hide(); 
+          importfooter('seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
+        
+        
+        var main_url = server_url + 'seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+              $('.show-hint').click(function()
+              {
+                var seeker_id = obj.currentFloormapInstance.seeker_session_a_i_id.value;
+                var get_seeker_hint = 'get_seeker_hint';
+                var main_url = server_url + 'modules/gamification/ajax/frontend_ws.php';
+                //alert(main_url)
+                $.ajax({
+                  url: main_url,
+                  dataType: "json",
+                  method: "POST",
+                  data: {
+                    action: get_seeker_hint,
+                    seekerId: seeker_id
+                  },                 
+                  success:function(datas) {
+                      $('.seeker-hint').html(datas.hint);
+                      $('.seeker-hint').show();
+                  },
+                  error: function(xhr, textStatus, errorThrown){
+                         alert('Request Failed');                  
+                  } 
+                 
+              });
+              });              
+               
+               $.each(obj.breadcrumbs, function(key, val) {
+
+                    if (key == 0) {
+                        $(".breadcrumbs a").html(val.text)
+                    }
+                    if (key == 1) {
+                        $(".breadcrumbs .green-text").html(val.text);
+                    }
+                });  
+                
+                
+                if(checkdefined(obj.congratsText) == 'yes')
+                {
+                   window.location.href = 'seeker_results.html';
+                }              
+                   
+                  $('.oneof').html(obj.currentPosition);
+                  $('.totalof').html(obj.floormapsCount);
+                  $('.bordered').html(''); 
+                  for(j = 1; j<=obj.floormapsCount; j++)
+                  {
+                     if(j == obj.userPositionForFloormap)
+                     {
+                         var classofcss = 'class="active"';
+                     }
+                     else
+                     {
+                         var classofcss = '';
+                     }
+                     $('.bordered').append('<li '+classofcss+'>'+j+'</li>'); 
+                  }  
+                  localStorage.correct_answer = obj.currentFloormapInstance.code.value;  
+                  $('.seeker-description').html('');
+                  if(checkdefined(obj.currentFloormapInstance.floormap_image.value) == 'yes')
+                  {                                               
+                     $('.seeker-description').append('<img src='+server_url+'resources/files/images/'+obj.currentFloormapInstance.floormap_image.__extra.large_file_name+' />'); 
+                  }           
+                  $('.seeker-description').append(obj.currentFloormapInstance.description.value+'<div class="seeker-hint"></div>');
+                  $('.seeker-hint').html(obj.currentFloormapInstance.hint.value);
+                  $(".seeker-game-container").show();
+                  $(".loading_agenda_items").hide();
+                  localStorage.resubmit_code = obj.form.noResubmitCode;
+              }
+           });        
+        });
+}
+
+//function to submit answer for seeker
+function submitseekeranswer()
+{
+    var submit_form = 1;
+    var form_noresubmit_code = localStorage.resubmit_code;
+   //alert(form_noresubmit_code)
+    var code = jQuery('#frmfld_code').val();
+    if(checkdefined(code) != 'yes')
+    {
+        alert('Please submit your answer!');
+        $('#frmfld_code').focus();
+    }
+    else
+    {
+      //jQuery(".submit_com").hide();
+      //jQuery(".loading_send").show(); 
+      var main_url = server_url + 'seeker/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+        jQuery.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data: {
+                submit_form: submit_form,
+                form_noresubmit_code:form_noresubmit_code,
+                code:code
+            },
+            success: function(resp) {
+                localStorage.resubmit_code = '';
+                $('.seeker-description img').remove();
+                $('.seeker-map-wrapper').show();
+                if(localStorage.correct_answer == code)
+                {
+                  localStorage.correct_answer = '';
+         $('.seeker-map-wrapper').html('<div class="seeker-bg-overlay"></div><a href="seeker.html" class="msg-wrapper"><div class="right-msg-container"><i class="fa fa-check"></i><h4><p>You got the <strong>correct</strong> code!</p></h4><p>New task starts in <span id="countdown" class="hasCountdown">05</span> seconds...</p></div></a>');
+         
+                    var c = 5;
+                    setInterval(function(){
+                		c--;
+                		if(c>=0){
+                			$('#countdown').text(c);
+                		}
+                    if(c==0){
+                       window.location.href="seeker.html"
+                    }
+                	},1000);
+                }
+                else
+                {
+                 localStorage.correct_answer = '';
+         $('.seeker-map-wrapper').html('<div class="seeker-bg-overlay"></div><a class="msg-wrapper" href="seeker.html"><div class="wrong-msg-container"><i class="fa fa-ban"></i><h5><p>The entered code is <strong>incorrect</strong>. <br>Try again!</p></h5><p>New task starts in <span id="countdown" class="hasCountdown">5</span> seconds...</p></div></a>');
+         
+              var c = 5;
+              setInterval(function(){
+          		c--;
+          		if(c>=0){
+          			$('#countdown').text(c);
+          		}
+                  if(c==0){
+                      window.location.href="seeker.html"
+                  }
+          	},1000);
+                }
+                
+                //
+            }
+        });
+    }  
+}
 
 //function to redirect to voting
 function voting()
 {
     window.location.href="voting.html"
 }
+
+
 
 //function to show voting
 function showvoting()
@@ -2639,14 +2887,11 @@ function showvoting()
                     
                     if(checkdefined(val.is_active) == 'yes')
                     {
-                       classcss = 'style="background-color:#2c3139"'; 
-                      
-                      
+                       classcss = 'style="background-color:#2c3139"';
                     }
                     if(is_answer == 1 && checkdefined(val.is_active) != 'yes')
                     {
-                        classcssli = 'style="opacity:0.3"';
-                        //alert(classcssli)
+                        classcssli = 'style="opacity:0.3"';                        
                     }
                                                             
                     
@@ -2707,6 +2952,13 @@ function showvoting()
          
                 $(".voting-page-container").show();
                 $(".loading_agenda_items").hide();
+                $('.voting-countdown').countdown({
+                  
+            until: +obj.closesInTime, 
+            onExpiry: refreshPresentationPage, 
+            format: 'HMS', 
+            compact: true
+        });
              }
           });
           });      

@@ -13,6 +13,7 @@
 
 /* Countdown manager. */
 function Countdown() {
+
 	this.regional = []; // Available regional settings, indexed by language code
 	this.regional[''] = { // Default regional settings
 		// The display texts for the counters
@@ -52,7 +53,7 @@ function Countdown() {
 		tickInterval: 1 // Interval (seconds) between onTick callbacks
 	};
 	$.extend(this._defaults, this.regional['']);
-	this._serverSyncs = [];
+	this._serverSyncs = [];  
 	var now = (typeof Date.now == 'function' ? Date.now :
 		function() { return new Date().getTime(); });
 	var perfAvail = (window.performance && typeof window.performance.now == 'function');

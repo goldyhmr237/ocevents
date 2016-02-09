@@ -8048,11 +8048,10 @@ ul {
 }
 .main-container .header-title p .breadcrumbs {
     padding: 0 10px;
-    width: auto;/* Width Modified from rahul width: 90%; */
+    width: 90%;
 }
 .main-container .header-title p .nav-arrow {
-  /* Width Modified from rahul width: 5%; */
-    width: auto;
+    width: 5%;
 }
 .main-container .header-title p i {
   font-size: 26px;
@@ -8534,7 +8533,7 @@ ul {
   margin-top: 30px;
 }
 .green-text {
-  color: #94be3e;
+  color: #94be3e !important;
 }
 /*****************************************************************
 						Media - mobile
@@ -10835,14 +10834,17 @@ ul {
   font-size: 26px;
   color: #20b5d6;
 }
-.seeker-game-container .seeker-container .seeker-bg-container .right-msg-container {
+.seeker-game-container .seeker-container .seeker-bg-container .right-msg-container,
+.seeker-game-container .seeker-container .seeker-bg-container .wrong-msg-container{
   padding: 10px 20px 20px 20px;
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   border-radius: 30px;
-  background: #94be3e;
   display: inline-block;
   width: 72%;
+}
+.seeker-game-container .seeker-container .seeker-bg-container .right-msg-container {
+  background: #94be3e;
 }
 .seeker-game-container .seeker-container .seeker-bg-container .right-msg-container i {
   color: #fff;
@@ -10859,11 +10861,6 @@ ul {
   margin-bottom: 5px;
 }
 .seeker-game-container .seeker-container .seeker-bg-container .wrong-msg-container {
-  -webkit-border-radius: 30px;
-  -moz-border-radius: 30px;
-  border-radius: 30px;
-  display: inline-block;
-  width: 72%;
   padding: 10px 20px;
   background: #de223d;
 }
@@ -10959,30 +10956,25 @@ ul {
   text-align: center;
   padding-bottom: 30px;
 }
-.seeker-game-container .seeker-finished-container .congrat-text-wrapper span {
-  color: #fff;
+.seeker-game-container .seeker-finished-container .congrat-text-wrapper p {
   font-size: 20px;
-}
-.seeker-game-container .seeker-finished-container .congrat-text-wrapper span p {
-  color: #94be3e;
-  font-size: 19px;
+  color: #fff;
   margin-bottom: 0;
 }
-.seeker-game-container .seeker-top-scores-container .seeker-scores-title {
-  font-size: 16px;
+.seeker-game-container .seeker-finished-container .congrat-text-wrapper small {
+  font-size: 15px;
   color: #94be3e;
-  padding: 5px 10px;
+}
+.seeker-game-container .seeker-scores-table thead {
+  color:#fff;
   background: #2c3139;
-  margin-left: -15px;
-  margin-right: -15px;
 }
 .seeker-game-container .seeker-top-scores-container .seeker-scores-table {
   padding-bottom: 20px;
 }
 .seeker-game-container .seeker-top-scores-container .seeker-scores-table table thead tr td {
   position: relative;
-  padding: 8px 2px;
-  padding-bottom: 0;
+  padding: 8px;
 }
 .seeker-game-container .seeker-top-scores-container .seeker-scores-table table thead tr td .bordered {
   text-align: center;
@@ -10994,6 +10986,7 @@ ul {
   border-radius: 50%;
   width: 18px;
   height: 18px;
+  line-height: 18px;
   background: white;
   display: inline-block;
   font-size: 12px;
@@ -11016,17 +11009,6 @@ ul {
 .seeker-game-container .seeker-top-scores-container .seeker-scores-table table thead tr td .bordered span.active:after {
   background: url(../img/seeker-border.png);
 }
-.seeker-game-container .seeker-top-scores-container .seeker-scores-table table tbody tr:last-child td {
-  color: #de223d;
-  border-bottom: 0;
-  position: relative;
-}
-.seeker-game-container .seeker-top-scores-container .seeker-scores-table table tbody tr:last-child td.player-name {
-  left: -10px;
-}
-.seeker-game-container .seeker-top-scores-container .seeker-scores-table table tbody tr:last-child td.points {
-  color: #de223d;
-}
 .seeker-game-container .seeker-top-scores-container .seeker-scores-table table tbody tr td {
   padding: 8px 6px;
   font-size: 14px;
@@ -11041,7 +11023,7 @@ ul {
   padding-right: 0;
   text-align: right;
 }
-.seeker-game-container .seeker-top-scores-container .seeker-scores-table table tbody tr td span {
+.seeker-game-container .seeker-top-scores-container .seeker-scores-table table tbody tr td .player-position {
   color: #94be3e;
 }
 .seeker-game-container .seeker-top-scores-container .seeker-scores-table table tbody tr td.points {
@@ -12234,10 +12216,8 @@ ul {
   left: 0;
   width: 100%;
   background: #ebecec;
-  border-top: 5px solid #dadbe0;
   text-align: left;
-  padding: 10px;
-  padding-bottom: 5px;
+  padding: 0 10px 5px 10px;
 }
 @media (min-width: 768px) {
     .questions-container .questions-filter-items,
@@ -12359,7 +12339,7 @@ ul {
 }
 .questions-container .questions-item-container {
   background: #fff;
-  padding-top: 10px;
+  padding-top: 20px;
   padding-bottom: 5px;
   border-bottom: 2px solid #ededee;
 }
@@ -12462,7 +12442,6 @@ ul {
   clear: both;
 }
 .questions-container .likes-container > a {
-  background: #e7e7e7;
   display: inline-block;
   float: left;
   text-decoration: none;
@@ -12475,9 +12454,6 @@ ul {
 }
 .questions-container .likes-container > a.liked-btn {
   display: none;
-}
-.questions-container .likes-container > a.liked-btn i {
-  color: #de223d;
 }
 .questions-container .likes-container > a i {
   color: #939598;
@@ -12498,10 +12474,6 @@ ul {
   display: inline-block;
   font-style: italic;
   float: left;
-}
-.questions-container .likes-container .dislikes-count a {
-  color: #94be3e;
-  text-decoration: underline;
 }
 /*****************************************************************
 						Media - mobile
@@ -13110,3 +13082,57 @@ footer .footer-menu .label-container label {
 {
   background-image:url('../img/bigplay.png') no-repeat;
 }  */
+.seeker-hint
+{
+  display:none;
+}
+
+.right-msg-container {
+  padding: 10px 20px 20px 20px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  background: #94be3e;
+  display: inline-block;
+  width: 72%;
+}
+.right-msg-container i {
+  color: #fff;
+  font-size: 43px;
+  margin-bottom: 5px;
+}
+.right-msg-container p {
+  color: #fff;
+  font-size: 17px;
+}
+.right-msg-container h4 {
+  color: #fff;
+  font-size: 38px;
+  margin-bottom: 5px;
+}
+
+.wrong-msg-container {
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  display: inline-block;
+  width: 72%;
+  padding: 10px 20px;
+  background: #de223d;
+}
+.wrong-msg-container h5 {
+  font-size: 17px;
+  color: #fff;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  line-height: 20px;
+}
+.wrong-msg-container i {
+  color: #fff;
+  font-size: 43px;
+}
+.wrong-msg-container p {
+  font-size: 15px;
+  color: #fff;
+  line-height: 16px;
+}
