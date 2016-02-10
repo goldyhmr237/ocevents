@@ -2611,7 +2611,7 @@ function loadnotes()
         loadcommonthings();        
         $(".notes-container").hide();
         $(".loading_agenda_items").show(); 
-        importfooter('Add-note/-/OCintranet-' + static_event_id, 'agenda'); 
+        importfooter('Add-note/-/OCintranet-' + static_event_id, 'notes'); 
         var main_url = server_url + 'Add-note/-/OCintranet-' + static_event_id +'/?gvm_json=1';
         $.ajax({
             url: main_url,
