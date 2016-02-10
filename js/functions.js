@@ -27,6 +27,8 @@ function resetpassword() {
     });
 }
 
+
+
 function removeprofileimage() {
     var main_url = server_url + 'api/index.php/auth/removeUserImage?XDEBUG_SESSION_START=PHPSTORM';
     jQuery.ajax({
@@ -2502,6 +2504,8 @@ function showfooter(active) {
                         link = 'points.html';
                     } else if (name == 'sponsors') {
                         link = 'sponsors.html';
+                    } else if (name == 'notes') {
+                        link = 'notes.html';
                     }
 
                     var friends_requests_count = results.rows.item(i).friends_requests_count;
@@ -2546,8 +2550,9 @@ function showfooter(active) {
                         link = 'contacts.html';
                     } else if (name == 'points') {
                         link = 'points.html';
-                    }
-                    else
+                    }else if (name == 'notes') {
+                        link = 'notes.html';
+                    }else
                     {
                       link = '#';
                     }
@@ -2596,6 +2601,97 @@ function showfooter(active) {
 function gotoseeker()
 {
   window.location.href="seeker.html"
+}
+
+//function to load notes
+function loadnotes()
+{
+    //alert(ur)
+    jQuery(document).ready(function($) {
+        loadcommonthings();        
+        $(".notes-container").hide();
+        $(".loading_agenda_items").show(); 
+        importfooter('Add-note/-/OCintranet-' + static_event_id, 'agenda'); 
+        var main_url = server_url + 'Add-note/-/OCintranet-' + static_event_id +'/?gvm_json=1';
+        $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "GET",
+            success: function(obj) {
+               $('.header-title h1').html(obj.pageTitle);
+               $('.questions-heading-title').hide();
+               if(checkdefined(obj.countNoteInstances) == 'yes')
+               {
+                  $('.questions-heading-title').show();
+                  $('.votes-count .green-text').html(obj.countNoteInstances);
+                  $('#allnotes').html('');
+                  $.each(obj.noteInstances, function(key, val) {
+                  
+                  var remstr = '';
+                  if(obj.currentEventUserId == val.eventuser_id)
+                  {
+                     remstr = ' <div class="clearfix"><a class="pull-right delete-note" href="javascript:removenote('+val.instance_id+')" data-url="/Add-note/-/OCintranet-100041/delete/28"><i class="fa fa-times"></i>Remove</a></div>'; 
+                  }
+                      var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div></div>'+remstr+'</div>';
+                   $('#allnotes').append(str);   
+                  });
+                  
+               } 
+               localStorage.resubmit_code = obj.form.noResubmitCode;               
+               $(".notes-container").show();
+               $(".loading_agenda_items").hide();
+            }
+       });     
+    });    
+}
+
+//function to add note
+function addnote()
+{
+    var submit_form = 1;
+    var form_noresubmit_code = localStorage.resubmit_code;
+   //alert(form_noresubmit_code)
+    var code = jQuery('#frmfld_note').val();
+    if(checkdefined(code) != 'yes')
+    {
+        alert('Please enter note!');
+        $('#frmfld_note').focus();
+    }
+    else
+    {
+       
+      var main_url = server_url + 'Add-note/-/OCintranet-'+static_event_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+        jQuery.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data: {
+                submit_form: submit_form,
+                form_noresubmit_code:form_noresubmit_code,
+                note:code
+            },
+            success: function(resp) {
+               window.location.href = 'notes.html';
+            }
+       });
+    }        
+}
+
+//function to remove note
+function removenote(id)
+{
+   if(confirm("Delete confirmation"))
+  {
+    var main_url = server_url + 'Add-note/-/OCintranet-' + static_event_id +'/delete/'+id+'/?gvm_json=1';
+          $.ajax({
+              url: main_url,
+              dataType: "json",
+              method: "GET",
+              success: function(obj) {
+                window.location.href = 'notes.html';
+             }
+        });
+   }         
 }
 
 function showseekerresults(ur)
@@ -2650,7 +2746,7 @@ function showseekerresults(ur)
                 else
                 {
                    $('.seeall').html('See All');
-                    $('.seeall').attr('href','javascript:showseekerresults("l-full");');
+                   $('.seeall').attr('href','javascript:showseekerresults("l-full");');
                 }
                 $(".seeker-game-container").show();
                 $(".loading_agenda_items").hide();  

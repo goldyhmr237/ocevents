@@ -376,6 +376,9 @@
 .gicon-sponsors:before {
 	content: "\e609";
 }
+.gicon-notes:before {
+    content: "\e632";
+}
 div.img {
     width: 100%;
     height: 100%;
