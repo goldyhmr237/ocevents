@@ -13137,7 +13137,7 @@ footer .footer-menu .label-container label {
   line-height: 16px;
 }
 
-/*ONLY FOR ANDROID BUILD, DON'T FORGET TO COMMENT FOR IOS BUILD*/
-/*header .header-login-wrapper {
+/*ONLY VALID FOR ANDROID BUILD, DON'T FORGET TO COMMENT FOR IOS BUILD*/
+header .header-login-wrapper {
  position: relative; 
-} */
+} 

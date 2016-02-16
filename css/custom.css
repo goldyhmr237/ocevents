@@ -303,11 +303,11 @@
 }
 @font-face {
     font-family: 'Gamification Icons';
-    src: url('../fonts/gamification-icons.eot');
-    src: url('../fonts/gamification-icons.eot?#iefix') format('embedded-opentype'),
-        url('../fonts/gamification-icons.woff') format('woff'),
-        url('../fonts/gamification-icons.ttf') format('truetype'),
-        url('../fonts/gamification-icons.svg#gamification-icons') format('svg');
+    src: url('../fonts/gamification-icons.eot?v=00000000');
+    src: url('../fonts/gamification-icons.eot?v=00000000#iefix') format('embedded-opentype'),
+        url('../fonts/gamification-icons.woff?v=00000000') format('woff'),
+        url('../fonts/gamification-icons.ttf?v=00000000') format('truetype'),
+        url('../fonts/gamification-icons.svg#gamification-icons?v=00000000') format('svg');
 }
 [class^="gicon-"], [class*=" gicon-"] {
 	font-family: 'Gamification Icons';
@@ -535,20 +535,30 @@ div.img {
     text-align: center;
 }
 .presentation-modules {
-    background-color: #D9DADF;
+    text-align: left;
+    margin: 10px auto 0 auto;
+    width: 80%;
+}
+.presentation-modules li {
+    margin-bottom: 10px;
 }
 .presentation-modules a {
-    color: #5E5E5E;
-    display: inline-block;
-    margin-right: 5%;
+    background: #94be3e;
+    padding: 5px 20px;
     text-decoration: none;
+    color: #fff;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    vertical-align: middle;
+    display: block;
 }
 .presentation-modules .last {
     margin-right: 0;
 }
 .presentation-modules i {
-    display: block;
     font-size: 40px;
+    vertical-align: middle;
 }
 @media (max-width:767px) {
     .video-item {
@@ -919,6 +929,11 @@ header, footer {
     resize: none;
 }
 
+@media (max-width: 400px) {
+    .presentation-modules {
+        width: 92%;
+    }
+}
 @media (min-width: 768px) {
     .btn-primary, .seeker-container .btn {
         max-width: 25%;
@@ -929,6 +944,15 @@ header, footer {
         display: block;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .presentation-modules {
+        width: 50%;
+    }
+}
+@media (min-width: 1200px) {
+    .presentation-modules {
+        width: 35%;
     }
 }
 
@@ -1212,7 +1236,7 @@ header, footer {
 }
 .like-btn:hover .fa-thumbs-up,
 .liked-btn .fa-thumbs-up {
-    color: #73CF27;
+    color: #94be3e;
 }
 .like-btn .fa-thumbs-down {
     color: #E9A2AD;

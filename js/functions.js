@@ -3,6 +3,48 @@ function getFileNameFromPath(path) {
     return ary[ary.length - 1];
 }
 
+//function to check internet connection on device
+function checkInternet()
+{
+        var networkState = navigator.connection.type;
+			
+				var states = {};
+				states[Connection.UNKNOWN]  = 'Unknown connection';
+				states[Connection.ETHERNET] = 'Ethernet connection';
+				states[Connection.WIFI]     = 'WiFi connection';
+				states[Connection.CELL_2G]  = 'Cell 2G connection';
+				states[Connection.CELL_3G]  = 'Cell 3G connection';
+				states[Connection.CELL_4G]  = 'Cell 4G connection';
+				states[Connection.CELL]     = 'Cell generic connection';
+				states[Connection.NONE]     = 'No network connection';  
+				 //alert(states[networkState]);
+				if(states[networkState]=='No network connection'){
+            return 'no';
+        }
+        else
+        {
+          return 'yes';
+        }
+}
+
+//function to check if user is logged in or not
+function isLoggedIn()
+{
+    var main_url = server_url + 'api/index.php/auth/isLoggedIn?XDEBUG_SESSION_START=PHPSTORM';
+    jQuery.ajax({
+        url: main_url,
+        dataType: "json",
+        method: "GET",
+        success: function(resp) {
+            if (resp.data.logged_in == false || resp.data.logged_in == 'false') {
+               localStorage.user_id = '';
+               window.location.href = 'index.html';
+            }
+          } 
+      });
+}
+
+
 //Reset Password
 function resetpassword() {
     //alert("asdas");
@@ -170,6 +212,13 @@ function saveprofile() {
 
 
 function loginme() {
+
+ if(checkInternet() == 'no')
+ {
+    alert('You must have an active internet connection to login');
+ }
+ else
+ {
     jQuery(document).ready(function($) {
         //adb logcat *:E
         event.preventDefault();
@@ -253,6 +302,7 @@ function loginme() {
             });
         }
     });
+    }
 }
 
 
@@ -377,6 +427,13 @@ function linkwithfacebook() {
 }
 
 var fbLoginSuccess = function() {
+if(checkInternet() == 'no')
+ {
+    alert('You must have an active internet connection to login');
+ }
+ else
+  {
+
     facebookConnectPlugin.login(["email"],
         function(response) {
 
@@ -416,6 +473,7 @@ var fbLoginSuccess = function() {
         function(response) {
             alert(JSON.stringify(response));
         });
+   }     
 }
 
 
@@ -552,7 +610,7 @@ function logout() {
 
 function loadgamification() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
-    loadcommonthings();
+    loadcommonthings(); isLoggedIn();
     importfooter('g-homepage', 'home');
 
     db.transaction(function(tx) {
@@ -761,8 +819,8 @@ function checkdefined(str) {
 //load agenda item
 function loadagendaitem() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
-        //$(".agenda-item-container").hide();
+        loadcommonthings(); 
+        isLoggedIn();
         importfooter('View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda-item');
         var main_url = server_url + 'View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
         $.ajax({
@@ -809,7 +867,8 @@ function loadagendaitem() {
                 if (checkdefined(data.presentation.embeded_html.value) == 'yes') {
                     $(".future-info").append('<div class="video-wrapper">' + data.presentation.embeded_html.value + '</div>');
                 }
-
+                
+          
                 $.each(data.presentationModules, function(key, val) {
 
                     var container_class = val.container_class;
@@ -837,7 +896,10 @@ function loadagendaitem() {
                       onclick = 'onclick=gotoseeker()';
                     }
                     //alert(text)
-                    $(".presentation-modules").append('<a href="#" '+onclick+'><i class="' + icon_class + '"></i>' + text + '</a>')
+                    
+                   
+                    
+                    $(".presentation-modules").append('<li><a href="#" '+onclick+'><i class="' + icon_class + '"></i>' + text + '</a></li>')
 
                 });
 
@@ -874,7 +936,7 @@ function gotoagenda(agenda_id) {
 //function to fetch user points
 function loadticket() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('ticketing', 'home');
         db.transaction(function(tx) {
             tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
@@ -938,7 +1000,7 @@ function showTicket() {
 //function to fetch user points
 function loadpoints() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();  
         importfooter('user-points', 'points');
         $(".leaderboards-container").hide();
         //jQuery(".loading_agenda_items").hide();
@@ -1088,7 +1150,7 @@ function gotopoints(instance_id) {
 //function to fetch user detail 
 function loaduserdetail() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
         importfooter('user-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'points');
         var main_url = server_url + 'user-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
@@ -1178,7 +1240,7 @@ function loaduserdetail() {
 //function to fetch team points
 function loadteampoints() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('team-points', 'team-points');
         $(".leaderboards-container").hide();
         var main_url = server_url + 'team-points/?gvm_json=1';
@@ -1290,7 +1352,7 @@ function gototeamdetail(instance_id) {
 //function to fetch detail team point
 function loaddetailteampoints() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
         importfooter('team-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'your-team');
         var main_url = server_url + 'team-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
@@ -1378,7 +1440,7 @@ function gotoyourteamdetail(instance_id) {
 //function to fetch your detail team point
 function loadyourdetailteampoints() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
         importfooter('Your-team/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'your-team');
         var main_url = server_url + 'Your-team/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
@@ -1467,7 +1529,7 @@ function loadyourdetailteampoints() {
 //function to fetch your team points
 function loadyourpoints() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
         importfooter('Your-team', 'your-team');
         var main_url = server_url + 'your-team/?gvm_json=1';
@@ -1573,7 +1635,7 @@ function showYourTeamPointsData() {
 //function to fetch agenda items
 function loadallagenda() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('agenda', 'agenda');
         $(".agenda-container").hide();
         //showAgendaData();
@@ -1597,7 +1659,7 @@ function loadallagenda() {
 //function to fetch agenda items
 function loadagenda() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('agenda', 'agenda');
         $(".agenda-container").hide();
         var main_url = server_url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
@@ -1660,7 +1722,7 @@ function showcommonagendalist(obj) {
 //function to load current sponsors
 function loadallsponsors() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('sponsors/-/OCintranet-' + static_event_id, 'sponsors');
         $(".agenda-container").hide();
         //showAgendaData();
@@ -1685,7 +1747,7 @@ function loadallsponsors() {
 //function to load all sponsors
 function loadsponsors() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('sponsors/-/OCintranet-' + static_event_id, 'sponsors');
         $(".agenda-container").hide();
         //showAgendaData();
@@ -1760,7 +1822,7 @@ function viewfriend(user_id) {
 //function to fetch user detail 
 function loadfrienddetail() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".add-friends-container").hide();
         importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/view/' + localStorage.friend_id, 'friends');
         var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/view/' + localStorage.friend_id + '?gvm_json=1';
@@ -2043,7 +2105,7 @@ function showcommoncontacts(obj,checkhide) {
 //function to load contacts
 function loadcontacts() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/', 'friends');
         $(".add-friends-container").hide();
         //showAgendaData();
@@ -2065,7 +2127,7 @@ function loadcontacts() {
 //function to load your friends
 function loadyourcontacts() {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/friends', 'friends');
         $(".add-friends-container").hide();
         //showAgendaData();
@@ -2608,7 +2670,7 @@ function loadnotes()
 {
     //alert(ur)
     jQuery(document).ready(function($) {
-        loadcommonthings();        
+        loadcommonthings(); isLoggedIn();        
         $(".notes-container").hide();
         $(".loading_agenda_items").show(); 
         importfooter('Add-note/-/OCintranet-' + static_event_id, 'notes'); 
@@ -2698,7 +2760,7 @@ function showseekerresults(ur)
 {
     //alert(ur)
     jQuery(document).ready(function($) {
-        loadcommonthings();        
+        loadcommonthings(); isLoggedIn();        
         $(".seeker-game-container").hide();
         $(".loading_agenda_items").show(); 
         importfooter('seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id+'/'+ur, 'agenda'); 
@@ -2774,7 +2836,7 @@ function reset_seeker()
 function showseeker()
 {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         
         $(".seeker-game-container").hide(); 
           importfooter('seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
@@ -2940,7 +3002,7 @@ function voting()
 function showvoting()
 {
    jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".voting-page-container").hide();
         
         //alert('hi')
@@ -3086,7 +3148,7 @@ function add_quiz()
 function showquiz()
 {
      jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".quiz-container").hide();
         
         //alert('hi')
@@ -3207,7 +3269,7 @@ function gotoscorecard()
 function loadscorecard()
 {
     jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
         
         //alert('hi')
@@ -3365,7 +3427,7 @@ function add_questions()
 function showquestions()
 {
    jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".questions-container").hide();
         
         //alert('hi')
@@ -3513,7 +3575,7 @@ function add_comments()
 function showcomments()
 {
    jQuery(document).ready(function($) {
-        loadcommonthings();
+        loadcommonthings(); isLoggedIn();
         $(".questions-container").hide();
         
         //alert('hi')
@@ -3616,6 +3678,14 @@ function showcomments()
               }
              
         });
+              $('#show-form-container').on('click', function ()
+    {
+        var container = $('.main-questions-form-container');
+        // Hide all other forms besides this one.
+        $('.questions-filter-items').not(container).slideUp();
+        // Hide main form container.
+        container.slideToggle();
+    });
               $(".loading_agenda_items").hide();  
               $(".questions-container").show();
         if(checkdefined(localStorage.message) == 'yes')
@@ -3787,3 +3857,7 @@ function truncatealltables() {
         tx.executeSql('delete from OCEVENTS_footermorelinks');
     });
 }
+
+//Done this week:
+//OCEM-1727
+//OCEM-1728

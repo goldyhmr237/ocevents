@@ -98,7 +98,7 @@
 	<div class="header-title row">
 		<p class="presentation-item-header">
 			
-<a class="nav-arrow prev" href="#" title="Back to presentation"><i class="fa fa-angle-left"></i></a>
+<a class="nav-arrow prev" href="agenda_item.html" title="Back to presentation"><i class="fa fa-angle-left"></i></a>
 
 <span class="breadcrumbs"><a href="agenda_item.html"></a> / 
 <span class="green-text"></span></span>		</p>
@@ -106,8 +106,9 @@
 			<div class="questions-heading-title row">
 			<div class="votes-count col-xs-6">
 				<i class="fa fa-comment"></i>
-                <span class="green-text">0</span> 
-                All comments			</div>
+          <span class="green-text">0</span> 
+          All comments			
+      </div>
 			<div class="votes-sort col-xs-6">
 				<span>Sort by:</span>
                 <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
@@ -119,9 +120,16 @@
 			</div>
 		</div>
                      <div class="comment_loop">
-                     <div class="questions-filter-items main-questions-form-container">
+                     
+                     <div id="show-form-container">
+            <i class="fa fa-comment"></i>
+            Write post        </div>
+                     <div class="questions-filter-items main-questions-form-container" style="display:none;">
 		
 <div class="has-file-upload" id="createdform">
+<div class="close-btn-wrapper">
+    <i class="fa fa-times close-btn"></i>
+</div>
 <div class="form-group fileupload frmfld_files" data-role="fieldcontain">
 <i class="gicon-camera file-upload" onclick="showimagebuttons();">
 </i></div>
