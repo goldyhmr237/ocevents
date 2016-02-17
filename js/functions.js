@@ -235,6 +235,7 @@ function loginme() {
         } else {
             var email = base64_encode(fld_l_email);
             var pwd = base64_encode(fld_l_password);
+            alert(email)
             var main_url = server_url + 'api/index.php/auth/login?XDEBUG_SESSION_START=PHPSTORM';
             // alert('here');
             $.ajax({
@@ -646,7 +647,7 @@ function loadgamification() {
 }
 
 function onFail(message) {
-    alert('Failed because: ' + message);
+    //alert('Failed because: ' + message);
 }
 
 function capturePhoto() {
