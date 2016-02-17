@@ -94,7 +94,7 @@ $(function ()
         $('header').popover('destroy')
     });
 
-    $('.has-file-upload').each(function () {
+  /*  $('.has-file-upload').each(function () {
         var form = $(this);
         var options = {
             singleFileUploads: false,
@@ -178,7 +178,7 @@ $(function ()
         }
 
         form.fileupload(options);
-    });
+    });  */
 
     if (typeof Swiper !== 'undefined') {
         var swiper = new Swiper('.swiper-container', {
@@ -297,7 +297,7 @@ $(function ()
             updateAgendaItemHeight();
         });
     }
-});
+
 
 function updateAgendaItemHeight() {
     var offset = agendaItem.offset();
@@ -354,6 +354,7 @@ function showHomescreenOverlay() {
     $(".app-overlay").addClass("show");
 }
 
+/*
 $(function () {
     $.stayInWebApp();
 
@@ -370,7 +371,8 @@ $(function () {
     });
 
     autoResizeTextarea();
-});
+}); 
+*/
 
 $(window).on("orientationchange", function (event) {
 });

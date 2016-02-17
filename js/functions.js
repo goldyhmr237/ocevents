@@ -4,7 +4,7 @@ function getFileNameFromPath(path) {
 }
 
 //function to check internet connection on device
-function checkInternet()
+function checkNetworkConnection()
 {
         var networkState = navigator.connection.type;
 			
@@ -213,7 +213,7 @@ function saveprofile() {
 
 function loginme() {
 
- if(checkInternet() == 'no')
+ if(checkNetworkConnection() == 'no')
  {
     alert('You must have an active internet connection to login');
  }
@@ -427,7 +427,7 @@ function linkwithfacebook() {
 }
 
 var fbLoginSuccess = function() {
-if(checkInternet() == 'no')
+if(checkNetworkConnection() == 'no')
  {
     alert('You must have an active internet connection to login');
  }
@@ -789,9 +789,24 @@ function showbuttons() {
 
 function showimagebuttons()
 {
-    jQuery('.captureimage').show();
-    jQuery('.uploadimage').show();
+    //jQuery('.captureimage').show();
+    //jQuery('.uploadimage').show();
+    jQuery('.ui-widget-overlay').show();
+    jQuery('#footerSlideContainer').slideDown('fast');
+    jQuery(".main-questions-form-container").hide();   
+     var buttons_html = '<div><a href="#" onclick="captureImage()">Take a photo</a></div>';
+     buttons_html += '<div><a href="#" onclick="uploadImage(pictureSource.PHOTOLIBRARY);">Choose a Photo</a></div>';
+     buttons_html += '<div><a href="#" onclick="canceloptions()">Cancel</a></div>';
+     jQuery('#footerSlideContainer').html(buttons_html);
+     //alert(buttons_html)
 }
+
+function canceloptions(){
+  
+   $('.ui-widget-overlay').hide();
+   $('#footerSlideContainer').slideUp('fast');
+   jQuery(".main-questions-form-container").show();
+} 
 
 
 //function to play video
@@ -3678,14 +3693,7 @@ function showcomments()
               }
              
         });
-              $('#show-form-container').on('click', function ()
-    {
-        var container = $('.main-questions-form-container');
-        // Hide all other forms besides this one.
-        $('.questions-filter-items').not(container).slideUp();
-        // Hide main form container.
-        container.slideToggle();
-    });
+            
               $(".loading_agenda_items").hide();  
               $(".questions-container").show();
         if(checkdefined(localStorage.message) == 'yes')

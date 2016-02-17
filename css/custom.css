@@ -1371,3 +1371,46 @@ tbody .hints-count-label {
     right: 0;
     min-height:100%;*/
 }
+
+#footerSlideContainer div a
+{
+    /*height:55px; */
+    background:#fff;
+    text-align:center;
+    border:1px solid #000;
+    z-index: 999999;
+    margin: 5px 0;
+    font-size:22px;
+    text-decoration:none;
+    padding:  7px 0;
+    color: #0769AD;
+    float:left;
+    width:96%;
+    border-radius:10px;
+} 
+
+#footerSlideContainer {
+	position: fixed;
+	bottom:0;
+	width: 100%;
+  display:none;
+  z-index: 999999;
+}
+
+.ui-widget-overlay {
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display:none;
+  z-index: 1;
+  opacity:0.8;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.cover_buttons
+{
+    display:none;
+    width:100%;
+    padding:10%;        
+}
