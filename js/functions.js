@@ -772,6 +772,9 @@ function onImageURISuccess(imageURI) {
 //alert(imageURI);
 jQuery('.swiper-container').show();
 jQuery('.preview').html('<img src = '+imageURI+' width="80" height="80" />');
+$('.ui-widget-overlay').hide();
+$('#footerSlideContainer').slideUp('fast');
+jQuery(".main-questions-form-container").show();
 localStorage.imageURI = imageURI;
     
 }
