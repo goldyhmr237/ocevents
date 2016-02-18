@@ -211,6 +211,15 @@ function saveprofile() {
 }
 
 
+function checkURL(value) {
+    var urlregex = new RegExp("^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&amp;%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&amp;%\$#\=~_\-]+))*$");
+    if (urlregex.test(value)) {
+        return (true);
+    }
+    return (false);
+}
+
+
 function loginme() {
 
  //alert('log');
@@ -218,10 +227,10 @@ function loginme() {
     jQuery(document).ready(function($) {
         //adb logcat *:E
         event.preventDefault();
-        $("#login_submit").hide();
-        $(".loading").show();
+       
         
         var fld_l_email = $("#fld_l_email").val();
+        var fld_l_url = $("#fld_l_url").val();
         var fld_l_password = $("#fld_l_password").val();
         if (fld_l_email == '') {
             alert("Please Enter Your Email");
@@ -229,11 +238,20 @@ function loginme() {
         } else if (fld_l_password == '') {
             alert("Please Enter Your Password");
             return false;
+        } else if (fld_l_url == '') {
+            alert("Please Enter Url");
+            return false;
+        } else if(!checkURL(fld_l_url)){
+              alert("Please Enter A Valid Url");
+            return false;
         } else {
+         $("#login_submit").hide();
+         $(".loading").show();
             var email = base64_encode(fld_l_email);
             var pwd = base64_encode(fld_l_password);
+            localStorage.url = fld_l_url + '/';
             //alert(email)
-            var main_url = server_url + 'api/index.php/auth/login?XDEBUG_SESSION_START=PHPSTORM';
+            var main_url = localStorage.url + 'api/index.php/auth/login?XDEBUG_SESSION_START=PHPSTORM';
              //alert('here');
             $.ajax({
                 url: main_url,
@@ -426,17 +444,12 @@ function linkwithfacebook() {
 }
 
 var fbLoginSuccess = function() {
-if(checkNetworkConnection() == 'no')
- {
-    alert('You must have an active internet connection to login');
- }
- else
-  {
 
+     
+      
     facebookConnectPlugin.login(["email"],
         function(response) {
-
-
+          
             var newstr = JSON.stringify(response.authResponse.userID).replace(/\"/g, '');
             var access_token = JSON.stringify(response.authResponse.accessToken).replace(/\"/g, '');
 
@@ -467,12 +480,13 @@ if(checkNetworkConnection() == 'no')
                 }
             });
 
-
+            
         },
         function(response) {
-            alert(JSON.stringify(response));
+            //alert(JSON.stringify(response));
         });
-   }     
+       
+       
 }
 
 
@@ -484,6 +498,17 @@ var login = function() {
             var appId = prompt("Enter FB Application ID", "");
             facebookConnectPlugin.browserInit(appId);
         }
+        var fld_l_url = jQuery("#fld_l_url").val();
+          if(fld_l_url == '')
+          {
+             alert('Please Enter Url');
+          }
+          else if(!checkURL(fld_l_url)){
+              alert("Please Enter A Valid Url");
+            return false;
+        }
+           else {
+           localStorage.url = fld_l_url + '/';
         facebookConnectPlugin.login(["email"],
             function(response) {
 
@@ -495,7 +520,8 @@ var login = function() {
                 var encoded_access_token = base64_encode(access_token);
                 // $("#login_submit").hide();
                 //   $(".loading").show();
-                var main_url = server_url + 'api/index.php/auth/FBlogin?XDEBUG_SESSION_START=PHPSTORM';
+                //alert(localStorage.url);
+                var main_url = localStorage.url + 'api/index.php/auth/FBlogin?XDEBUG_SESSION_START=PHPSTORM';
                 jQuery.ajax({
                     url: main_url,
                     dataType: "json",
@@ -565,8 +591,9 @@ var login = function() {
 
             },
             function(response) {
-                alert(JSON.stringify(response));
+               // alert(JSON.stringify(response));
             });
+            }
     });
 }
 

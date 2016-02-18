@@ -53,9 +53,18 @@
 		<div class="col-xs-12">
 			<div class="container logo-wrapper"></div>
 			<span class="gamification text-center">Gamification</span>
+      <form class="form-container">
+        <div class="login-wrapper"> 
+          <div class="form-group">
+							<input class="form-control" type="text" name="url" id="fld_l_url" value="" placeholder="Enter Url (Example: http://www.oceventmanager.com)">
+						</div>
+          </div>
+       </form>    
 			<div id="loginFacebookBox" class="hideloginbox show-element">
 				<form class="form-container">
-					<div class="login-type">
+					
+          <div class="login-type">
+          
 			     <div class="form-group">
 							<a id="login_button" href="#" title="Login with credentials">
 								<i class="icon-edit"></i>
@@ -75,13 +84,14 @@
 			<div id="loginBox" class="hide-element">
 				<form class="form-container" name="user_login" method="post" action="" id="user_login">
 					<div class="login-wrapper">
+          
 					 <div class="form-group">
-							<i class="icon-mail"></i>                                                   <!--adi.patrascu@gmail.com-->
-							<input class="form-control" type="text" name="email" id="fld_l_email" value="rahul.chhabra88@gmail.com" placeholder="Email">
+							<i class="icon-mail"></i>                                                   <!--rahul.chhabra88@gmail.com adi.patrascu@gmail.com-->
+							<input class="form-control" type="text" name="email" id="fld_l_email" value="adrian@onecom.no" placeholder="Email">
 						</div>
 						<div class="form-group">
 							<i class="icon-lock"></i>
-							<input class="form-control" type="password" name="password" value="123123" id="fld_l_password" placeholder="Password">
+							<input class="form-control" type="password" name="password" value="123456" id="fld_l_password" placeholder="Password">
 						</div>
 						<div class="btn-wrapper login-page-button">
 							<button type="submit" id="login_submit" onclick="loginme();" class="btn">Login</button>
