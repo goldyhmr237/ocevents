@@ -220,12 +220,7 @@ function loginme() {
         event.preventDefault();
         $("#login_submit").hide();
         $(".loading").show();
-         if(checkNetworkConnection() == 'no')
-         {
-            alert('You must have an active internet connection to login');
-         }
-         else
-         {
+        
         var fld_l_email = $("#fld_l_email").val();
         var fld_l_password = $("#fld_l_password").val();
         if (fld_l_email == '') {
@@ -304,7 +299,7 @@ function loginme() {
                 }
             });
         }
-        }
+        
     });
     
 }
