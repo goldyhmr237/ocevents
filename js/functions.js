@@ -237,7 +237,7 @@ function loginme() {
             var pwd = base64_encode(fld_l_password);
             alert(email)
             var main_url = server_url + 'api/index.php/auth/login?XDEBUG_SESSION_START=PHPSTORM';
-            // alert('here');
+             alert('here');
             $.ajax({
                 url: main_url,
                 dataType: "json",
@@ -247,7 +247,7 @@ function loginme() {
                     password: pwd
                 },
                 success: function(obj) {
-                    //alert(obj.status);
+                    alert(obj.status);
                     if (obj.status == 'error') {
                         alert(obj.message);
                         $("#login_submit").show();
@@ -989,7 +989,6 @@ function loadticket() {
                             var ImgFullUrl = '';
                             ImgFullUrl = theFile.toURI();
 
-                            // alert(ImgFullUrl);
                             db.transaction(function(tx) {
 
                                 tx.executeSql("insert into OCEVENTS_ticket (user_id,ticketCode,ticketSrc) values ('" + localStorage.user_id + "','" + obj.ticketCode + "','" + ImgFullUrl + "')");
