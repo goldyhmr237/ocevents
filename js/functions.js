@@ -220,6 +220,12 @@ function loginme() {
         event.preventDefault();
         $("#login_submit").hide();
         $(".loading").show();
+         if(checkNetworkConnection() == 'no')
+         {
+            alert('You must have an active internet connection to login');
+         }
+         else
+         {
         var fld_l_email = $("#fld_l_email").val();
         var fld_l_password = $("#fld_l_password").val();
         if (fld_l_email == '') {
@@ -231,9 +237,9 @@ function loginme() {
         } else {
             var email = base64_encode(fld_l_email);
             var pwd = base64_encode(fld_l_password);
-            alert(email)
+            //alert(email)
             var main_url = server_url + 'api/index.php/auth/login?XDEBUG_SESSION_START=PHPSTORM';
-             alert('here');
+             //alert('here');
             $.ajax({
                 url: main_url,
                 dataType: "json",
@@ -243,7 +249,7 @@ function loginme() {
                     password: pwd
                 },
                 success: function(obj) {
-                    alert(obj.status);
+                    //alert(obj.status);
                     if (obj.status == 'error') {
                         alert(obj.message);
                         $("#login_submit").show();
@@ -297,6 +303,7 @@ function loginme() {
 
                 }
             });
+        }
         }
     });
     
