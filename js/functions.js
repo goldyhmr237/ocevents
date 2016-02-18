@@ -213,7 +213,7 @@ function saveprofile() {
 
 function loginme() {
 
- alert('log');
+ //alert('log');
 
     jQuery(document).ready(function($) {
         //adb logcat *:E
