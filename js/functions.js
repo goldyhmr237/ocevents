@@ -214,12 +214,7 @@ function saveprofile() {
 function loginme() {
 
  alert('log');
- if(checkNetworkConnection() == 'no')
- {
-    alert('You must have an active internet connection to login');
- }
- else
- {
+
     jQuery(document).ready(function($) {
         //adb logcat *:E
         event.preventDefault();
@@ -304,7 +299,7 @@ function loginme() {
             });
         }
     });
-    }
+    
 }
 
 
