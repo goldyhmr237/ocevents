@@ -30,7 +30,7 @@ function checkNetworkConnection()
 //function to check if user is logged in or not
 function isLoggedIn()
 {
-    var main_url = server_url + 'api/index.php/auth/isLoggedIn?XDEBUG_SESSION_START=PHPSTORM';
+    var main_url = localStorage.url + 'api/index.php/auth/isLoggedIn?XDEBUG_SESSION_START=PHPSTORM';
     jQuery.ajax({
         url: main_url,
         dataType: "json",
@@ -48,9 +48,21 @@ function isLoggedIn()
 //Reset Password
 function resetpassword() {
     //alert("asdas");
-    event.preventDefault();
-    var email = jQuery("#fld_rp_email").val();
-    var main_url = server_url + 'gamification/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+  event.preventDefault();
+  var email = jQuery("#fld_rp_email").val();
+  var fld_l_url = jQuery("#fld_l_url").val();
+    
+  if (fld_l_url == '') {
+      alert("Please Enter Url");
+      return false;
+  }
+  else if (email == '') {
+      alert("Please Enter Email");
+      return false;
+  }
+  else
+   {
+    var main_url = fld_l_url + 'gamification/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
     jQuery.ajax({
         url: main_url,
         dataType: "json",
@@ -67,12 +79,13 @@ function resetpassword() {
             }
         }
     });
+    }
 }
 
 
 
 function removeprofileimage() {
-    var main_url = server_url + 'api/index.php/auth/removeUserImage?XDEBUG_SESSION_START=PHPSTORM';
+    var main_url = localStorage.url + 'api/index.php/auth/removeUserImage?XDEBUG_SESSION_START=PHPSTORM';
     jQuery.ajax({
         url: main_url,
         dataType: "json",
@@ -165,7 +178,7 @@ function saveprofile() {
         password = base64_encode(password);
         password_repeat = base64_encode(password_repeat);
         //alert(mobile);
-        var main_url = server_url + 'api/index.php/auth/updateUser?XDEBUG_SESSION_START=PHPSTORM';
+        var main_url = localStorage.url + 'api/index.php/auth/updateUser?XDEBUG_SESSION_START=PHPSTORM';
         // alert('here');
         $.ajax({
             url: main_url,
@@ -268,6 +281,8 @@ function loginme() {
                         $("#login_submit").show();
                         $(".loading").hide();
                     } else {
+                           
+                        
 
                         var DIR_Name = 'oc_photos';
                         var a = new DirManager();
@@ -288,10 +303,6 @@ function loginme() {
                             url: STR,
                             dataType: "html",
                             success: function(DtatURL) {
-                                // DtatURL ='data:image/png;base64,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';
-                                //alert(DtatURL);  
-                                //adb logcat *:E		 
-                                // alert(obj.data.image.image_src);
                                 b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
 
                                     var ImgFullUrl = '';
@@ -308,10 +319,6 @@ function loginme() {
 
                             }
                         });
-
-
-
-
                     }
 
                 }
@@ -364,13 +371,13 @@ function unlinkwithfacebook() {
     if (confirm('Are you sure you want to unlink facebook from your account?')) {
 
 
-        var main_url = server_url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
+        var main_url = localStorage.url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
         jQuery.ajax({
             url: main_url,
             dataType: "json",
             method: "POST",
             data: {
-                event_id: static_event_id
+                event_id: localStorage.event_id
             },
             success: function(obj) {
                 alert("Facebook Account Unlinked Successfully");
@@ -403,7 +410,7 @@ function linkwithfacebook() {
                 //alert(encoded_newstr);
                 // $("#login_submit").hide();
                 // $(".loading").show();
-                var main_url = server_url + 'api/index.php/auth/FBUpdateData?XDEBUG_SESSION_START=PHPSTORM';
+                var main_url = localStorage.url + 'api/index.php/auth/FBUpdateData?XDEBUG_SESSION_START=PHPSTORM';
                 jQuery.ajax({
                     url: main_url,
                     dataType: "json",
@@ -411,7 +418,7 @@ function linkwithfacebook() {
                     data: {
                         fb_access_token: encoded_access_token,
                         fb_user_id: encoded_newstr,
-                        event_id: static_event_id
+                        event_id: localStorage.event_id
                     },
                     success: function(obj) {
                         //alert(obj.status);
@@ -456,7 +463,7 @@ var fbLoginSuccess = function() {
             var encoded_newstr = base64_encode(newstr);
             var encoded_access_token = base64_encode(access_token);
 
-            var main_url = server_url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
+            var main_url = localStorage.url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
             jQuery.ajax({
                 url: main_url,
                 dataType: "json",
@@ -464,7 +471,7 @@ var fbLoginSuccess = function() {
                 data: {
                     fb_access_token: encoded_access_token,
                     fb_user_id: encoded_newstr,
-                    event_id: static_event_id
+                    event_id: localStorage.event_id
                 },
                 success: function(obj) {
                     //alert(obj.status);
@@ -529,7 +536,7 @@ var login = function() {
                     data: {
                         fb_access_token: encoded_access_token,
                         fb_user_id: encoded_newstr,
-                        event_id: static_event_id
+                        event_id: localStorage.event_id
                     },
                     success: function(obj) {
                         // alert(obj.message);
@@ -599,7 +606,7 @@ var login = function() {
 
 function logout() {
     //alert('here')
-    var main_url = server_url + 'api/index.php/auth/logout?XDEBUG_SESSION_START=PHPSTORM';
+    var main_url = localStorage.url + 'api/index.php/auth/logout?XDEBUG_SESSION_START=PHPSTORM';
     jQuery.ajax({
         url: main_url,
         dataType: "json",
@@ -717,7 +724,7 @@ function onPhotoURISuccess(imageURI) {
     options.chunkedMode = false;
     var ft = new FileTransfer();
     //alert(imageURI);
-    ft.upload(imageURI, encodeURI(server_url + "api/index.php/auth/updateUserImage"), win, fail, options);
+    ft.upload(imageURI, encodeURI(localStorage.url + "api/index.php/auth/updateUserImage"), win, fail, options);
 
     function win(r) {
         //alert("Code = " + r.responseCode.toString());
@@ -865,8 +872,8 @@ function loadagendaitem() {
     jQuery(document).ready(function($) {
         loadcommonthings(); 
         isLoggedIn();
-        importfooter('View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda-item');
-        var main_url = server_url + 'View-presentation/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
+        importfooter('View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda-item');
+        var main_url = localStorage.url + 'View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
         $.ajax({
             url: main_url,
             dataType: "json",
@@ -893,7 +900,7 @@ function loadagendaitem() {
                 $(".future-title").html(data.presentation.speaker_name.value);
                 $(".future-info").html(data.presentation.description.value);
                 if (checkdefined(data.presentation.speaker_image) == 'yes') {
-                    var imgurl = server_url + 'resources/files/images/' + data.presentation.speaker_image.__extra.medium_file_name;
+                    var imgurl = localStorage.url + 'resources/files/images/' + data.presentation.speaker_image.__extra.medium_file_name;
                     $(".agenda-main-img").attr("style", "background-image:url(" + imgurl + ")");
                 }
                 //alert(data.presentation.time)
@@ -903,8 +910,8 @@ function loadagendaitem() {
                 //alert(checkundefined(data.videoSrc));
                 if (checkdefined(data.videoSrc) == 'yes') {
                     $('.future-video').show();
-                    $('.future-video').attr('onclick', 'playvideo("' + server_url + data.videoSrc + '")');
-                    $('.playme').attr('src', server_url + data.videoPoster);
+                    $('.future-video').attr('onclick', 'playvideo("' + localStorage.url + data.videoSrc + '")');
+                    $('.playme').attr('src', localStorage.url + data.videoPoster);
                     $('.playme').attr('style', 'width:100%;height:400px;');
                     $('.future-info').attr('style', 'position:relative;bottom:128px;');
                 }
@@ -987,7 +994,7 @@ function loadticket() {
             tx.executeSql('delete from OCEVENTS_ticket');
         });
         $(".ticketing-container").hide();
-        var main_url = server_url + 'ticketing/-/' + static_event_id + '/?gvm_json=1';
+        var main_url = localStorage.url + 'ticketing/-/' + localStorage.event_id + '/?gvm_json=1';
         // alert(main_url);
         $.ajax({
             url: main_url,
@@ -998,7 +1005,7 @@ function loadticket() {
                 var a = new DirManager();
                 a.create_r(DIR_Name, Log('created successfully'));
                 var b = new FileManager();
-                var img_src = server_url + obj.ticketSrc;
+                var img_src = localStorage.url + obj.ticketSrc;
                 var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
                 // alert(img_src);
                 var image_name = getFileNameFromPath(img_src);
@@ -1047,7 +1054,7 @@ function loadpoints() {
         importfooter('user-points', 'points');
         $(".leaderboards-container").hide();
         //jQuery(".loading_agenda_items").hide();
-        var main_url = server_url + 'user-points/?gvm_json=1';
+        var main_url = localStorage.url + 'user-points/?gvm_json=1';
         // alert(main_url);
         $.ajax({
             url: main_url,
@@ -1195,8 +1202,8 @@ function loaduserdetail() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
-        importfooter('user-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'points');
-        var main_url = server_url + 'user-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
+        importfooter('user-points/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id, 'points');
+        var main_url = localStorage.url + 'user-points/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -1286,7 +1293,7 @@ function loadteampoints() {
         loadcommonthings(); isLoggedIn();
         importfooter('team-points', 'team-points');
         $(".leaderboards-container").hide();
-        var main_url = server_url + 'team-points/?gvm_json=1';
+        var main_url = localStorage.url + 'team-points/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -1397,8 +1404,8 @@ function loaddetailteampoints() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
-        importfooter('team-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'your-team');
-        var main_url = server_url + 'team-points/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
+        importfooter('team-points/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id, 'your-team');
+        var main_url = localStorage.url + 'team-points/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -1485,8 +1492,8 @@ function loadyourdetailteampoints() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
-        importfooter('Your-team/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id, 'your-team');
-        var main_url = server_url + 'Your-team/-/OCintranet-' + static_event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
+        importfooter('Your-team/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id, 'your-team');
+        var main_url = localStorage.url + 'Your-team/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -1575,7 +1582,7 @@ function loadyourpoints() {
         loadcommonthings(); isLoggedIn();
         $(".leaderboards-container").hide();
         importfooter('Your-team', 'your-team');
-        var main_url = server_url + 'your-team/?gvm_json=1';
+        var main_url = localStorage.url + 'your-team/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -1682,8 +1689,8 @@ function loadallagenda() {
         importfooter('agenda', 'agenda');
         $(".agenda-container").hide();
         //showAgendaData();
-        //http://www.oceventmanager.com/agenda/-/OCintranet-100041/?ajax=1&all=1&gvm_json=1
-        var main_url = server_url + 'agenda/-/OCintranet-' + static_event_id + '/?ajax=1&all=1&gvm_json=1';
+        //http://www.oceventmanager.com/agenda/-/'+localStorage.short_url+'-100041/?ajax=1&all=1&gvm_json=1
+        var main_url = localStorage.url + 'agenda/-/'+localStorage.short_url+'-' + localStorage.event_id + '/?ajax=1&all=1&gvm_json=1';
         // alert(main_url);
         $("#presentations-list").html('&nbsp;');
         $.ajax({
@@ -1705,7 +1712,7 @@ function loadagenda() {
         loadcommonthings(); isLoggedIn();
         importfooter('agenda', 'agenda');
         $(".agenda-container").hide();
-        var main_url = server_url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
+        var main_url = localStorage.url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
         $("#presentations-list").html('&nbsp');
         $.ajax({
             url: main_url,
@@ -1766,11 +1773,11 @@ function showcommonagendalist(obj) {
 function loadallsponsors() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
-        importfooter('sponsors/-/OCintranet-' + static_event_id, 'sponsors');
+        importfooter('sponsors/-/'+localStorage.short_url+'-' + localStorage.event_id, 'sponsors');
         $(".agenda-container").hide();
         //showAgendaData();
 
-        var main_url = server_url + 'sponsors/-/OCintranet-' + static_event_id + '/?gvm_json=1&ajax=1&all=1';
+        var main_url = localStorage.url + 'sponsors/-/'+localStorage.short_url+'-' + localStorage.event_id + '/?gvm_json=1&ajax=1&all=1';
         // alert(main_url);
         $("#presentations-list").html('&nbsp');
         $.ajax({
@@ -1791,11 +1798,11 @@ function loadallsponsors() {
 function loadsponsors() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
-        importfooter('sponsors/-/OCintranet-' + static_event_id, 'sponsors');
+        importfooter('sponsors/-/'+localStorage.short_url+'-' + localStorage.event_id, 'sponsors');
         $(".agenda-container").hide();
         //showAgendaData();
 
-        var main_url = server_url + 'sponsors/-/OCintranet-' + static_event_id + '/?gvm_json=1';
+        var main_url = localStorage.url + 'sponsors/-/'+localStorage.short_url+'-' + localStorage.event_id + '/?gvm_json=1';
         // alert(main_url);
         $("#presentations-list").html('&nbsp');
         $.ajax({
@@ -1867,8 +1874,8 @@ function loadfrienddetail() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
         $(".add-friends-container").hide();
-        importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/view/' + localStorage.friend_id, 'friends');
-        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/view/' + localStorage.friend_id + '?gvm_json=1';
+        importfooter('user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/view/' + localStorage.friend_id, 'friends');
+        var main_url = localStorage.url + 'user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/view/' + localStorage.friend_id + '?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -1941,8 +1948,8 @@ function loadfrienddetail() {
 
 //function to download vCard
 function downloadVcard(url) {
-    var download_url = server_url + url;
-    alert(download_url)
+    var download_url = localStorage.url + url;
+    //alert(download_url)
     navigator.app.loadUrl(download_url, { openExternal:true });
     //window.open(download_url, '_system');
     //alert(download_url)
@@ -1981,7 +1988,7 @@ function cancelRequest(player_code) {
     jQuery(document).ready(function($) {
         $(".add-friends-container").hide();
         $(".loading_cancel").show();
-        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/cancel/' + player_code + '?gvm_json=1';
+        var main_url = localStorage.url + 'user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/cancel/' + player_code + '?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -2005,7 +2012,7 @@ function approveRequest(player_code) {
     jQuery(document).ready(function($) {
         $(".add-friends-container").hide();
         $(".loading_approve").show();
-        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/approve/' + player_code + '?gvm_json=1';
+        var main_url = localStorage.url + 'user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/approve/' + player_code + '?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -2029,7 +2036,7 @@ function sendRequest(player_code) {
     jQuery(document).ready(function($) {
         $(".add-friends-container").hide();
         $(".loading_send").show();
-        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/add/' + player_code + '?gvm_json=1';
+        var main_url = localStorage.url + 'user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/add/' + player_code + '?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -2149,11 +2156,11 @@ function showcommoncontacts(obj,checkhide) {
 function loadcontacts() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
-        importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/', 'friends');
+        importfooter('user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/', 'friends');
         $(".add-friends-container").hide();
         //showAgendaData();
 
-        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/?gvm_json=1';
+        var main_url = localStorage.url + 'user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -2171,11 +2178,11 @@ function loadcontacts() {
 function loadyourcontacts() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
-        importfooter('user-add-friend/-/OCintranet-' + static_event_id + '/friends', 'friends');
+        importfooter('user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/friends', 'friends');
         $(".add-friends-container").hide();
         //showAgendaData();
 
-        var main_url = server_url + 'user-add-friend/-/OCintranet-' + static_event_id + '/friends?gvm_json=1';
+        var main_url = localStorage.url + 'user-add-friend/-/'+localStorage.short_url+'-' + localStorage.event_id + '/friends?gvm_json=1';
         $(".friends-items-container").html('&nbsp');
         var icon_class = '';
         var link = '';
@@ -2328,7 +2335,34 @@ function loadcommonthings() {
             var len = results.rows.length;
             $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
         });
+        tx.executeSql("SELECT * FROM OCEVENTS_events", [], function(tx, results) {
+            var len = results.rows.length;
+            //alert(len)
+            if(len>0)
+            {
+                $('.events').html('<p class="my-events-title">My networks</p>');
+            }
+            for (i = 0; i < len; i++) {                
+                    
+                    var event_id = results.rows.item(i).event_id;
+                    var title = results.rows.item(i).title; 
+                    //alert(title)
+                    var current = '';
+                    if(localStorage.event_id == event_id)
+                    {
+                       current = 'active';
+                    }
+                    $('.events').append('<p><a href="javascript:changecurrentevent('+event_id+')" class="'+current+'">'+title+'</a></p>');              
+                
+                }            
+        });    
     });
+}
+
+function changecurrentevent(event_id)
+{
+    localStorage.event_id = event_id;
+    window.location.href = 'gamification.html';
 }
 
 function login_process() {
@@ -2366,7 +2400,7 @@ function importhomepage() {
 
 
 
-    var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + static_event_id;
+    var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
     // alert('here');
     jQuery.ajax({
         url: main_url,
@@ -2378,6 +2412,22 @@ function importhomepage() {
                 alert(obj.message);
                 window.location.href = "index.html";
             } else {
+                 db.transaction(function(tx) {
+                              tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
+                              tx.executeSql("delete from OCEVENTS_events");                            
+                          });
+            $.each( obj.data._extra.userEvents, function( key, val ) {
+             
+                            //document.write(val.event_id+'<br />');
+                            if(val.event_id == '100041')
+                            {
+                                localStorage.event_id = val.event_id;
+                                localStorage.short_url = val.short_url;
+                            }
+                            db.transaction(function(tx) {
+                                tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,description,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.description + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
+                            });                
+                          }); 
                 if (obj.data.type == 'content') {
 
                     db.transaction(function(tx) {
@@ -2530,7 +2580,7 @@ function downloadLogoFile(url, type, img_src) {
 function importfooter(page, active) {
     //alert(page);
     //alert(active);
-    var main_url = server_url + page + '/?gvm_json=1&event_id=' + static_event_id;
+    var main_url = localStorage.url + page + '/?gvm_json=1&event_id=' + localStorage.event_id;
     db.transaction(function(tx) {
 
         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
@@ -2716,8 +2766,8 @@ function loadnotes()
         loadcommonthings(); isLoggedIn();        
         $(".notes-container").hide();
         $(".loading_agenda_items").show(); 
-        importfooter('Add-note/-/OCintranet-' + static_event_id, 'notes'); 
-        var main_url = server_url + 'Add-note/-/OCintranet-' + static_event_id +'/?gvm_json=1';
+        importfooter('Add-note/-/'+localStorage.short_url+'-' + localStorage.event_id, 'notes'); 
+        var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-' + localStorage.event_id +'/?gvm_json=1';
         $.ajax({
             url: main_url,
             dataType: "json",
@@ -2735,7 +2785,7 @@ function loadnotes()
                   var remstr = '';
                   if(obj.currentEventUserId == val.eventuser_id)
                   {
-                     remstr = ' <div class="clearfix"><a class="pull-right delete-note" href="javascript:removenote('+val.instance_id+')" data-url="/Add-note/-/OCintranet-100041/delete/28"><i class="fa fa-times"></i>Remove</a></div>'; 
+                     remstr = ' <div class="clearfix"><a class="pull-right delete-note" href="javascript:removenote('+val.instance_id+')" data-url="/Add-note/-/'+localStorage.short_url+'-100041/delete/28"><i class="fa fa-times"></i>Remove</a></div>'; 
                   }
                       var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div></div>'+remstr+'</div>';
                    $('#allnotes').append(str);   
@@ -2765,7 +2815,7 @@ function addnote()
     else
     {
        
-      var main_url = server_url + 'Add-note/-/OCintranet-'+static_event_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+      var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-'+localStorage.event_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
         jQuery.ajax({
             url: main_url,
             dataType: "json",
@@ -2787,7 +2837,7 @@ function removenote(id)
 {
    if(confirm("Delete confirmation"))
   {
-    var main_url = server_url + 'Add-note/-/OCintranet-' + static_event_id +'/delete/'+id+'/?gvm_json=1';
+    var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-' + localStorage.event_id +'/delete/'+id+'/?gvm_json=1';
           $.ajax({
               url: main_url,
               dataType: "json",
@@ -2806,8 +2856,8 @@ function showseekerresults(ur)
         loadcommonthings(); isLoggedIn();        
         $(".seeker-game-container").hide();
         $(".loading_agenda_items").show(); 
-        importfooter('seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id+'/'+ur, 'agenda'); 
-        var main_url = server_url + 'seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/' + ur + '/?gvm_json=1';
+        importfooter('seeker/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id+'/'+ur, 'agenda'); 
+        var main_url = localStorage.url + 'seeker/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/' + ur + '/?gvm_json=1';
         $.ajax({
             url: main_url,
             dataType: "json",
@@ -2864,7 +2914,7 @@ function showseekerresults(ur)
 //function to reset seeker game
 function reset_seeker()
 {                         
-    var main_url = server_url + 'seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/reset_seeker?gvm_json=1';
+    var main_url = localStorage.url + 'seeker/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/reset_seeker?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -2882,10 +2932,10 @@ function showseeker()
         loadcommonthings(); isLoggedIn();
         
         $(".seeker-game-container").hide(); 
-          importfooter('seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
+          importfooter('seeker/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda');
         
         
-        var main_url = server_url + 'seeker/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+        var main_url = localStorage.url + 'seeker/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -2896,7 +2946,7 @@ function showseeker()
               {
                 var seeker_id = obj.currentFloormapInstance.seeker_session_a_i_id.value;
                 var get_seeker_hint = 'get_seeker_hint';
-                var main_url = server_url + 'modules/gamification/ajax/frontend_ws.php';
+                var main_url = localStorage.url + 'modules/gamification/ajax/frontend_ws.php';
                 //alert(main_url)
                 $.ajax({
                   url: main_url,
@@ -2952,7 +3002,7 @@ function showseeker()
                   $('.seeker-description').html('');
                   if(checkdefined(obj.currentFloormapInstance.floormap_image.value) == 'yes')
                   {                                               
-                     $('.seeker-description').append('<img src='+server_url+'resources/files/images/'+obj.currentFloormapInstance.floormap_image.__extra.large_file_name+' />'); 
+                     $('.seeker-description').append('<img src='+localStorage.url+'resources/files/images/'+obj.currentFloormapInstance.floormap_image.__extra.large_file_name+' />'); 
                   }           
                   $('.seeker-description').append(obj.currentFloormapInstance.description.value+'<div class="seeker-hint"></div>');
                   $('.seeker-hint').html(obj.currentFloormapInstance.hint.value);
@@ -2980,7 +3030,7 @@ function submitseekeranswer()
     {
       //jQuery(".submit_com").hide();
       //jQuery(".loading_send").show(); 
-      var main_url = server_url + 'seeker/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+      var main_url = localStorage.url + 'seeker/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
         jQuery.ajax({
             url: main_url,
             dataType: "json",
@@ -3049,8 +3099,8 @@ function showvoting()
         $(".voting-page-container").hide();
         
         //alert('hi')
-        importfooter('Add-vote/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
-        var main_url = server_url + 'Add-vote/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+        importfooter('Add-vote/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = localStorage.url + 'Add-vote/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3170,7 +3220,7 @@ function showvoting()
 //function to give vote
 function givevote(instance_id)
 {
-    var main_url = server_url + 'Add-vote/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/'+instance_id+'/?gvm_json=1';
+    var main_url = localStorage.url + 'Add-vote/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/'+instance_id+'/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3195,8 +3245,8 @@ function showquiz()
         $(".quiz-container").hide();
         
         //alert('hi')
-        importfooter('Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
-        var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+        importfooter('Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = localStorage.url + 'Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3289,7 +3339,7 @@ function showquiz()
                   {
                     if(checkdefined(val.__extra.large_file_name) == 'yes')
                     {
-                      $('.quiz-question-container').prepend('<img src="'+server_url+'resources/files/images/'+val.__extra.large_file_name+'" class="img-responsive" />')
+                      $('.quiz-question-container').prepend('<img src="'+localStorage.url+'resources/files/images/'+val.__extra.large_file_name+'" class="img-responsive" />')
                     }
                   }
                 
@@ -3316,9 +3366,9 @@ function loadscorecard()
         $(".leaderboards-container").hide();
         
         //alert('hi')
-        importfooter('Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id+'/scorecard', 'agenda');
+        importfooter('Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id+'/scorecard', 'agenda');
                                     
-        var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/scoreboard/?gvm_json=1';
+        var main_url = localStorage.url + 'Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/scoreboard/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3374,7 +3424,7 @@ function loadscorecard()
 //function to reset the quiz
 function resetquiz()
 {
-    var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/reset_quiz/?gvm_json=1';
+    var main_url = localStorage.url + 'Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/reset_quiz/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3399,7 +3449,7 @@ function submitmultipleanswers(question_id)
    // alert(checkboxes);
     
     var countdown_box = Number(jQuery('#countdown_box').html()+'000');
-    var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+    var main_url = localStorage.url + 'Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
 
         jQuery.ajax({
             url: main_url,
@@ -3422,7 +3472,7 @@ function submitmultipleanswers(question_id)
 function submitanswer(question_id,answer)
 {
   var countdown_box = Number($('#countdown_box').html()+'000');
-  var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+  var main_url = localStorage.url + 'Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3443,7 +3493,7 @@ function submitanswer(question_id,answer)
 //function to go to next question
 function gotonextquestion(question_id)
 {
-    var main_url = server_url + 'Quiz/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+    var main_url = localStorage.url + 'Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3474,8 +3524,8 @@ function showquestions()
         $(".questions-container").hide();
         
         //alert('hi')
-        importfooter('Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
-        var main_url = server_url + 'Add-question/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
+        importfooter('Add-question/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = localStorage.url + 'Add-question/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3501,10 +3551,10 @@ function showquestions()
               
               
               $.each(obj.questionInstances, function(key, val) {
-              var image_url = server_url+'resources/gamification/img/avatar-placeholder.png';
+              var image_url = localStorage.url+'resources/gamification/img/avatar-placeholder.png';
               if(checkdefined(val.image) == "yes")
               {
-                  image_url = server_url+'resources/files/event/images/thumb_'+val.image+'.jpg';
+                  image_url = localStorage.url+'resources/files/event/images/thumb_'+val.image+'.jpg';
               }
               var name = 'anonymous';
               if(checkdefined(val.fName) == "yes")
@@ -3571,7 +3621,7 @@ function submitquestion(instance_id)
     var question = jQuery('#frmfld_question').val();
     jQuery(".submit_com").hide();
     jQuery(".loading_send").show(); 
-    var main_url = server_url + 'Add-question/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+    var main_url = localStorage.url + 'Add-question/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
       jQuery.ajax({
           url: main_url,
           dataType: "json",
@@ -3595,7 +3645,7 @@ function likedislikequestion(id,like)
   {
     $(".loading_cancel").show();  
     $(".questions-container").hide();
-  var main_url = server_url + 'Add-question/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
+  var main_url = localStorage.url + 'Add-question/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
        //  alert(main_url);
         $.ajax({
             url: main_url,
@@ -3622,8 +3672,8 @@ function showcomments()
         $(".questions-container").hide();
         
         //alert('hi')
-        importfooter('Add-comment/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id, 'agenda');
-        var main_url = server_url + 'Add-comment/-/OCintranet-' + static_event_id + '/' + localStorage.agenda_id + '/sort/timestamp/asc/?gvm_json=1';
+        importfooter('Add-comment/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda');
+        var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/sort/timestamp/asc/?gvm_json=1';
 
         $.ajax({
             url: main_url,
@@ -3658,10 +3708,10 @@ function showcomments()
               });
               
               $.each(element, function(key, val) {
-              var image_url = server_url+'resources/gamification/img/avatar-placeholder.png';
+              var image_url = localStorage.url+'resources/gamification/img/avatar-placeholder.png';
               if(checkdefined(val.image) == "yes")
               {
-                  image_url = server_url+'resources/files/event/images/thumb_'+val.image+'.jpg';
+                  image_url = localStorage.url+'resources/files/event/images/thumb_'+val.image+'.jpg';
               }
               var name = 'anonymous';
               if(checkdefined(val.fName) == "yes")
@@ -3700,12 +3750,12 @@ function showcomments()
               {
                   // alert(val.images.small)
                    //alert(val.images[0].small)
-                   comment_image = '<div class="images-container clearfix"><div class="col-xs-6 col-md-4 col-lg-2 image-container"><span data-mfp-src="'+server_url+'resources/files/images/'+val.images[0].large+'" class="mfp-image"><img alt="" src="'+server_url+'resources/files/images/'+val.images[0].small+'" class="resize-img"></span></div></div>';
+                   comment_image = '<div class="images-container clearfix"><div class="col-xs-6 col-md-4 col-lg-2 image-container"><span data-mfp-src="'+localStorage.url+'resources/files/images/'+val.images[0].large+'" class="mfp-image"><img alt="" src="'+localStorage.url+'resources/files/images/'+val.images[0].small+'" class="resize-img"></span></div></div>';
               }
               var comment_video = '';
               if(checkdefined(val.video_filename) == 'yes')
               {
-                  comment_video = '<div style=background-image:url("'+ server_url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + server_url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
+                  comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
                  // alert(comment_video)
               }
               
@@ -3749,7 +3799,7 @@ function deletecomment(instance_id)
 {
   if(confirm("Delete confirmation"))
   {
-      var main_url = server_url + 'Add-comment/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/delete/'+instance_id+'/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+      var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/delete/'+instance_id+'/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
       jQuery.ajax({
         url: main_url,
         dataType: "json",
@@ -3808,7 +3858,7 @@ function submitcomment(instance_id)
     options.chunkedMode = false;
     var ft = new FileTransfer();
     //alert(imageURI);
-    var main_url = server_url + 'Add-comment/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+    var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
     ft.upload(imageURI, encodeURI(main_url), win, fail, options);
 
     function win(r) {
@@ -3830,7 +3880,7 @@ function submitcomment(instance_id)
    { 
     
   //alert(comment)
-  var main_url = server_url + 'Add-comment/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+  var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
     jQuery.ajax({
         url: main_url,
         dataType: "json",
@@ -3858,7 +3908,7 @@ function likedislikecomment(id,like)
   {
     $(".loading_cancel").show();  
     $(".questions-container").hide();
-  var main_url = server_url + 'Add-comment/-/OCintranet-'+static_event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
+  var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
        //  alert(main_url);
         $.ajax({
             url: main_url,
