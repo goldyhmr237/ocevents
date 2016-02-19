@@ -2362,7 +2362,28 @@ function loadcommonthings() {
 function changecurrentevent(event_id)
 {
     localStorage.event_id = event_id;
-    window.location.href = 'gamification.html';
+    db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_events where event_id = '" + event_id + "'", [], function(tx, results) {
+            
+            var short_url = results.rows.item(0).short_url;
+            var main_url = localStorage.url + 'gamification/-/'+short_url+'-'+event_id+'?gvm_json=1';
+    // alert('here');
+    jQuery.ajax({
+        url: main_url,
+        dataType: "json",
+        method: "GET",
+        success: function(obj) {
+          login_process();
+        }
+        
+        });
+        
+        });
+        
+     });   
+    
+    
+    //window.location.href = 'gamification.html';
 }
 
 function login_process() {
