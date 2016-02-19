@@ -2336,7 +2336,7 @@ function login_process() {
         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)');
         tx.executeSql('delete from OCEVENTS_qa');
     });
-    var main_url = server_url + 'user-profile/?gvm_json=1';
+    var main_url = localStorage.url + 'user-profile/?gvm_json=1';
     // alert('here');
     jQuery.ajax({
         url: main_url,
@@ -2366,7 +2366,7 @@ function importhomepage() {
 
 
 
-    var main_url = server_url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + static_event_id;
+    var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + static_event_id;
     // alert('here');
     jQuery.ajax({
         url: main_url,
