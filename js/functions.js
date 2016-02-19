@@ -2337,7 +2337,7 @@ function loadcommonthings() {
         });
         tx.executeSql("SELECT * FROM OCEVENTS_events", [], function(tx, results) {
             var len = results.rows.length;
-            alert(len)
+            //alert(len)
             if(len>0)
             {
                 $('.events').html('<p class="my-events-title">My networks</p>');
