@@ -1,3 +1,561 @@
+/**
+
+
+Copyright (c) 2014 torrmal:Jorge Torres, jorge-at-turned.mobi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+*/
+
+try{
+	var tmp = LocalFileSystem.PERSISTENT;
+	var tmp = null;
+}
+catch(e){
+
+	var LocalFileSystem= {PERSISTENT : window.PERSISTENT,
+						TEMPORARY: window.TEMPORARY}; 
+	window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+
+
+}
+
+
+
+
+
+
+var DirManager = function(){
+	
+	this.cache = {};
+
+	var current_object = this;
+	// recursive create
+	this.create_r =function(path, callback, fail, position)
+	{
+		position = (typeof position == 'undefined')? 0: position;
+
+		
+		
+		var path_split 		= path.split('/');
+		var new_position 	= position+1;
+		var sub_path 		= path_split.slice(0,new_position).join('/');
+
+		Log('DirManager','mesg')('path:'+sub_path,'DirManager');
+		
+		
+		
+		var inner_callback = function(obj){
+			return function(){
+				Log('DirManager','mesg')('inner_callback:'+path);
+
+				obj.create_r(path, callback, fail, new_position);
+			}
+		}
+
+		
+		if(new_position == path_split.length){
+			this.create(sub_path, callback, fail);
+		}
+		else
+		{
+			this.create(sub_path, inner_callback(this), fail);
+		}
+		
+
+	};
+
+	this.list = function(path, success, fail){
+
+		fail = (typeof fail == 'undefined')? Log('DirManager','crete fail'): fail;
+
+		var template_callback = function(success){
+
+			return 	function(entries) {
+			        var i;
+			        var ret = [];
+			        
+			        limit=entries.length;
+			        	
+			        
+			        for (i=0; i<limit; i++) {
+			            //console.log(entries[i].name);
+			            ret.push(entries[i].name);
+
+			        }
+			        // console.log('LIST: '+ret);
+			        success(ret);
+				}
+		}
+
+		if(current_object.cache[path]){
+			
+			current_object.cache[path].readEntries(
+			            	template_callback(success)
+			            );
+			return;
+		}
+
+		fileSystemSingleton.load(
+			function(fileSystem){
+				var entry=fileSystem.root; 
+				
+	        	entry.getDirectory(path,
+
+	        		{create: true, exclusive: false}, 
+	        		function(entry){
+	        			var directoryReader = entry.createReader();
+	        			current_object.cache[path] = directoryReader;
+			            directoryReader.readEntries(
+			            	template_callback(success)
+			            );
+	        		}, 
+	        		function(err){
+	        			current_object.create_r(path,function(){success([]);},fail);
+	        			Log('DirManager','crete fail')('error creating directory');
+	        			//fail(err);
+	        		}
+	        	);
+			}
+		);		
+	}
+
+	this.create = function(path, callback, fail){
+		fail = (typeof fail == 'undefined')? Log('DirManager','crete fail'): fail;
+		fileSystemSingleton.load(
+			function(fileSystem){
+				var entry=fileSystem.root; 
+				
+	        	entry.getDirectory(path,
+	        		{create: true, exclusive: false}, 
+	        		function(entry){
+	        			Log('FileSystem','msg')('Directory created successfuly');
+	        			callback(entry);
+	        		}, 
+	        		function(err){
+	        			Log('DirManager','crete fail')('error creating directory');
+	        			fail(err);
+	        		}
+	        	);
+			}
+		);
+	};
+
+	this.remove = function(path, success, fail){
+		fail = (typeof fail == 'undefined')? Log('DirManager','crete fail'): fail;
+		success = (typeof success == 'undefined')? Log('DirManager','crete fail'): success;
+		
+		//console.log(current_object.cache);
+		delete current_object.cache[path];
+		//console.log(current_object.cache);
+		this.create(
+			path,
+			function(entry){
+				
+				
+				entry.removeRecursively(success, fail);
+			}
+		);
+	}
+	
+};
+
+var Log = function(bucket, tag){
+  return function(message){
+    if(typeof bucket != 'undefined')
+    {
+      console.log(' '+bucket+':');
+    }
+    if(typeof tag != 'undefined')
+    {
+      console.log(' '+tag+':');
+    }
+    if(typeof message != 'object'){
+      console.log('       '+message);
+    }
+    else
+    {
+      console.log(message);
+    }
+  };
+}
+
+
+var fileSystemSingleton = {
+	fileSystem: false,
+
+	load : function(callback, fail){
+		fail = (typeof fail == 'undefined')? Log('FileSystem','load fail'): fail;
+		if(fileSystemSingleton.fileSystem){
+			callback(fileSystemSingleton.fileSystem);
+			return; 
+		}
+
+		if(!window.requestFileSystem){
+			return fail();
+		}
+
+
+		window.requestFileSystem(
+			LocalFileSystem.PERSISTENT,
+			0, 
+			function(fileSystem){
+				fileSystemSingleton.fileSystem = fileSystem;
+				callback(fileSystemSingleton.fileSystem);
+			}, 
+			function(err){
+				Log('FileSystem','load fail')('error loading file system');
+				fail(err);
+			}
+		);
+	}
+};
+
+
+var Log = function(bucket, tag){
+  return function(message){
+    if(typeof bucket != 'undefined')
+    {
+      console.log(' '+bucket+':');
+    }
+    if(typeof tag != 'undefined')
+    {
+      console.log(' '+tag+':');
+    }
+    if(typeof message != 'object'){
+      console.log('       '+message);
+    }
+    else
+    {
+      console.log(message);
+    }
+  };
+}
+
+
+var fileSystemSingleton = {
+	fileSystem: false,
+
+	load : function(callback, fail){
+		fail = (typeof fail == 'undefined')? Log('FileSystem','load fail'): fail;
+		if(fileSystemSingleton.fileSystem){
+			callback(fileSystemSingleton.fileSystem);
+			return; 
+		}
+
+		if(!window.requestFileSystem){
+			return fail();
+		}
+
+
+		window.requestFileSystem(
+			LocalFileSystem.PERSISTENT,
+			0, 
+			function(fileSystem){
+				fileSystemSingleton.fileSystem = fileSystem;
+				callback(fileSystemSingleton.fileSystem);
+			}, 
+			function(err){
+				Log('FileSystem','load fail')('error loading file system');
+				fail(err);
+			}
+		);
+	}
+};
+
+var FileManager = function(){
+
+	
+
+	this.get_path = function(todir,tofilename, success){
+		fail = (typeof fail == 'undefined')? Log('FileManager','read file fail'): fail;
+		this.load_file(
+			todir,
+			tofilename,
+			function(fileEntry){
+
+					var sPath = fileEntry.toURL();
+					
+					
+					success(sPath);
+			},
+			Log('fail')
+		);
+
+
+		
+	}
+
+	this.load_file = function(dir, file, success, fail, dont_repeat){
+		if(!dir || dir =='')
+		{
+			Log('error','msg')('No file should be created, without a folder, to prevent a mess');
+			fail();
+			return;
+		}
+		fail = (typeof fail == 'undefined')? Log('FileManager','load file fail'): fail;
+		var full_file_path = dir+'/'+file;
+		var object = this;
+		// well, here it will be a bit of diharrea code, 
+		// but, this requires to be this chain of crap, thanks to phonegap file creation asynch stuff
+		// get fileSystem
+		fileSystemSingleton.load(
+			function(fs){
+				var dont_repeat_inner = dont_repeat;
+				// get file handler
+				console.log(fs.root);
+				fs.root.getFile(
+					full_file_path, 
+					{create: true, exclusive: false}, 
+					success, 
+
+					function(error){
+						
+						if(dont_repeat == true){
+							Log('FileManager','error')('recurring error, gettingout of here!');
+							return;
+						}
+						// if target folder does not exist, create it
+						if(error.code == 3){
+							Log('FileManager','msg')('folder does not exist, creating it');
+							var a = new DirManager();
+      						a.create_r(
+      							dir, 
+      							function(){
+      								Log('FileManager','mesg')('trying to create the file again: '+file);
+      								object.load_file(dir,file,success,fail,true);
+      							},
+      							fail
+      						);
+							return;
+						}
+						fail(error);
+					}
+				);
+			}
+		);
+	};
+
+	this.download_file = function(url, todir, tofilename, success, fail){
+
+		fail = (typeof fail == 'undefined')? Log('FileManager','read file fail'): fail;
+		this.load_file(
+			todir,
+			tofilename,
+			function(fileEntry){
+
+					var sPath = fileEntry.toURL();
+
+		            var fileTransfer = new FileTransfer();
+		            fileEntry.remove();
+		           
+		            fileTransfer.download(
+		                encodeURI(url),
+		                sPath,
+		                function(theFile) {
+		                    console.log("download complete: " + theFile.toURI()); 
+		                    success(theFile);
+		                },
+		                function(error) {
+		                    console.log("download error source " + error.source);
+		                    console.log("download error target " + error.target);
+		                    console.log("upload error code: " + error.code);
+		                    fail(error);
+		                }
+		            );
+
+
+				
+
+			},
+			fail
+		);
+
+		
+	};
+
+	this.read_file = function(dir, filename, success, fail){
+		// console.log(dir);
+		fail = (typeof fail == 'undefined')? Log('FileManager','read file fail'): fail;
+		this.load_file(
+			dir,
+			filename,
+			function(fileEntry){
+				fileEntry.file(
+					function(file){
+						var reader = new FileReader();
+
+						reader.onloadend = function(evt) {
+						    
+						    success(evt.target.result);
+						};
+
+						reader.readAsText(file);
+					}, 
+					fail
+				);
+
+			},
+			fail
+		);
+	};
+
+	this.write_file = function(dir, filename, data, success, fail){
+		fail = (typeof fail == 'undefined')? Log('FileManager','write file fail'): fail;
+		this.load_file(
+			dir,
+			filename,
+			function(fileEntry){
+				fileEntry.createWriter(
+					function(writer){
+						Log('FileManager','mesg')('writing to file: '+filename);
+						writer.onwriteend = function(evt){
+							Log('FileManager','mesg')('file write success!');
+							success(evt);
+						}
+				        writer.write(data);
+					}, 
+					fail
+				);
+			},			
+			fail
+		);
+
+		//
+	};
+
+
+	this.remove_file = function(dir, filename, success, fail){
+		var full_file_path = dir+'/'+filename;
+		fileSystemSingleton.load(
+			function(fs){
+				
+				// get file handler
+				fs.root.getFile(full_file_path, {create: false, exclusive: false}, function(fileEntry){fileEntry.remove(success, fail);}, fail);
+			}
+
+		);
+		//
+	};
+};
+
+
+
+
+var ParallelAgregator = function(count, success, fail, bucket)
+{
+  ////System.log('success: aggregator count:'+count);
+  var success_results = [];
+  var fail_results = [];
+  var success_results_labeled = {};
+  var ini_count = 0;
+  var log_func= function(the_data){
+    //console.log(the_data)
+  }
+  var object = this;
+  current_bucket = (typeof bucket == 'undefined')? 'aggregator' : bucket;
+  var success_callback =  (typeof success == 'undefined')? log_func : success;
+  var fail_callback = (typeof fail == 'undefined')? log_func: fail;
+
+  
+
+  this.success = function(label){
+    return function(result){
+      //System.log('one aggregator success!',current_bucket);
+      ini_count++;
+      success_results.push(result);
+      if(!success_results_labeled[label]){
+        success_results_labeled[label] = [];
+      }
+      success_results_labeled[label].push(result);
+      //System.log('success: aggregator count:'+ini_count,current_bucket);
+      object.call_success_or_fail();
+    }
+  };
+
+  this.call_success_or_fail = function(){
+    if(ini_count == count){
+      //System.log('aggregator complete',current_bucket);
+      if(success_results.length == count)
+      {
+        //System.log('aggregator success',current_bucket);
+        success_callback(success_results_labeled);
+      }
+      else{
+        //System.log('aggregator fail',current_bucket);
+        fail_callback({success:success_results,fail:fail_results});
+      }
+    }
+  };
+
+  this.fail = function(result){
+    //System.log('one aggregator fail!',current_bucket);
+    ini_count++;
+    fail_results.push(result);
+    //System.log('fail: aggregator count:'+ini_count, current_bucket);
+    this.call_success_or_fail();
+  }
+}
+
+/**
+
+//TEST CODE:
+var start=	function(){
+		
+
+		//
+		//CREATE A DIRECTORY RECURSEVLY
+		var a = new DirManager(); // Initialize a Folder manager
+        a.create_r('folder_a/folder_b',Log('complete/jorge'));
+
+		//LIST A DIRECTORY 
+		a.list('cosa', Log('List'));
+
+        //REMOVE A DIRECTORY RECURSEVLY
+        a.remove('folder_a/folder_b',Log('complete delte'), Log('delete fail'));
+
+		//
+		//FILES MANAGEMENT:
+		//
+        var b = new FileManager();
+        // create an empty  FILE (simialr unix touch command), directory will be created recursevly if it doesnt exist
+        b.load_file('dira/dirb/dirc','demofile.txt',Log('file created'),Log('something went wrong'));
+        
+        // WRITE TO A FILE
+        b.write_file('dira/dirb/dirc/dird','demofile_2.txt','this is demo content',Log('wrote sucessful!'));
+
+        // READ A FILE
+        b.read_file('dira/dirb/dirc/dird','demofile_2.txt',Log('file contents: '),Log('something went wrong'));
+        
+        // download a file from a remote location and store it localy
+        b.download_file('http://www.greylock.com/teams/42-Josh-Elman','filder_a/dwonloads_folder/','target_name.html',Log('downloaded sucess'));
+       
+
+		
+}
+document.addEventListener('deviceready', start, false);
+*/
+
+
+
+
+
 function getFileNameFromPath(path) {
     var ary = path.split("/");
     return ary[ary.length - 1];
@@ -617,6 +1175,10 @@ function logout() {
 
                 truncatealltables();
                 localStorage.user_id = '';
+                localStorage.instance_id = '';
+                localStorage.event_id = '';
+                localStorage.short_url = '';
+                localStorage.url = '';
                 if (localStorage.fid != '' && localStorage.fid != undefined && localStorage.fid != null) {
                     facebookConnectPlugin.logout(
                         function(response) {
@@ -1204,7 +1766,7 @@ function loaduserdetail() {
         $(".leaderboards-container").hide();
         importfooter('user-points/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id, 'points');
         var main_url = localStorage.url + 'user-points/-/'+localStorage.short_url+'-' + localStorage.event_id + '/topscores/' + localStorage.instance_id + '?gvm_json=1';
-
+         //alert(main_url)
         $.ajax({
             url: main_url,
             dataType: "json",
@@ -1225,11 +1787,12 @@ function loaduserdetail() {
                 $(".team-points-table table tbody").html('');
                 var i = 0;
                 var classcss = '';
-                $.each(obj.topScoresViewVars.users, function(key, val) {
-                    if (val.eventuser_id == localStorage.user_id) {
-                        var classcss = "current-user";
-                    } else {
-                        var classcss = "";
+                $.each(obj.topScoresViewVars.items, function(key, val) {
+                    var classcss = "";
+                    //alert(localStorage.user_id)
+                    if(val.is_current_user == true || val.is_current_user == 'true')
+                    {
+                        classcss= 'current-user';
                     }
                     if (val.image != '') {
                         var newtd = '<td class="avatar-col"><span class="avatar"><div class="img img-circle" style="background-image:url(' + val.image + ');"></div></span></td>';
@@ -1237,16 +1800,12 @@ function loaduserdetail() {
                         var newtd = '<td class="avatar-col"></td>';
                     }
                     i++;
-                     var id = val.total ;
-                 var user_total = formatpoints(id);
-                    $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + user_total + '</td></tr>');
+                     var id = val.points ;
+                     var user_total = formatpoints(id);
+                     $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.name + '</span></td><td class="point">' + user_total + '</td></tr>');
 
                 });
-                var difference = Number(10) - Number(i);
-                for (v = 0; v < difference; v++) {
-                    i++;
-                    $(".team-points-table table tbody").append('<tr><td class="num-col"><span class="num">' + i + '</span></td><td class="avatar-col"></td><td><span class="name">-</span></td><td class="point">0</td></tr>');
-                }
+                
                 $(".user-points-table table tbody").html('');
                 $.each(obj.categories, function(key, val) {
                     if (val.instance_id == localStorage.instance_id) {
@@ -1256,17 +1815,17 @@ function loaduserdetail() {
                     }
 
                     var icon = '';
-                    if (val.name == 'Bonus') {
+                    if (val.alias == 'early_bird') {
                         icon = '<span class="icon"><i class="social-icon"></i></span>';
-                    } else if (val.name == 'Social') {
+                    } else if (val.alias == 'social') {
                         icon = '<span class="icon"><i class="gicon-friends"></i></span>';
-                    } else if (val.name == 'Seekergame') {
+                    } else if (val.alias == 'seeker') {
                         icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                    } else if (val.name == 'Course/Quiz') {
+                    } else if (val.alias == 'first_mover') {
                         icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                    } else if (val.name == 'Communication') {
+                    } else if (val.alias == 'communication') {
                         icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                    } else if (val.name == 'Total') {
+                    } else if (val.alias == 'total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
                     }
                     if (val.count > 0) {
@@ -1309,7 +1868,7 @@ function loadteampoints() {
                 // alert(label);
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
                     tx.executeSql('delete from OCEVENTS_teampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -1327,7 +1886,7 @@ function loadteampoints() {
                                     if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
                                         green_count = val.count;
                                     }
-                                    tx.executeSql("insert into OCEVENTS_teampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points + "','" + green_count + "','" + label + "','" + val.instance_id + "' )");
+                                    tx.executeSql("insert into OCEVENTS_teampoints (alias,user_id,name,position,userTotal,green_count,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points + "','" + green_count + "','" + label + "','" + val.instance_id + "' )");
                                     //alert(val.position);
                                     co++;
                                     // alert(co);
@@ -1364,7 +1923,25 @@ function showTeamPointsData() {
             var group_title = '';
 
             for (i = 0; i < len; i++) {
+                
                 var icon = '';
+                var val = results.rows.item(i);
+                    if (val.alias == 'early_bird') {
+                        icon = '<span class="icon"><i class="social-icon"></i></span>';
+                    } else if (val.alias == 'social') {
+                        icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                    } else if (val.alias == 'seeker') {
+                        icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                    } else if (val.alias == 'first_mover') {
+                        icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                    } else if (val.alias == 'communication') {
+                        icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                    } else if (val.alias == 'total') {
+                        icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                    }
+                
+                
+               /* var icon = '';
                 if (results.rows.item(i).name == 'Bonus') {
                     icon = '<span class="icon"><i class="social-icon"></i></span>';
                 } else if (results.rows.item(i).name == 'Social') {
@@ -1376,8 +1953,8 @@ function showTeamPointsData() {
                 } else if (results.rows.item(i).name == 'Communication') {
                     icon = '<span class="icon"><i class="gicon-comments"></i></span>';
                 } else if (results.rows.item(i).name == 'Total') {
-                    icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
+                    icon = '<span class="icon"><i class="gicon-points"></i></span>';   
+                }                                                                       */
                 var green_count_html = '';
                 if (results.rows.item(i).green_count != 0) {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
@@ -1453,17 +2030,17 @@ function loaddetailteampoints() {
                     }
 
                     var icon = '';
-                    if (val.name == 'Bonus') {
+                    if (val.alias == 'early_bird') {
                         icon = '<span class="icon"><i class="social-icon"></i></span>';
-                    } else if (val.name == 'Social') {
+                    } else if (val.alias == 'social') {
                         icon = '<span class="icon"><i class="gicon-friends"></i></span>';
-                    } else if (val.name == 'Seekergame') {
+                    } else if (val.alias == 'seeker') {
                         icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                    } else if (val.name == 'Course/Quiz') {
+                    } else if (val.alias == 'first_mover') {
                         icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                    } else if (val.name == 'Communication') {
+                    } else if (val.alias == 'communication') {
                         icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                    } else if (val.name == 'Total') {
+                    } else if (val.alias == 'total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
                     }
                     var id = val.points ;
@@ -1547,17 +2124,17 @@ function loadyourdetailteampoints() {
                     }
 
                     var icon = '';
-                    if (val.name == 'Bonus') {
+                    if (val.alias == 'early_bird') {
                         icon = '<span class="icon"><i class="social-icon"></i></span>';
-                    } else if (val.name == 'Social') {
+                    } else if (val.alias == 'social') {
                         icon = '<span class="icon"><i class="gicon-friends"></i></span>';
-                    } else if (val.name == 'Seekergame') {
+                    } else if (val.alias == 'seeker') {
                         icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                    } else if (val.name == 'Course/Quiz') {
+                    } else if (val.alias == 'first_mover') {
                         icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                    } else if (val.name == 'Communication') {
+                    } else if (val.alias == 'communication') {
                         icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                    } else if (val.name == 'Total') {
+                    } else if (val.alias == 'total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
                     }
                     
@@ -1598,7 +2175,7 @@ function loadyourpoints() {
                 // alert(label);
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
                     tx.executeSql('delete from OCEVENTS_yourteampoints');
                     tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
                         var len_ag = results.rows.length;
@@ -1616,7 +2193,7 @@ function loadyourpoints() {
                                     if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
                                         green_count = val.count;
                                     }
-                                    tx.executeSql("insert into OCEVENTS_yourteampoints (user_id,name,position,userTotal,green_count,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points + "','" + green_count + "','" + label + "','" + val.instance_id + "'  )");
+                                    tx.executeSql("insert into OCEVENTS_yourteampoints (alias,user_id,name,position,userTotal,green_count,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points + "','" + green_count + "','" + label + "','" + val.instance_id + "'  )");
                                     //alert(val.position);
                                     co++;
                                     // alert(co);
@@ -2366,6 +2943,7 @@ function changecurrentevent(event_id)
         tx.executeSql("SELECT * FROM OCEVENTS_events where event_id = '" + event_id + "'", [], function(tx, results) {
             
             var short_url = results.rows.item(0).short_url;
+            localStorage.short_url = short_url;
             var main_url = localStorage.url + 'gamification/-/'+short_url+'-'+event_id+'?gvm_json=1';
     // alert('here');
     jQuery.ajax({
@@ -2389,6 +2967,8 @@ function changecurrentevent(event_id)
 function login_process() {
     db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)');
+        //alert('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)')
+         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
         tx.executeSql('delete from OCEVENTS_qa');
     });
     var main_url = localStorage.url + 'user-profile/?gvm_json=1';
@@ -2434,23 +3014,33 @@ function importhomepage() {
                 window.location.href = "index.html";
             } else {
                  db.transaction(function(tx) {
-                              tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
+                 tx.executeSql("SELECT * FROM OCEVENTS_events", [], function(tx, results) {
+                  var len = results.rows.length;
+               if(len == 0)
+               {
+                   tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
                               tx.executeSql("delete from OCEVENTS_events");                            
-                          });
-            $.each( obj.data._extra.userEvents, function( key, val ) {
-             
-                            //document.write(val.event_id+'<br />');
-                            if(val.event_id == '100041')
-                            {
-                                localStorage.event_id = val.event_id;
-                                localStorage.short_url = val.short_url;
-                            }
-                            db.transaction(function(tx) {
-                                tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,description,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.description + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
-                            });                
-                          }); 
+                         
+                  $.each( obj.data._extra.userEvents, function( key, val ) {
+                   
+                              //document.write(val.event_id+'<br />');
+                              if(val.event_id == '100041')
+                              {
+                                  localStorage.event_id = val.event_id;
+                                  localStorage.short_url = val.short_url;
+                              }
+                              //db.transaction(function(tx) {
+                                  tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,description,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.description + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
+                             // });                
+                      }); 
+                }
+                  });
+                  });
+            
+                 
+                   // alert(obj.data.type)         
                 if (obj.data.type == 'content') {
-
+                     //alert('here content')
                     db.transaction(function(tx) {
 
                         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id,main_logo_small_image,main_banner_image,main_title,main_text,main_link,type,iframe_url)');
@@ -2539,7 +3129,7 @@ function importhomepage() {
                     }
 
                 } else if (obj.data.type == 'url') {
-
+                   // alert('here url')
                     downloadLogoFile(obj.data.url, obj.data.type, obj.data.main_logo_image.small_url);
 
                 } else {
@@ -2572,20 +3162,24 @@ function onDeviceReady() {
 
 //function to download logo from server
 function downloadLogoFile(url, type, img_src) {
+   //document.write('<scr'+'ipt type="text/javascript" src="painlessfs.js" ></scr'+'ipt>'); 
     var DIR_Name = 'oc_photos';
-    //alert(img_src);
+   /* alert(url);
+    alert(type);
+    alert(img_src); */
     var a = new DirManager();
     a.create_r(DIR_Name, Log('created successfully'));
     var b = new FileManager();
     var image_name = getFileNameFromPath(img_src);
     var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+    //alert(STR)
     jQuery.ajax({
         url: STR,
         dataType: "html",
         success: function(DtatURL) {
             b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
                 var img_uri = theFile.toURI();
-                //alert(img_uri);
+               // alert(img_uri);
                 db.transaction(function(tx) {
                     tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
                     tx.executeSql("delete from OCEVENTS_homepage");
@@ -2594,7 +3188,7 @@ function downloadLogoFile(url, type, img_src) {
                 });
             });
         }
-    });
+    }); 
 }
 
 //function to import footer links
@@ -3962,6 +4556,7 @@ function truncatealltables() {
         tx.executeSql('delete from OCEVENTS_yourteampoints');
         tx.executeSql('delete from OCEVENTS_footerlinks');
         tx.executeSql('delete from OCEVENTS_footermorelinks');
+        tx.executeSql("delete from OCEVENTS_events");
     });
 }
 
