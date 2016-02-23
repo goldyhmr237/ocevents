@@ -1397,6 +1397,15 @@ tbody .hints-count-label {
   z-index: 999999;
 }
 
+#footerSlideContainer_loading {
+	position: fixed;
+	bottom:50%;
+	width: 100%;
+  left:50%; 
+  display:none;
+  z-index: 999999;
+}
+
 .ui-widget-overlay {
   height: 100%;
   left: 0;

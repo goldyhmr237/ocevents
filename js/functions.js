@@ -672,7 +672,7 @@ function removeprofileimage() {
                             ImgFullUrl = theFile.toURI();
 
                             db.transaction(function(tx) {
-                                tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="false" where user_id = "' + localStorage.user_id + '"');
+                                tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="false"');
                                 window.location.href = "profile.html";
                             });
                         });
@@ -755,7 +755,7 @@ function saveprofile() {
                 //alert(obj.status);
                 if (obj.status == 'success') {
                     db.transaction(function(tx) {
-                        tx.executeSql("update OCEVENTS_user set email = '" + obj.data.email + "',first_name = '" + obj.data.first_name + "',last_name = '" + obj.data.last_name + "',mobile = '" + obj.data.mobile + "' where user_id = '" + obj.data.id + "'");
+                        tx.executeSql("update OCEVENTS_user set email = '" + obj.data.email + "',first_name = '" + obj.data.first_name + "',last_name = '" + obj.data.last_name + "',mobile = '" + obj.data.mobile + "'");
                         $(".success_message").show();
                         $('#edited_success').focus();
                         setTimeout(function() {
@@ -788,6 +788,22 @@ function checkURL(value) {
         return (true);
     }
     return (false);
+}
+
+function createTables()
+{
+   db.transaction(function(tx) {
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_user (id integer primary key autoincrement,team,position,fb_user_id,fb_email,birthday_date,website, user_id, email, first_name, last_name,mobile, image_src, is_user_image, created,gender,player_code)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,hideTeamScores,label,instance_id)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id,main_logo_small_image,main_banner_image,main_title,main_text,main_link,type,iframe_url)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)'); 
+ }); 
 }
 
 
@@ -839,8 +855,7 @@ function loginme() {
                         $("#login_submit").show();
                         $(".loading").hide();
                     } else {
-                           
-                        
+                        createTables();
 
                         var DIR_Name = 'oc_photos';
                         var a = new DirManager();
@@ -867,10 +882,12 @@ function loginme() {
                                     ImgFullUrl = theFile.toURI();
                                     // alert(ImgFullUrl);
                                     db.transaction(function(tx) {
-                                        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_user (id integer primary key autoincrement,team,position,fb_user_id,fb_email,birthday_date,website, user_id, email, first_name, last_name,mobile, image_src, is_user_image, created,gender,player_code)');
+                                        
                                         tx.executeSql("delete from OCEVENTS_user");
                                         tx.executeSql('INSERT INTO OCEVENTS_user (team,position,fb_user_id,fb_email,birthday_date,website,user_id,email,first_name,last_name,mobile,image_src,is_user_image,created,gender,player_code) VALUES ("' + obj.data.team + '","' + obj.data.position + '","' + obj.data.fb_user_id + '","' + obj.data.fb_email + '","' + obj.data.birthday_date + '","' + obj.data.website + '","' + obj.data.id + '","' + obj.data.email + '","' + obj.data.first_name + '","' + obj.data.last_name + '","' + obj.data.mobile + '","' + ImgFullUrl + '","' + obj.data.image.is_user_image + '","' + obj.data.created + '","' + obj.data.gender + '","' + obj.data.player_code + '")');
                                         localStorage.user_id = obj.data.id;
+                                        localStorage.event_id = obj.data.event_id;
+                                        //alert(localStorage.event_id)
                                         login_process();
                                     });
                                 });
@@ -985,7 +1002,7 @@ function linkwithfacebook() {
                             //alert(obj.message);
                             var fb_uid = obj.data.fb_user_id;
                             db.transaction(function(tx) {
-                                tx.executeSql('update OCEVENTS_user set fb_user_id = "' + fb_uid + '" where user_id = "' + localStorage.user_id + '"');
+                                tx.executeSql('update OCEVENTS_user set fb_user_id = "' + fb_uid + '"');
 
                                 window.location.href = "profile.html";
 
@@ -1036,7 +1053,7 @@ var fbLoginSuccess = function() {
                     if (obj.status == "success") {
 
                         db.transaction(function(tx) {
-                            tx.executeSql('update OCEVENTS_user set fb_user_id = "" where user_id = "' + localStorage.user_id + '"');
+                            tx.executeSql('update OCEVENTS_user set fb_user_id = ""');
 
                             window.location.href = "profile.html";
 
@@ -1086,6 +1103,7 @@ var login = function() {
                 // $("#login_submit").hide();
                 //   $(".loading").show();
                 //alert(localStorage.url);
+                createTables();
                 var main_url = localStorage.url + 'api/index.php/auth/FBlogin?XDEBUG_SESSION_START=PHPSTORM';
                 jQuery.ajax({
                     url: main_url,
@@ -1133,6 +1151,8 @@ var login = function() {
                                             tx.executeSql("delete from OCEVENTS_user");
                                             tx.executeSql('INSERT INTO OCEVENTS_user (team,position,fb_user_id,fb_email,birthday_date,website,user_id,email,first_name,last_name,mobile,image_src,is_user_image,created,gender,player_code) VALUES ("' + obj.data.team + '","' + obj.data.position + '","' + obj.data.fb_user_id + '","' + obj.data.fb_email + '","' + obj.data.birthday_date + '","' + obj.data.website + '","' + obj.data.id + '","' + obj.data.email + '","' + obj.data.first_name + '","' + obj.data.last_name + '","' + obj.data.mobile + '","' + ImgFullUrl + '","' + obj.data.image.is_user_image + '","' + obj.data.created + '","' + obj.data.gender + '","' + obj.data.player_code + '")');
                                             localStorage.user_id = obj.data.id;
+                                            localStorage.event_id = obj.data.event_id;
+                                            
                                             login_process();
                                         });
                                     });
@@ -1164,6 +1184,7 @@ var login = function() {
 
 function logout() {
     //alert('here')
+    truncatealltables();
     var main_url = localStorage.url + 'api/index.php/auth/logout?XDEBUG_SESSION_START=PHPSTORM';
     jQuery.ajax({
         url: main_url,
@@ -1173,7 +1194,7 @@ function logout() {
             //alert(obj.status);                       
             if (obj.status == 'success') {
 
-                truncatealltables();
+                
                 localStorage.user_id = '';
                 localStorage.instance_id = '';
                 localStorage.event_id = '';
@@ -1210,8 +1231,8 @@ function loadgamification() {
 
     db.transaction(function(tx) {
 
-        //alert("SELECT * FROM OCEVENTS_homepage where user_id = '"+localStorage.user_id+"'");
-        tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        //alert("SELECT * FROM OCEVENTS_homepage ");
+        tx.executeSql("SELECT * FROM OCEVENTS_homepage", [], function(tx, results) {
             var len = results.rows.length;
             //            alert(results.rows.item(0).main_logo_small_image);
             if (results.rows.item(0).type == 'content') {
@@ -1230,7 +1251,13 @@ function loadgamification() {
                     $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
                 }
                 $(".main-container").html('<iframe src=' + results.rows.item(0).iframe_url + ' id="homepage-content" />');
-            } else {
+            }
+            else if (results.rows.item(0).type == 'module') {
+                    localStorage.agenda_id = results.rows.item(0).main_title;
+                    //alert(localStorage.agenda_id)
+                    window.location.href = 'agenda_item.html';
+            } else { 
+                
                 $(".main-container").html("No Module Found");
             }
 
@@ -1323,7 +1350,7 @@ function onPhotoURISuccess(imageURI) {
                         ImgFullUrl = theFile.toURI();
                         //alert(ImgFullUrl);
                         db.transaction(function(tx) {
-                            tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="true" where user_id = "' + localStorage.user_id + '"');
+                            tx.executeSql('update OCEVENTS_user set image_src = "' + ImgFullUrl + '",is_user_image="true"');
 
                             window.location.href = "profile.html";
 
@@ -1552,7 +1579,7 @@ function loadticket() {
         loadcommonthings(); isLoggedIn();
         importfooter('ticketing', 'home');
         db.transaction(function(tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
+            
             tx.executeSql('delete from OCEVENTS_ticket');
         });
         $(".ticketing-container").hide();
@@ -1600,7 +1627,7 @@ function loadticket() {
 //function to show user ticket
 function showTicket() {
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_ticket where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_ticket", [], function(tx, results) {
             jQuery(".ticket_code").html(results.rows.item(0).ticketCode);
             jQuery(".qr_photo").attr("src", results.rows.item(0).ticketSrc);
             jQuery(".ticketing-container").show();
@@ -1636,9 +1663,9 @@ function loadpoints() {
                 // alert(label);
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,user_id,name,position integer,userTotal,green_count,hideTeamScores,label,instance_id)');
+                    
                     tx.executeSql('delete from OCEVENTS_points');
-                    tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+                    tx.executeSql("SELECT * FROM OCEVENTS_points", [], function(tx, results) {
                         var len_ag = results.rows.length;
                         // alert(len_ag);
                         if (imagedatalength == len_ag && len_ag != 0) {
@@ -1654,7 +1681,7 @@ function loadpoints() {
                                     if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
                                         green_count = val.count;
                                     }
-                                    tx.executeSql("insert into OCEVENTS_points (user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal + "','" + green_count + "','" + hideTeamScores + "','" + label + "' ,'" + val.instance_id + "' )");
+                                    tx.executeSql("insert into OCEVENTS_points (alias,user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal + "','" + green_count + "','" + hideTeamScores + "','" + label + "' ,'" + val.instance_id + "' )");
                                     //alert(val.position);
                                     co++;
                                     // alert(co);
@@ -1682,7 +1709,7 @@ function loadpoints() {
 function showPointsData() {
     // alert('here');
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_points where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_points", [], function(tx, results) {
             var len = results.rows.length;
             $(".table-striped tbody").html('&nbsp;');
             var label = results.rows.item(0).label;
@@ -1698,20 +1725,21 @@ function showPointsData() {
             //alert(results.rows.item(0).hideTeamScores);
             for (i = 0; i < len; i++) {
                 //alert(results.rows.item(i).description);
-                var icon = '';
-                if (results.rows.item(i).name == 'Bonus') {
-                    icon = '<span class="icon"><i class="social-icon"></i></span>';
-                } else if (results.rows.item(i).name == 'Social') {
-                    icon = '<span class="icon"><i class="gicon-friends"></i></span>';
-                } else if (results.rows.item(i).name == 'Seekergame') {
-                    icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
-                } else if (results.rows.item(i).name == 'Course/Quiz') {
-                    icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
-                } else if (results.rows.item(i).name == 'Communication') {
-                    icon = '<span class="icon"><i class="gicon-comments"></i></span>';
-                } else if (results.rows.item(i).name == 'Total') {
-                    icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
+                  var icon = '';
+                var val = results.rows.item(i);
+                    if (val.alias == 'early_bird') {
+                        icon = '<span class="icon"><i class="social-icon"></i></span>';
+                    } else if (val.alias == 'social') {
+                        icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                    } else if (val.alias == 'seeker') {
+                        icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                    } else if (val.alias == 'first_mover') {
+                        icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                    } else if (val.alias == 'communication') {
+                        icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                    } else if (val.alias == 'total') {
+                        icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                    }
                 var green_count_html = '';
                 if (results.rows.item(i).green_count != 0) {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
@@ -1868,9 +1896,9 @@ function loadteampoints() {
                 // alert(label);
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+                    
                     tx.executeSql('delete from OCEVENTS_teampoints');
-                    tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+                    tx.executeSql("SELECT * FROM OCEVENTS_teampoints", [], function(tx, results) {
                         var len_ag = results.rows.length;
                         // alert(len_ag);
                         if (imagedatalength == len_ag && len_ag != 0) {
@@ -1914,7 +1942,7 @@ function loadteampoints() {
 function showTeamPointsData() {
     // alert('here');
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_teampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_teampoints", [], function(tx, results) {
             var len = results.rows.length;
             $(".table-striped tbody").html('&nbsp;');
             var label = results.rows.item(0).label;
@@ -2175,9 +2203,9 @@ function loadyourpoints() {
                 // alert(label);
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
-                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+                    
                     tx.executeSql('delete from OCEVENTS_yourteampoints');
-                    tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+                    tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints", [], function(tx, results) {
                         var len_ag = results.rows.length;
                         // alert(len_ag);
                         if (imagedatalength == len_ag && len_ag != 0) {
@@ -2221,7 +2249,7 @@ function loadyourpoints() {
 function showYourTeamPointsData() {
     // alert('here');
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints", [], function(tx, results) {
             var len = results.rows.length;
             $(".table-striped tbody").html('&nbsp;');
             var label = results.rows.item(0).label;
@@ -2230,7 +2258,7 @@ function showYourTeamPointsData() {
             var group_title = '';
 
             for (i = 0; i < len; i++) {
-                var icon = '';
+               /* var icon = '';
                 if (results.rows.item(i).name == 'Bonus') {
                     icon = '<span class="icon"><i class="social-icon"></i></span>';
                 } else if (results.rows.item(i).name == 'Social') {
@@ -2243,7 +2271,22 @@ function showYourTeamPointsData() {
                     icon = '<span class="icon"><i class="gicon-comments"></i></span>';
                 } else if (results.rows.item(i).name == 'Total') {
                     icon = '<span class="icon"><i class="gicon-points"></i></span>';
-                }
+                } */
+                var val = results.rows.item(i);
+                var icon = '';
+                    if (val.alias == 'early_bird') {
+                        icon = '<span class="icon"><i class="social-icon"></i></span>';
+                    } else if (val.alias == 'social') {
+                        icon = '<span class="icon"><i class="gicon-friends"></i></span>';
+                    } else if (val.alias == 'seeker') {
+                        icon = '<span class="icon"><i class="gicon-seeker"></i></span>';
+                    } else if (val.alias == 'first_mover') {
+                        icon = '<span class="icon"><i class="gicon-quiz"></i></span>';
+                    } else if (val.alias == 'communication') {
+                        icon = '<span class="icon"><i class="gicon-comments"></i></span>';
+                    } else if (val.alias == 'total') {
+                        icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                    }
                 var green_count_html = '';
                 if (results.rows.item(i).green_count != 0) {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
@@ -2400,7 +2443,7 @@ function loadsponsors() {
 function showAgendaData() {
     // alert('here');
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' order by start_time asc", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_agenda order by start_time asc", [], function(tx, results) {
             var len = results.rows.length;
             //alert(len); 
             //$("#presentations-list").html('<div class="row"><div class="date-wrapper "><div class="date"><p>' + localStorage.group_title + '</p></div></div></div>');
@@ -2823,7 +2866,7 @@ function loadprofile() {
     importfooter('user-profile', 'profile');
     db.transaction(function(tx) {
 
-        tx.executeSql("SELECT * FROM OCEVENTS_qa where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_qa", [], function(tx, results) {
             var len = results.rows.length;
             $(".qa-list").html('<dt>Registration</dt>');
             for (i = 0; i < len; i++) {
@@ -2832,7 +2875,7 @@ function loadprofile() {
             }
         });
 
-        tx.executeSql("SELECT * FROM OCEVENTS_user where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
             //alert(results.rows.item(0).image_src);
             $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
@@ -2877,7 +2920,7 @@ function loadprofile() {
             $(".fa-trophy").html("<span> # </span>" + results.rows.item(0).position);
         });
 
-        tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_homepage", [], function(tx, results) {
             var len = results.rows.length;
 
             $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
@@ -2890,7 +2933,7 @@ function loadprofile() {
 
 function loadcommonthings() {
     db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_user where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
             $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
@@ -2908,7 +2951,7 @@ function loadcommonthings() {
             $(".fa-trophy").html("<span> # </span>" + results.rows.item(0).position);
         });
 
-        tx.executeSql("SELECT * FROM OCEVENTS_homepage where user_id = '" + localStorage.user_id + "'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_homepage", [], function(tx, results) {
             var len = results.rows.length;
             $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
         });
@@ -2936,53 +2979,59 @@ function loadcommonthings() {
     });
 }
 
+function getLoggedInUser()
+{
+   var main_url = localStorage.url + 'api/index.php/auth/user?gvm_json=1';
+    jQuery.ajax({
+      url: main_url,
+      dataType: "json",
+      method: "GET",
+      success: function(obj) {
+          db.transaction(function(tx) {                                        
+            tx.executeSql('update OCEVENTS_user set position = "' + obj.data.position + '"');
+            //alert('done')
+            login_process();
+          });                                
+      }
+    }); 
+}
+
 function changecurrentevent(event_id)
 {
-    localStorage.event_id = event_id;
-    db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_events where event_id = '" + event_id + "'", [], function(tx, results) {
-            
-            var short_url = results.rows.item(0).short_url;
-            localStorage.short_url = short_url;
-            var main_url = localStorage.url + 'gamification/-/'+short_url+'-'+event_id+'?gvm_json=1';
-    // alert('here');
+    jQuery("footer .container").before('<div class="ui-widget-overlay"></div>');
+    jQuery(".my-events-title").before('<div id="footerSlideContainer_loading"><img src="img/ajax-loader.gif" /></div>');
+    jQuery(".ui-widget-overlay").show();
+    jQuery("#footerSlideContainer_loading").show();
+    var main_url = localStorage.url + 'api/index.php/main/changeEvent?gvm_json=1';
     jQuery.ajax({
-        url: main_url,
-        dataType: "json",
-        method: "GET",
-        success: function(obj) {
-          login_process();
-        }
-        
-        });
-        
-        });
-        
-     });   
-    
-    
-    //window.location.href = 'gamification.html';
+      url: main_url,
+      dataType: "json",
+      method: "POST",
+      data:{eventId:event_id},
+      success: function(obj) {
+          //alert(obj.data.event_id)
+          //alert(obj.data.short_url)
+          localStorage.event_id = obj.data.event_id;
+          localStorage.short_url = obj.data.short_url;
+          getLoggedInUser();
+          
+      }
+    });
 }
 
 function login_process() {
     db.transaction(function(tx) {
-        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)');
-        //alert('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)')
-         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
         tx.executeSql('delete from OCEVENTS_qa');
     });
+    
     var main_url = localStorage.url + 'user-profile/?gvm_json=1';
-    // alert('here');
     jQuery.ajax({
         url: main_url,
         dataType: "json",
         method: "GET",
         success: function(obj) {
             $.each(obj.userQA, function(i, dataVal) {
-                // alert(dataVal.question);
                 if (i != 0 && dataVal.question != undefined && dataVal.answer != undefined) {
-                    // alert(dataVal.question);
-                    //alert(dataVal.answer);
                     if (dataVal.question != undefined && dataVal.question != null && dataVal.question != '') {
                         db.transaction(function(tx) {
                             tx.executeSql("insert into OCEVENTS_qa (user_id,question,answer) values('" + localStorage.user_id + "','" + dataVal.question + "','" + dataVal.answer + "')");
@@ -2999,16 +3048,12 @@ function login_process() {
 
 function importhomepage() {
 
-
-
     var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
-    // alert('here');
     jQuery.ajax({
         url: main_url,
         dataType: "json",
         method: "GET",
         success: function(obj) {
-            //alert(obj.status);
             if (obj.status == 'error') {
                 alert(obj.message);
                 window.location.href = "index.html";
@@ -3016,19 +3061,23 @@ function importhomepage() {
                  db.transaction(function(tx) {
                  tx.executeSql("SELECT * FROM OCEVENTS_events", [], function(tx, results) {
                   var len = results.rows.length;
+                  //alert(len)
                if(len == 0)
                {
                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
-                              tx.executeSql("delete from OCEVENTS_events");                            
+                   tx.executeSql("delete from OCEVENTS_events");                            
                          
                   $.each( obj.data._extra.userEvents, function( key, val ) {
                    
                               //document.write(val.event_id+'<br />');
-                              if(val.event_id == '100041')
+                              if(val.event_id == localStorage.event_id)
                               {
                                   localStorage.event_id = val.event_id;
                                   localStorage.short_url = val.short_url;
+                                  // alert(localStorage.short_url)
+                                  //alert(localStorage.event_id)
                               }
+                             
                               //db.transaction(function(tx) {
                                   tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,description,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.description + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
                              // });                
@@ -3043,7 +3092,7 @@ function importhomepage() {
                      //alert('here content')
                     db.transaction(function(tx) {
 
-                        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id,main_logo_small_image,main_banner_image,main_title,main_text,main_link,type,iframe_url)');
+                        
                         tx.executeSql("delete from OCEVENTS_homepage");
                         tx.executeSql("INSERT INTO OCEVENTS_homepage (main_logo_small_image,main_banner_image,user_id,main_title,main_text,main_link,type) VALUES ('','','" + localStorage.user_id + "','" + obj.data.content.main_title + "','" + obj.data.content.main_text + "','" + obj.data.content.main_link + "','" + obj.data.type + "')");
                         //alert("INSERT INTO OCEVENTS_homepage (main_logo_small_image,main_banner_image,user_id,main_title,main_text,main_link,type) VALUES ('','','"+localStorage.user_id+"','"+obj.data.content.main_title+"','"+obj.data.content.main_text+"','"+obj.data.content.main_link+"','"+obj.data.type+"')");
@@ -3054,9 +3103,10 @@ function importhomepage() {
                     var a = new DirManager();
                     a.create_r(DIR_Name, Log('created successfully'));
                     var b = new FileManager();
-
-                    if (obj.data.content.main_logo_image != null) {
-                        var img_src = obj.data.content.main_logo_image.small_url;
+                    // alert(obj.data.main_logo_image.small_url);
+                    // alert(obj.data.content.main_banner_image.medium_url);
+                    if (obj.data.main_logo_image != null) {
+                        var img_src = obj.data.main_logo_image.small_url;
                         //var img_src = 'http://weknowyourdreams.com/images/love/love-09.jpg';
                         var image_name = getFileNameFromPath(img_src);
 
@@ -3067,18 +3117,14 @@ function importhomepage() {
                             url: STR,
                             dataType: "html",
                             success: function(DtatURL) {
-
-                                // alert(DtatURL);  
-                                //adb logcat *:E		 
-                                //alert(obj.data.image.image_src);
-                                //alert(image_name);
+                                
                                 b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
 
                                     var ImgFullUrl = '';
                                     ImgFullUrl = theFile.toURI();
                                     //alert(ImgFullUrl);
                                     db.transaction(function(tx) {
-                                        tx.executeSql('update OCEVENTS_homepage set main_logo_small_image = "' + ImgFullUrl + '" where user_id = "' + localStorage.user_id + '"');
+                                        tx.executeSql('update OCEVENTS_homepage set main_logo_small_image = "' + ImgFullUrl + '"');
                                         if (obj.data.content.main_banner_image == null) {
                                             //alert(obj.data.content.main_banner_image);
                                             window.location.href = "gamification.html";
@@ -3115,7 +3161,7 @@ function importhomepage() {
                                     //alert(BannerImgFullUrl);                          
                                     db.transaction(function(tx) {
 
-                                        tx.executeSql('update OCEVENTS_homepage set main_banner_image = "' + BannerImgFullUrl + '" where user_id = "' + localStorage.user_id + '"');
+                                        tx.executeSql('update OCEVENTS_homepage set main_banner_image = "' + BannerImgFullUrl + '"');
 
                                         window.location.href = "gamification.html";
                                     });
@@ -3124,7 +3170,7 @@ function importhomepage() {
                         });
                     }
 
-                    if (obj.data.content.main_banner_image == null && obj.data.content.main_logo_image == null) {
+                    if (obj.data.content.main_banner_image == null && obj.data.main_logo_image == null) {
                         window.location.href = "gamification.html";
                     }
 
@@ -3132,6 +3178,9 @@ function importhomepage() {
                    // alert('here url')
                     downloadLogoFile(obj.data.url, obj.data.type, obj.data.main_logo_image.small_url);
 
+                }
+                else if (obj.data.type == 'module') {
+                    downloadmoduleLogoFile(obj.data.module, obj.data.type, obj.data.main_logo_image.small_url);                    
                 } else {
                     db.transaction(function(tx) {
                         tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id, iframe_url,type,main_logo_small_image)');
@@ -3158,6 +3207,43 @@ document.addEventListener("deviceready", onDeviceReady, false);
 function onDeviceReady() {
     pictureSource = navigator.camera.PictureSourceType;
     destinationType = navigator.camera.DestinationType;
+}
+
+//function to download logo from module
+function downloadmoduleLogoFile(url, type, img_src)
+{   //document.write('<scr'+'ipt type="text/javascript" src="painlessfs.js" ></scr'+'ipt>'); 
+    var DIR_Name = 'oc_photos';
+   /* alert(url);
+    alert(type);
+    alert(img_src); */
+    var a = new DirManager();
+    a.create_r(DIR_Name, Log('created successfully'));
+    var b = new FileManager();
+    var image_name = getFileNameFromPath(img_src);
+    var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+    //alert(STR)
+    jQuery.ajax({
+        url: STR,
+        dataType: "html",
+        success: function(DtatURL) {
+            b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                var img_uri = theFile.toURI();
+               // alert(img_uri);
+                db.transaction(function(tx) {
+
+        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id,main_logo_small_image,main_banner_image,main_title,main_text,main_link,type,iframe_url)');
+        tx.executeSql("delete from OCEVENTS_homepage");
+        tx.executeSql("INSERT INTO OCEVENTS_homepage (main_logo_small_image,main_banner_image,user_id,main_title,main_text,main_link,type) VALUES ('"+img_uri+"','','','"+url+"','','','" + type + "')");
+       //alert(url); 
+        window.location.href = "gamification.html";
+
+  });
+            });
+        }
+    }); 
+    
+    
+    
 }
 
 //function to download logo from server
@@ -3198,10 +3284,10 @@ function importfooter(page, active) {
     var main_url = localStorage.url + page + '/?gvm_json=1&event_id=' + localStorage.event_id;
     db.transaction(function(tx) {
 
-        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+        
         tx.executeSql("delete from OCEVENTS_footerlinks");
 
-        tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+        
         tx.executeSql("delete from OCEVENTS_footermorelinks");
     });
     jQuery.ajax({
@@ -4549,14 +4635,14 @@ function truncatealltables() {
         tx.executeSql('delete from OCEVENTS_user');
         tx.executeSql('delete from OCEVENTS_ticket');
         tx.executeSql('delete from OCEVENTS_points');
-        tx.executeSql('delete from OCEVENTS_agenda');
         tx.executeSql('delete from OCEVENTS_qa');
         tx.executeSql('delete from OCEVENTS_homepage');
         tx.executeSql('delete from OCEVENTS_teampoints');
         tx.executeSql('delete from OCEVENTS_yourteampoints');
         tx.executeSql('delete from OCEVENTS_footerlinks');
         tx.executeSql('delete from OCEVENTS_footermorelinks');
-        tx.executeSql("delete from OCEVENTS_events");
+        tx.executeSql('delete from OCEVENTS_events');
+        
     });
 }
 
