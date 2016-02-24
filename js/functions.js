@@ -1379,6 +1379,55 @@ function captureImage() {
     });
 }
 
+function getVideo(source) {
+    navigator.camera.getPicture(onVideoURISuccess, onFail, { quality: 50, 
+    destinationType: destinationType.FILE_URI,
+    sourceType: source,
+    mediaType: 1 });
+}
+
+function onVideoURISuccess(videoURI) {
+    //alert("video url= " + videoURI);
+    /*var loginid = localStorage.getItem('id');   
+    var options = new FileUploadOptions();
+    options.fileKey = "video";
+    if (videoURI.substr(videoURI.lastIndexOf('/') + 1).indexOf(".") >= 0) {
+        var newfname = videoURI.substr(videoURI.lastIndexOf('/') + 1);
+    } else {
+        var newfname = jQuery.trim(videoURI.substr(videoURI.lastIndexOf('/') + 1)) + '.mp4';
+    }
+   // alert("new name= " + newfname);
+    options.fileName = newfname;
+    options.mimeType="video/mp4";
+    var params = new Object();
+    params.loginid =loginid;
+
+    options.params = params;
+    options.chunkedMode = false;
+    var ft = new FileTransfer();
+    // alert(videoURI);
+    ft.upload(videoURI, encodeURI("http://qeneqt.us/index2.php?option=com_content&view=appcode&task=videoupload"), win, fail, options);
+
+    function win(r) {
+        var resp = JSON.parse(r.response);
+        window.location.reload();
+        
+    }
+
+    function fail(error) {
+        alert("An error has occurred: Code = " + error.code + "upload error source " + error.source + "upload error target " + error.target);
+    } */
+    
+    //alert(imageURI);
+jQuery('.swiper-container').show();
+jQuery('.preview').html('<img src ="img/dummy_video.gif" width="80" height="80" />');
+$('.ui-widget-overlay').hide();
+$('#footerSlideContainer').slideUp('fast');
+jQuery(".main-questions-form-container").show();
+localStorage.imageURI = videoURI;
+localStorage.mime = 'video/mp4';
+}
+
 
 function uploadImage(source) {
     // Retrieve image file location from specified source
@@ -1398,6 +1447,7 @@ $('.ui-widget-overlay').hide();
 $('#footerSlideContainer').slideUp('fast');
 jQuery(".main-questions-form-container").show();
 localStorage.imageURI = imageURI;
+localStorage.mime = 'image/jpeg';
     
 }
 
@@ -1421,6 +1471,7 @@ function showimagebuttons()
     jQuery(".main-questions-form-container").hide();   
      var buttons_html = '<div><a href="#" onclick="captureImage()">Take a photo</a></div>';
      buttons_html += '<div><a href="#" onclick="uploadImage(pictureSource.PHOTOLIBRARY);">Choose a Photo</a></div>';
+     buttons_html += '<div><a href="#" onclick="getVideo(pictureSource.PHOTOLIBRARY);">Choose a Video</a></div>';
      buttons_html += '<div><a href="#" onclick="canceloptions()">Cancel</a></div>';
      jQuery('#footerSlideContainer').html(buttons_html);
      //alert(buttons_html)
@@ -4533,6 +4584,8 @@ function submitcomment(instance_id)
   jQuery(".loading_send").show(); 
   if(checkdefined(localStorage.imageURI) == 'yes')
   {
+    
+    
     var imageData = localStorage.imageURI;
    
     //  alert(imageData);          
@@ -4540,14 +4593,27 @@ function submitcomment(instance_id)
     var options = new FileUploadOptions();
     var imageURI = photo_ur;
     options.fileKey = "files[]";
-    if (imageURI.substr(imageURI.lastIndexOf('/') + 1).indexOf(".") >= 0) {
-        var newfname = imageURI.substr(imageURI.lastIndexOf('/') + 1);
-    } else {
-        var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.jpg';
+    
+    if(localStorage.mime == 'video/mp4')
+    {
+       if (imageURI.substr(imageURI.lastIndexOf('/') + 1).indexOf(".") >= 0) {
+          var newfname = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+      } else {
+          var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.mp4';
+      }
+    }
+    else
+    {
+    
+      if (imageURI.substr(imageURI.lastIndexOf('/') + 1).indexOf(".") >= 0) {
+          var newfname = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+      } else {
+          var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.jpg';
+      }
     }
     options.fileName = newfname;
-    //alert(newfname);
-    options.mimeType = "image/jpeg";
+   // alert(newfname);
+    options.mimeType = localStorage.mime;
     var params = new Object();    
     params.submit_form = submit_form;
     params.form_noresubmit_code = form_noresubmit_code;
