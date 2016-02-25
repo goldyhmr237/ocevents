@@ -1392,6 +1392,7 @@ tbody .hints-count-label {
 #footerSlideContainer {
 	position: fixed;
 	bottom:0;
+  right:6px;
 	width: 100%;
   display:none;
   z-index: 999999;
