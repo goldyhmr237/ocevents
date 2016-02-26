@@ -104,7 +104,7 @@
                     <div id="allnotes">
                     
     </div>
-            <div class="questions-filter-items main-questions-form-container">
+            <div class="questions-filter-items main-questions-form-container has-file-upload">
 
 <div class="close-btn-wrapper">
     <i class="fa fa-times close-btn"></i>
@@ -114,6 +114,9 @@
 
 <div data-role="fieldcontain" class="form-group hidden frmfld_note_id">
 <input id="frmfld_note_id" name="note_id" type="hidden" value="0"></div>
+<div data-role="fieldcontain" class="form-group fileupload frmfld_files">
+<i class="gicon-camera file-upload" onclick="shownotesbuttons();"></i>
+</div>
 <div data-role="fieldcontain" class="form-group textarea frmfld_note">
 <textarea class="form-control" id="frmfld_note" name="note" maxlength="4096" placeholder="Make a note" style="height: 52px; overflow-y: hidden;"></textarea>
 <span><i class="gicon-notes"></i></span>
@@ -134,14 +137,27 @@
 
 <div class="clearfix">
         <div data-role="fieldcontain" class="frm_field submit">
-                <button type="button" name="submit" onclick="addnote();">Add note</button>
+                <button type="button" name="submit" class="submit_com" onclick="addnote();">Add note</button>
+                <img src="img/loading.gif" class="loading_send" style="display:none" />
             </div>
     
     </div>
+    
+    <div class="swiper-container swiper-container-horizontal">
+    <div class="files swiper-wrapper">
+    <div class="template-upload swiper-slide fade in swiper-slide-active" style="width: 98.3333px; margin-right: 5px;">
+            <div class="name"></div>
+            <div class="preview"><canvas width="80" height="80"></canvas></div>
+            <i class="fa fa-times cancel" onclick="hidethumb();"></i>
+        </div></div>
+</div>
 
 
 
     </div>  
+     <div class="ui-widget-overlay"></div>
+ 
+ <div id="footerSlideContainer"></div> 
 </div>  
 
 
@@ -255,7 +271,9 @@
         <script src="js/overlay_mobile.js"></script>
         <script src="js/overlay_quiz.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
+      
         <script src="js/facebookConnectPlugin.js"></script>
         <script src="js/painlessfs.js"></script>        
         <script src="js/functions.js"></script>
+        
 </body></html>

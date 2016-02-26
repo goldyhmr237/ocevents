@@ -1467,6 +1467,22 @@ function showimagebuttons()
      //alert(buttons_html)
 }
 
+function shownotesbuttons()
+{
+    //jQuery('.captureimage').show();
+    //jQuery('.uploadimage').show();
+    jQuery('.ui-widget-overlay').show();
+    jQuery('#footerSlideContainer').slideDown('fast');
+    jQuery(".main-questions-form-container").hide();   
+     var buttons_html = '<div><a href="#" onclick="captureImage()">Take a Photo</a></div>';
+     buttons_html += '<div><a href="#" onclick="uploadImage(pictureSource.PHOTOLIBRARY);">Choose a Photo</a></div>';
+     buttons_html += '<div><a href="#" onclick="captureVideo();">Take a Video</a></div>';
+     buttons_html += '<div><a href="#" onclick="getVideo(pictureSource.PHOTOLIBRARY);">Choose a Video</a></div>';
+     buttons_html += '<div><a href="#" onclick="canceloptions()">Cancel</a></div>';
+     jQuery('#footerSlideContainer').html(buttons_html);
+     //alert(buttons_html)
+}
+
 function canceloptions(){
   
    $('.ui-widget-overlay').hide();
@@ -1474,18 +1490,19 @@ function canceloptions(){
    jQuery(".main-questions-form-container").show();
 } 
 
-
+       
 //function to play video
 function playvideo(videoUrl) {
-    var options = {
+    /*var options = {
         successCallback: function() {
             console.log("Video was closed without error.");
         },
         errorCallback: function(errMsg) {
             console.log("Error! " + errMsg);
         }
-    };
-    window.plugins.streamingMedia.playVideo(videoUrl, options);
+    }; */
+    window.plugins.videoPlayer.play(videoUrl);
+   // window.plugins.streamingMedia.playVideo(videoUrl, options);
 }
 
 function checkdefined(str) {
@@ -3529,7 +3546,19 @@ function loadnotes()
                   {
                      remstr = ' <div class="clearfix"><a class="pull-right delete-note" href="javascript:removenote('+val.instance_id+')" data-url="/Add-note/-/'+localStorage.short_url+'-100041/delete/28"><i class="fa fa-times"></i>Remove</a></div>'; 
                   }
-                      var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div></div>'+remstr+'</div>';
+                  
+              var comment_image = '';
+              if(checkdefined(val.images) == 'yes')
+              {
+                  comment_image = '<div class="images-container clearfix"><div class="col-xs-6 col-md-4 col-lg-2 image-container"><span data-mfp-src="'+localStorage.url+'resources/files/images/'+val.images[0].large+'" class="mfp-image"><img alt="" src="'+localStorage.url+'resources/files/images/'+val.images[0].small+'" class="resize-img"></span></div></div>';
+              }
+              var comment_video = '';
+              if(checkdefined(val.video_filename) == 'yes')
+              {
+                  comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
+                 
+              }
+                      var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div>'+comment_image+comment_video+'</div>'+remstr+'</div>';
                    $('#allnotes').append(str);   
                   });
                   
@@ -3556,7 +3585,70 @@ function addnote()
     }
     else
     {
-       
+    jQuery(".submit_com").hide();
+    jQuery(".loading_send").show();
+      if(checkdefined(localStorage.imageURI) == 'yes')
+  {
+    
+    
+    var imageData = localStorage.imageURI;
+   
+    //  alert(imageData);          
+    var photo_ur = imageData;
+    var options = new FileUploadOptions();
+    var imageURI = photo_ur;
+    options.fileKey = "files[]";
+    
+    if(localStorage.mime == 'video/mp4')
+    {
+       if (imageURI.substr(imageURI.lastIndexOf('/') + 1).indexOf(".") >= 0) {
+          var newfname = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+      } else {
+          var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.mp4';
+      }
+    }
+    else
+    {
+    
+      if (imageURI.substr(imageURI.lastIndexOf('/') + 1).indexOf(".") >= 0) {
+          var newfname = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+      } else {
+          var newfname = jQuery.trim(imageURI.substr(imageURI.lastIndexOf('/') + 1)) + '.jpg';
+      }
+    }
+    options.fileName = newfname;
+   // alert(newfname);
+    options.mimeType = localStorage.mime;
+    var params = new Object();    
+    params.submit_form = submit_form;
+    params.form_noresubmit_code = form_noresubmit_code;
+    params.note = code;
+    
+    //options.headers = "Content-Type: multipart/form-data; boundary=38516d25820c4a9aad05f1e42cb442f4";
+    options.params = params;
+    options.chunkedMode = false;
+    var ft = new FileTransfer();
+    //alert(imageURI);
+    var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+    ft.upload(imageURI, encodeURI(main_url), win, fail, options);
+
+    function win(r) {
+      localStorage.imageURI = '';
+      localStorage.resubmit_code= '';      
+       window.location.href="notes.html"
+    }
+
+    function fail(error) {
+        alert("An error has occurred: Code = " + error.code);
+        alert("upload error source " + error.source);
+        alert("upload error target " + error.target);
+        jQuery(".submit_com").show();
+        jQuery(".loading_send").hide();
+    }
+    
+   }
+   else
+   { 
       var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-'+localStorage.event_id+'/submit/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
         jQuery.ajax({
             url: main_url,
@@ -3571,7 +3663,8 @@ function addnote()
                window.location.href = 'notes.html';
             }
        });
-    }        
+    } 
+    }       
 }
 
 //function to remove note
@@ -4258,7 +4351,7 @@ function add_questions()
     window.location.href="add_questions.html"
 }
 
-//function to show comments
+//function to show questions
 function showquestions()
 {
    jQuery(document).ready(function($) {
