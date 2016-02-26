@@ -1493,16 +1493,15 @@ function canceloptions(){
        
 //function to play video
 function playvideo(videoUrl) {
-    /*var options = {
+    var options = {
         successCallback: function() {
             console.log("Video was closed without error.");
         },
         errorCallback: function(errMsg) {
             console.log("Error! " + errMsg);
         }
-    }; */
-    window.plugins.videoPlayer.play(videoUrl);
-   // window.plugins.streamingMedia.playVideo(videoUrl, options);
+    };
+    window.plugins.streamingMedia.playVideo(videoUrl, options);
 }
 
 function checkdefined(str) {
