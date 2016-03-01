@@ -35,7 +35,7 @@
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
             {
-                  loadgamification();
+                 // loadgamification();
             });
     }
                 var localLink = '/';
@@ -83,8 +83,12 @@
                             </div>
         </div>
     </div>
-</header>                            
+</header>
+                           
 <div class="container main-container welcome-container">
+ <video width="320" height="176" controls poster="http://www.w3schools.com/images/w3html5.gif" playsinline webkit-playsinline>
+    <source src="http://oceventmanager.com/resources/files/videos/_1456477475_VID_20160226_170403_10.m4v" type="video/mp4">
+</video> 
 	<div class="row">
 					<div class="welcome-slider">
 				<img class="main_banner_image" src="">
@@ -207,7 +211,9 @@
         <script src="js/overlay_quiz.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <script src="js/facebookConnectPlugin.js"></script>
-        <script src="js/config_db.js"></script>        
+        <script src="js/config_db.js"></script> 
+        <script src="js/requestAnimationFrame.js"></script>
+<script src="js/inline-video.js"></script>       
         <script src="js/functions.js"></script>
        
 </body></html>
