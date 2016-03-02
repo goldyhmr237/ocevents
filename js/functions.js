@@ -3045,7 +3045,7 @@ function getLoggedInUser()
       method: "GET",
       success: function(obj) {
           db.transaction(function(tx) {                                        
-            tx.executeSql('update OCEVENTS_user set position = "' + obj.data.position + '"');
+            tx.executeSql('update OCEVENTS_user set position = "' + obj.data.position + '", team = "'+obj.data.team+'"');
             //alert('done')
             login_process();
           });                                
