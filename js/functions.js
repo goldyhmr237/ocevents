@@ -3734,7 +3734,7 @@ function showseekerresults(ur)
                 }
                 else
                 {
-                   $('.seeall').html('See All');
+                   $('.seeall').html('All');
                    $('.seeall').attr('href','javascript:showseekerresults("l-full");');
                 }
                 $(".seeker-game-container").show();
