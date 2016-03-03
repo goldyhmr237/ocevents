@@ -13045,7 +13045,8 @@ padding:12px;
 }
 .video_comment
 {
-  padding:65px 0 0 200px;
+  /*padding:65px 0 0 200px;*/
+  padding:30%;
 }
   /*
 .label-container {

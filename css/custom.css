@@ -493,8 +493,8 @@ div.img {
     cursor: pointer;
 }
 .video-item {
-    width: 60%;
-    margin: 20px auto;
+    width: 100%;
+    margin: 20% auto;
 }
 .questions-container .alert {
     margin-top: 20px;
