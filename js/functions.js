@@ -2990,7 +2990,8 @@ function loadprofile() {
 
 function loadcommonthings() {
 
-jQuery("head").append("<link href='https://oceventmanager.com/resources/gamification/css/appearance.css.php?eid=100041' rel='stylesheet' type='text/css'>");
+jQuery("head").append("<link href='https://oceventmanager.com/resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
+   // alert(localStorage.event_id)
     db.transaction(function(tx) {
         tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
