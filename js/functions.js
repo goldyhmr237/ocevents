@@ -3557,11 +3557,17 @@ function loadnotes()
                   comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
                  
               }
-                      var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div>'+comment_image+comment_video+'</div>'+remstr+'</div>';
+                      var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i> '+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div>'+comment_image+comment_video+'</div>'+remstr+'</div>';
                    $('#allnotes').append(str);   
                   });
                   
-               } 
+               }
+               $(".close-btn-wrapper").click(function()
+               {
+                  //alert("here")
+                  $("#show-form-container").show();
+                  $(".questions-filter-items").fadeOut();
+               }); 
                localStorage.resubmit_code = obj.form.noResubmitCode;               
                $(".notes-container").show();
                $(".loading_agenda_items").hide();
@@ -4514,7 +4520,12 @@ function showcomments()
             dataType: "json",
             method: "GET",
             success: function(obj) {
-
+                 $(".close-btn-wrapper").click(function()
+               {
+                  //alert("here")
+                  $("#show-form-container").show();
+                  $(".questions-filter-items").fadeOut();
+               });
                 var label = '';
                 $.each(obj.breadcrumbs, function(key, val) {
 
