@@ -2989,6 +2989,8 @@ function loadprofile() {
 }
 
 function loadcommonthings() {
+
+jQuery("head").append("<link href='https://oceventmanager.com/resources/gamification/css/appearance.css.php?eid=100041' rel='stylesheet' type='text/css'>");
     db.transaction(function(tx) {
         tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
