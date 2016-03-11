@@ -1243,6 +1243,11 @@ function loadgamification() {
                 if(checkdefined(results.rows.item(0).banner_video) == 'yes')
                 {
                    $('.welcome-slider').addClass('video'); 
+                   $('.welcome-slider').css('background','#000');
+                   $('.welcome-slider').parent().css({
+   // 'background-image' : 'url("http://cdn1.iconfinder.com/data/icons/DarkGlass_Reworked/128x128/actions/camera_test.png")',
+    'background-color' : '#000'
+});
                    $('.welcome-slider').html('');
                                      
                    var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '");><img src="img/bigplay.png" style="width:auto !important;top:0px !important;padding: 10% 30% !important;" class="video_comment" /></div></div></div></div>';
