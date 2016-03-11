@@ -1732,6 +1732,7 @@ function loadpoints() {
                     label = val.text;
                 });
                 // alert(label);
+                localStorage.total_points = obj.totalPoints;
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
                     
@@ -1739,9 +1740,9 @@ function loadpoints() {
                     tx.executeSql("SELECT * FROM OCEVENTS_points", [], function(tx, results) {
                         var len_ag = results.rows.length;
                         // alert(len_ag);
-                        if (imagedatalength == len_ag && len_ag != 0) {
+                       /* if (imagedatalength == len_ag && len_ag != 0) {
                             showPointsData();
-                        } else {
+                        } else {  */
                             db.transaction(function(tx) {
                                 tx.executeSql('delete from OCEVENTS_points');
                             });
@@ -1750,7 +1751,7 @@ function loadpoints() {
                                 db.transaction(function(tx) {
                                     var green_count = '';
                                     //if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
-                                    if(checkdefined(val.count) == 'yes' || val.count == 0)
+                                    if(checkdefined(val.count) == 'yes' || val.count == '0')
                                     {
                                         green_count = val.count;
                                         //alert(green_count)
@@ -1768,7 +1769,7 @@ function loadpoints() {
                                     }
                                 });
                             });
-                        }
+                        
 
                     });
 
@@ -1800,6 +1801,11 @@ function showPointsData() {
             for (i = 0; i < len; i++) {
                 //alert(results.rows.item(i).description);
                   var icon = '';
+                  var user_total = '0';
+               if(checkdefined(id) == 'yes')
+               {
+                  user_total = formatpoints(id);
+               }
                 var val = results.rows.item(i);
                     if (val.alias == 'early_bird') {
                         icon = '<span class="icon"><i class="social-icon"></i></span>';
@@ -1813,17 +1819,14 @@ function showPointsData() {
                         icon = '<span class="icon"><i class="gicon-comments"></i></span>';
                     } else if (val.alias == 'total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                        user_total = localStorage.total_points;
                     }
                 var green_count_html = '';
-                if (checkdefined(results.rows.item(i).green_count) == 'yes') {
+                if (checkdefined(results.rows.item(i).green_count) == 'yes' || results.rows.item(i).green_count == '0') {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
                var id = results.rows.item(i).userTotal ;
-               var user_total = '0';
-               if(checkdefined(id) == 'yes')
-               {
-                  user_total = formatpoints(id);
-               }
+               
                 
                 $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
@@ -1922,6 +1925,12 @@ function loaduserdetail() {
                     }
 
                     var icon = '';
+                    var user_total = '';
+                    var id = val.userTotal ;
+                    if(checkdefined(id) == 'yes')
+                    { 
+                      var user_total = formatpoints(id);
+                    }  
                     if (val.alias == 'early_bird') {
                         icon = '<span class="icon"><i class="social-icon"></i></span>';
                     } else if (val.alias == 'social') {
@@ -1934,14 +1943,14 @@ function loaduserdetail() {
                         icon = '<span class="icon"><i class="gicon-comments"></i></span>';
                     } else if (val.alias == 'total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                        user_total = localStorage.total_points;
                     }
                     if (val.count > 0) {
                         var cnt = '<span class="count">' + val.count + '</span>';
                     } else {
                         var cnt = '';
                     }
-                    var id = val.userTotal ;
-                 var user_total = formatpoints(id);
+                    
                     $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotopoints(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + val.instance_id + ')">' + cnt + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
 
                 });
@@ -2231,6 +2240,8 @@ function loadyourdetailteampoints() {
                     }
 
                     var icon = '';
+                    var id = val.points ;
+                    var user_total = formatpoints(id);
                     if (val.alias == 'early_bird') {
                         icon = '<span class="icon"><i class="social-icon"></i></span>';
                     } else if (val.alias == 'social') {
@@ -2243,10 +2254,10 @@ function loadyourdetailteampoints() {
                         icon = '<span class="icon"><i class="gicon-comments"></i></span>';
                     } else if (val.alias == 'total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                        user_total = localStorage.total_points; 
                     }
                     
-                      var id = val.points ;
-                 var user_total = formatpoints(id);
+                      
                     $(".user-points-table table tbody").append('<tr class=' + classcss + '><td><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')"><span class="num">' + val.position + '.</span>' + icon + val.name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + val.instance_id + ')">' + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
 
                 });
@@ -2279,6 +2290,7 @@ function loadyourpoints() {
                     //alert(val.text);
                     label = val.text;
                 });
+                localStorage.total_points = obj.totalPoints;
                 // alert(label);
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
@@ -2287,17 +2299,17 @@ function loadyourpoints() {
                     tx.executeSql("SELECT * FROM OCEVENTS_yourteampoints", [], function(tx, results) {
                         var len_ag = results.rows.length;
                         // alert(len_ag);
-                        if (imagedatalength == len_ag && len_ag != 0) {
+                      /*  if (imagedatalength == len_ag && len_ag != 0) {
                             showYourTeamPointsData();
-                        } else {
+                        } else { */
                             db.transaction(function(tx) {
                                 tx.executeSql('delete from OCEVENTS_yourteampoints');
                             });
                             var co = 0;
                             $.each(obj.categories, function(key, val) {
                                 db.transaction(function(tx) {
-                                    var green_count = 0;
-                                    if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
+                                    var green_count = '';
+                                    if (checkdefined(val.count) == 'yes' || val.count == '0') {
                                         green_count = val.count;
                                     }
                                     tx.executeSql("insert into OCEVENTS_yourteampoints (alias,user_id,name,position,userTotal,green_count,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.points + "','" + green_count + "','" + label + "','" + val.instance_id + "'  )");
@@ -2313,7 +2325,7 @@ function loadyourpoints() {
                                     }
                                 });
                             });
-                        }
+                        //}
 
                     });
 
@@ -2353,6 +2365,8 @@ function showYourTeamPointsData() {
                 } */
                 var val = results.rows.item(i);
                 var icon = '';
+                 var id = results.rows.item(i).userTotal ;
+                 var user_total = formatpoints(id);
                     if (val.alias == 'early_bird') {
                         icon = '<span class="icon"><i class="social-icon"></i></span>';
                     } else if (val.alias == 'social') {
@@ -2365,14 +2379,18 @@ function showYourTeamPointsData() {
                         icon = '<span class="icon"><i class="gicon-comments"></i></span>';
                     } else if (val.alias == 'total') {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
+                        user_total = localStorage.total_points;
                     }
                 var green_count_html = '';
-                if (results.rows.item(i).green_count != 0) {
-                    var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
+                //if (results.rows.item(i).green_count != 0) {
+                //alert(checkdefined(results.rows.item(i).green_count))
+                if (checkdefined(results.rows.item(i).green_count) == 'yes' || results.rows.item(i).green_count == '0') {
+                    green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
+                    //alert(results.rows.item(i).green_count)
                 }
-                var id = results.rows.item(i).userTotal ;
-                 var user_total = formatpoints(id);
-                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
+            
+                
+                $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotoyourteamdetail(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
             jQuery(".loading_agenda_items").hide();
@@ -3004,7 +3022,10 @@ function loadprofile() {
             } else if (results.rows.item(0).gender == 'f') {
                 $(".mygender").html('Female');
             } else {
-                $(".mygender").html('N/A');
+                //$(".mygender").html('N/A');
+                $(".mygender").hide();
+                $(".all_gender").hide();
+                
             }
             /*$(".log-info p").html("<p>" + results.rows.item(0).first_name + " " + results.rows.item(0).last_name);
             if(checkdefined(results.rows.item(0).team) == 'yes')
