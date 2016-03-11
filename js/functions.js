@@ -802,7 +802,8 @@ function createTables()
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
-      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)'); 
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_keywords (id integer primary key autoincrement,key_constant,key_val)'); 
   }); 
 }
 
@@ -3039,6 +3040,17 @@ function loadcommonthings() {
 jQuery("head").append("<link href='"+localStorage.url+"resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
    // alert(localStorage.event_id)
     db.transaction(function(tx) {
+    
+   
+      /*  tx.executeSql("SELECT * FROM OCEVENTS_keywords where key_constant = 'EditUser'", [], function(tx, results) {
+                  var len = results.rows.length;
+                 // alert(len);
+                  //alert(results.rows.item(0).key_constant);
+                 // alert(results.rows.item(0).key_val);
+                 $('.edit-btn-wrapper a').html(results.rows.item(0).key_val)
+                 
+        }); */ 
+     
         tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
             $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
@@ -3155,7 +3167,20 @@ function login_process() {
 
 function importhomepage() {
 
-    var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
+    var main_urld = localStorage.url + 'api/index.php/main/keywords?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
+    jQuery.ajax({
+        url: main_urld,
+        dataType: "json",
+        method: "GET",
+        success: function(dat) {
+        
+        /*$.each( dat.data, function( key, val ) {
+          db.transaction(function(tx) {
+            tx.executeSql("insert into OCEVENTS_keywords (key_constant,key_val) values ('"+key+"','"+val+"')");
+           }); 
+        });*/
+          
+          var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
     jQuery.ajax({
         url: main_url,
         dataType: "json",
@@ -3329,6 +3354,11 @@ function importhomepage() {
             }
         }
     });
+        }
+        
+        });
+    
+    
 
 }
 
@@ -4881,6 +4911,7 @@ function truncatealltables() {
         tx.executeSql('delete from OCEVENTS_footerlinks');
         tx.executeSql('delete from OCEVENTS_footermorelinks');
         tx.executeSql('delete from OCEVENTS_events');
+        tx.executeSql('delete from OCEVENTS_keywords');
         
     });
 }
