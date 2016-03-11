@@ -1748,8 +1748,10 @@ function loadpoints() {
                             $.each(obj.categories, function(key, val) {
                                 db.transaction(function(tx) {
                                     var green_count = 0;
-                                    if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
+                                    //if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
+                                    if(checkdefined(val.count) == 'yes')
                                         green_count = val.count;
+                                        alert(green_count)
                                     }
                                     tx.executeSql("insert into OCEVENTS_points (alias,user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal + "','" + green_count + "','" + hideTeamScores + "','" + label + "' ,'" + val.instance_id + "' )");
                                     //alert(val.position);
