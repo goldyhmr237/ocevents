@@ -3175,7 +3175,7 @@ function importhomepage() {
                               //db.transaction(function(tx) {
                                   tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
                                   //tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,description,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.description + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
-                                  alert('INSERT INTO OCEVENTS_events (event_id,user_id,title,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")')
+                                  //alert('INSERT INTO OCEVENTS_events (event_id,user_id,title,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")')
                              // });                
                       }); 
                 }
