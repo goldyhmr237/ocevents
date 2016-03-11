@@ -1747,9 +1747,9 @@ function loadpoints() {
                             var co = 0;
                             $.each(obj.categories, function(key, val) {
                                 db.transaction(function(tx) {
-                                    var green_count = 0;
+                                    var green_count = '';
                                     //if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
-                                    if(checkdefined(val.count) == 'yes')
+                                    if(checkdefined(val.count) == 'yes' || val.count == 0)
                                         green_count = val.count;
                                         alert(green_count)
                                     }
@@ -1813,11 +1813,16 @@ function showPointsData() {
                         icon = '<span class="icon"><i class="gicon-points"></i></span>';
                     }
                 var green_count_html = '';
-                if (results.rows.item(i).green_count != 0) {
+                if (checkdefined(results.rows.item(i).green_count) == 'yes') {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
                var id = results.rows.item(i).userTotal ;
-                var user_total = formatpoints(id);
+               var user_total = '0';
+               if(checkdefined(id) == 'yes')
+               {
+                  user_total = formatpoints(id);
+               }
+                
                 $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
             }
             jQuery(".leaderboards-container").show();
