@@ -658,7 +658,7 @@ function removeprofileimage() {
                 var img_src = resp.data.image.image_src;
                 var image_name = getFileNameFromPath(img_src);
 
-                var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+                var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
 
                 jQuery.ajax({
@@ -666,7 +666,7 @@ function removeprofileimage() {
                     dataType: "html",
                     success: function(DtatURL) {
 
-                        b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                        b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(resp.data.image.image_src), function(theFile) {
 
                             var ImgFullUrl = '';
                             ImgFullUrl = theFile.toURI();
@@ -793,17 +793,17 @@ function checkURL(value) {
 function createTables()
 {
    db.transaction(function(tx) {
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_user (id integer primary key autoincrement,team,position,fb_user_id,fb_email,birthday_date,website, user_id, email, first_name, last_name,mobile, image_src, is_user_image, created,gender,player_code)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,hideTeamScores,label,instance_id)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id,main_logo_small_image,main_banner_image,main_title,main_text,main_link,type,iframe_url)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
-  tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)'); 
- }); 
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_user (id integer primary key autoincrement,team,position,fb_user_id,fb_email,birthday_date,website, user_id, email, first_name, last_name,mobile, image_src, is_user_image, created,gender,player_code)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_ticket (id integer primary key autoincrement,user_id,ticketCode,ticketSrc)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_points (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,hideTeamScores,label,instance_id)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_qa (id integer primary key autoincrement,user_id, question,answer)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_homepage (id integer primary key autoincrement,user_id,main_logo_small_image,main_banner_image,main_title,main_text,main_link,type,iframe_url,banner_video)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_teampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_yourteampoints (id integer primary key autoincrement,alias,user_id,name,position integer,userTotal,green_count,label,instance_id)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)'); 
+  }); 
 }
 
 
@@ -869,14 +869,14 @@ function loginme() {
                         var image_name = getFileNameFromPath(img_src);
                         // alert(img_src);
                         //  alert(image_name);
-                        var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+                        var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
 
                         $.ajax({
                             url: STR,
                             dataType: "html",
                             success: function(DtatURL) {
-                                b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                                b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.image.image_src), function(theFile) {
 
                                     var ImgFullUrl = '';
                                     ImgFullUrl = theFile.toURI();
@@ -1130,7 +1130,7 @@ var login = function() {
                             var image_name = getFileNameFromPath(img_src);
                             // alert(img_src);
                             //  alert(image_name);
-                            var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+                            var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
 
                             $.ajax({
@@ -1141,7 +1141,7 @@ var login = function() {
                                     //alert(DtatURL);  
                                     //adb logcat *:E		 
                                     // alert(obj.data.image.image_src);
-                                    b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                                    b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.image.image_src), function(theFile) {
 
                                         var ImgFullUrl = '';
                                         ImgFullUrl = theFile.toURI();
@@ -1165,10 +1165,7 @@ var login = function() {
 
                         } else {
                             localStorage.user_fid = '';
-
-                            alert(obj.message);
-
-
+                            alert(obj.message); 
                         }
                     }
                 });
@@ -1242,6 +1239,17 @@ function loadgamification() {
                 if (results.rows.item(0).main_banner_image != undefined && results.rows.item(0).main_banner_image != null && results.rows.item(0).main_banner_image != '') {
                     $(".main_banner_image").attr('src', results.rows.item(0).main_banner_image);
                 }
+                // alert(results.rows.item(0).banner_video)
+                if(checkdefined(results.rows.item(0).banner_video) == 'yes')
+                {
+                   $('.welcome-slider').addClass('video'); 
+                   $('.welcome-slider').html('');
+                                     
+                   var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '");><img src="img/bigplay.png" style="width:auto !important;top:0px !important;padding: 10% 30% !important;" class="video_comment" /></div></div></div></div>';
+                  
+                   $('.welcome-slider').html(comment_video);
+                }
+                
 
                 $(".welcome-title h1").html(results.rows.item(0).main_title);
                 $(".welcome-content").html(results.rows.item(0).main_text);
@@ -1333,7 +1341,7 @@ function onPhotoURISuccess(imageURI) {
             //var img_src = 'http://weknowyourdreams.com/images/love/love-09.jpg';
             var image_name = getFileNameFromPath(img_src);
 
-            var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+            var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
 
             jQuery.ajax({
@@ -1344,7 +1352,7 @@ function onPhotoURISuccess(imageURI) {
                     //alert(DtatURL);  
                     //adb logcat *:E		 
                     // alert(obj.data.image.image_src);
-                    b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                    b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(resp.data.image.image_src), function(theFile) {
 
                         var ImgFullUrl = '';
                         ImgFullUrl = theFile.toURI();
@@ -1652,7 +1660,7 @@ function loadticket() {
                 a.create_r(DIR_Name, Log('created successfully'));
                 var b = new FileManager();
                 var img_src = localStorage.url + obj.ticketSrc;
-                var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+                var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
                 // alert(img_src);
                 var image_name = getFileNameFromPath(img_src);
                 //alert(image_name);
@@ -1662,7 +1670,7 @@ function loadticket() {
                     url: STR,
                     dataType: "html",
                     success: function(DtatURL) {
-                        b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                        b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(localStorage.url + obj.ticketSrc), function(theFile) {
                             //alert(DtatURL);
                             var ImgFullUrl = '';
                             ImgFullUrl = theFile.toURI();
@@ -2919,13 +2927,17 @@ function loadyourcontacts() {
 //Load profile page variables
 function loadprofile() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
-
+    //jQuery("head").append("<link href='https://oceventmanager.com/resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
+    loadcommonthings();
     importfooter('user-profile', 'profile');
     db.transaction(function(tx) {
 
         tx.executeSql("SELECT * FROM OCEVENTS_qa", [], function(tx, results) {
-            var len = results.rows.length;
-            $(".qa-list").html('<dt>Registration</dt>');
+            var len = results.rows.length;  
+            if(len > 0)
+            {
+               $(".qa-list").html('<dt>Registration</dt>');
+            }
             for (i = 0; i < len; i++) {
                 //alert(results.rows.item(i).answer);
                 $('.qa-list').append('<h4 class="qa-item-title">' + results.rows.item(i).question + '</h4><p class="answer_me">' + results.rows.item(i).answer + '</p></dd>');
@@ -2935,10 +2947,25 @@ function loadprofile() {
         tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
             //alert(results.rows.item(0).image_src);
-            $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
+           // $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
+            //$("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
+           /* $(".log-info p").html(results.rows.item(0).first_name + " " + results.rows.item(0).last_name);
+            if (results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null') {
+                $(".log-info p").append("<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br />");
+            }
+            $(".log-info p").append("</p>");  
+            $(".firstname a").html(results.rows.item(0).first_name);
+            if (results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null') {
+                $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
+            }
+
+            $(".lastname a").html(results.rows.item(0).last_name);
+            $(".fa-trophy").html("<span> # </span>" + results.rows.item(0).position);
+            */
+           // $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $(".player_code").html(results.rows.item(0).player_code);
             $(".main-img").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
-            $("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
+           // $("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             //var image_source = getFileNameFromPath(image_src);  
             //alert(results.rows.item(0).is_user_image);
             if (results.rows.item(0).is_user_image == 'true') {
@@ -2965,16 +2992,22 @@ function loadprofile() {
             } else {
                 $(".mygender").html('N/A');
             }
-            $(".log-info p").html("<p>" + results.rows.item(0).first_name + " " + results.rows.item(0).last_name + "<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br></p>");
+            /*$(".log-info p").html("<p>" + results.rows.item(0).first_name + " " + results.rows.item(0).last_name);
+            if(checkdefined(results.rows.item(0).team) == 'yes')
+            {
+               $(".log-info p").append("<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br>");
+            }
+            $(".log-info p").append("</p>"); */                                               
+                          
             $(".firstname a").html(results.rows.item(0).first_name);
             $(".lastname a").html(results.rows.item(0).last_name);
             $("#fname_edit").val(results.rows.item(0).first_name);
             $("#lname_edit").val(results.rows.item(0).last_name);
             $("#email_edit").val(results.rows.item(0).email);
             $("#mobile_edit").val(results.rows.item(0).mobile);
-            $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
+            //$(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
 
-            $(".fa-trophy").html("<span> # </span>" + results.rows.item(0).position);
+            //$(".fa-trophy").html("<span> # </span>" + results.rows.item(0).position);
         });
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage", [], function(tx, results) {
@@ -2990,7 +3023,7 @@ function loadprofile() {
 
 function loadcommonthings() {
 
-jQuery("head").append("<link href='https://oceventmanager.com/resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
+jQuery("head").append("<link href='"+localStorage.url+"resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
    // alert(localStorage.event_id)
     db.transaction(function(tx) {
         tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
@@ -3001,7 +3034,7 @@ jQuery("head").append("<link href='https://oceventmanager.com/resources/gamifica
             if (results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null') {
                 $(".log-info p").append("<br><strong>&lt; " + results.rows.item(0).team + " &gt; </strong><br />");
             }
-            //$(".log-info p").append("</p>");
+            $(".log-info p").append("</p>");
             $(".firstname a").html(results.rows.item(0).first_name);
             if (results.rows.item(0).team != undefined && results.rows.item(0).team != '' && results.rows.item(0).team != null && results.rows.item(0).team != 'null') {
                 $(".team-name").html("&lt; " + results.rows.item(0).team + " &gt;");
@@ -3012,7 +3045,7 @@ jQuery("head").append("<link href='https://oceventmanager.com/resources/gamifica
         });
 
         tx.executeSql("SELECT * FROM OCEVENTS_homepage", [], function(tx, results) {
-            var len = results.rows.length;
+            var len = results.rows.length;    
             $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
         });
         tx.executeSql("SELECT * FROM OCEVENTS_events", [], function(tx, results) {
@@ -3082,6 +3115,7 @@ function changecurrentevent(event_id)
 function login_process() {
     db.transaction(function(tx) {
         tx.executeSql('delete from OCEVENTS_qa');
+        tx.executeSql('delete from OCEVENTS_homepage');
     });
     
     var main_url = localStorage.url + 'user-profile/?gvm_json=1';
@@ -3139,7 +3173,9 @@ function importhomepage() {
                               }
                              
                               //db.transaction(function(tx) {
-                                  tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,description,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.description + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
+                                  tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
+                                  //tx.executeSql('INSERT INTO OCEVENTS_events (event_id,user_id,title,description,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.description + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")');
+                                  alert('INSERT INTO OCEVENTS_events (event_id,user_id,title,logo,image, short_url) VALUES ("' + val.event_id + '","' + val.user_id + '","' + val.title + '","' + val.logo + '","' + val.image + '","' + val.short_url + '")')
                              // });                
                       }); 
                 }
@@ -3159,6 +3195,25 @@ function importhomepage() {
                         //alert("SELECT * FROM OCEVENTS_homepage");
 
                     });
+                    
+                    var STRD = localStorage.url + "gamification/-/"+localStorage.short_url+"-"+localStorage.event_id+"/?gvm_json=1";
+                        //alert(STR)           
+
+                        jQuery.ajax({
+                            url: STRD,
+                            dataType: "json",
+                            success: function(obj) {
+                                if(checkdefined(obj.GSettingsExtraData.main_banner_video) == 'yes')
+                                {
+                                     db.transaction(function(tx) {
+                                         tx.executeSql('update OCEVENTS_homepage set banner_video = "' + obj.GSettingsExtraData.main_banner_video.__extra.filename + '"');                                         
+                                     });
+                                }
+                            }
+                            
+                          });  
+                    
+                    
                     var DIR_Name = 'oc_photos';
                     var a = new DirManager();
                     a.create_r(DIR_Name, Log('created successfully'));
@@ -3166,25 +3221,27 @@ function importhomepage() {
                     // alert(obj.data.main_logo_image.small_url);
                     // alert(obj.data.content.main_banner_image.medium_url);
                     if (obj.data.main_logo_image != null) {
-                        var img_src = obj.data.main_logo_image.small_url;
+                        var img_src = obj.data.main_logo_image.small_url; 
                         //var img_src = 'http://weknowyourdreams.com/images/love/love-09.jpg';
                         var image_name = getFileNameFromPath(img_src);
-
-                        var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
-                                   
+                        //alert(image_name)
+                        //alert(img_src)   
+                        var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+                        //alert(STR)           
 
                         jQuery.ajax({
                             url: STR,
                             dataType: "html",
                             success: function(DtatURL) {
                                 
-                                b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
-
+                                b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.main_logo_image.small_url), function(theFile) {
+                                     //alert(getFileNameFromPath(obj.data.main_logo_image.small_url))
                                     var ImgFullUrl = '';
                                     ImgFullUrl = theFile.toURI();
-                                    //alert(ImgFullUrl);
-                                    db.transaction(function(tx) {
+                                   // alert(ImgFullUrl);
+                                    db.transaction(function(tx) { 
                                         tx.executeSql('update OCEVENTS_homepage set main_logo_small_image = "' + ImgFullUrl + '"');
+                                       // alert('update OCEVENTS_homepage set main_logo_small_image = "' + ImgFullUrl + '"');
                                         if (obj.data.content.main_banner_image == null) {
                                             //alert(obj.data.content.main_banner_image);
                                             window.location.href = "gamification.html";
@@ -3195,13 +3252,13 @@ function importhomepage() {
                             }
                         });
                     }
-                    if (obj.data.content.main_banner_image != null) {
+                    if (obj.data.content.main_banner_image != null) { 
                         var img_src = obj.data.content.main_banner_image.medium_url;
                         //var img_src = 'https://www.google.ro/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png';
                         var image_name = getFileNameFromPath(img_src);
                         //alert(img_src);
-                        //  alert(image_name);
-                        var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+                          
+                        var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
 
                         jQuery.ajax({
@@ -3212,7 +3269,7 @@ function importhomepage() {
                                 //alert(DtatURL);  
                                 //adb logcat *:E		 
                                 // alert(obj.data.image.image_src);
-                                b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+                                b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.content.main_banner_image.medium_url), function(theFile) {
 
                                     var BannerImgFullUrl = '';
                                     //ImgFullUrl = localStorage.ImgFullUrl; 
@@ -3222,7 +3279,14 @@ function importhomepage() {
                                     db.transaction(function(tx) {
 
                                         tx.executeSql('update OCEVENTS_homepage set main_banner_image = "' + BannerImgFullUrl + '"');
-
+                                       // alert('update OCEVENTS_homepage set main_banner_image = "' + BannerImgFullUrl + '"');
+                                        tx.executeSql("SELECT * FROM OCEVENTS_homepage", [], function(tx, results) {
+                      //var len = results.rows.length;
+                        //alert(results.rows.item(0).main_logo_small_image);
+                       // alert(results.rows.item(0).main_banner_image);                
+                
+                
+                });
                                         window.location.href = "gamification.html";
                                     });
                                 });
@@ -3280,13 +3344,13 @@ function downloadmoduleLogoFile(url, type, img_src)
     a.create_r(DIR_Name, Log('created successfully'));
     var b = new FileManager();
     var image_name = getFileNameFromPath(img_src);
-    var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+    var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
     //alert(STR)
     jQuery.ajax({
         url: STR,
         dataType: "html",
         success: function(DtatURL) {
-            b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+            b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(img_src), function(theFile) {
                 var img_uri = theFile.toURI();
                // alert(img_uri);
                 db.transaction(function(tx) {
@@ -3317,13 +3381,13 @@ function downloadLogoFile(url, type, img_src) {
     a.create_r(DIR_Name, Log('created successfully'));
     var b = new FileManager();
     var image_name = getFileNameFromPath(img_src);
-    var STR = server_url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
+    var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
     //alert(STR)
     jQuery.ajax({
         url: STR,
         dataType: "html",
         success: function(DtatURL) {
-            b.download_file(DtatURL, DIR_Name + '/', image_name, function(theFile) {
+            b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(img_src), function(theFile) {
                 var img_uri = theFile.toURI();
                // alert(img_uri);
                 db.transaction(function(tx) {
