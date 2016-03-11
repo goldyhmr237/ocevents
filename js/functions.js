@@ -2950,11 +2950,11 @@ function loadprofile() {
             var len = results.rows.length;  
             if(len > 0)
             {
-               $(".qa-list").html('<dt>Registration</dt>');
+               $(".qa-list").html('<dt>'+localStorage.qlabel+'</dt>');
             }
             for (i = 0; i < len; i++) {
                 //alert(results.rows.item(i).answer);
-                $('.qa-list').append('<h4 class="qa-item-title">' + results.rows.item(i).question + '</h4><p class="answer_me">' + results.rows.item(i).answer + '</p></dd>');
+                $('.qa-list').append('<dd><h4 class="qa-item-title">' + results.rows.item(i).question + '</h4><p>' + results.rows.item(i).answer + '</p></dd>');
             }
         });
 
@@ -3150,6 +3150,7 @@ function login_process() {
         method: "GET",
         success: function(obj) {
             $.each(obj.userQA, function(i, dataVal) {
+                localStorage.qlabel = obj.userQA[0].label;
                 if (i != 0 && dataVal.question != undefined && dataVal.answer != undefined) {
                     if (dataVal.question != undefined && dataVal.question != null && dataVal.question != '') {
                         db.transaction(function(tx) {
