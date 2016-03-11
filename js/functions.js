@@ -1750,6 +1750,7 @@ function loadpoints() {
                                     var green_count = '';
                                     //if (val.count != null && val.count != undefined && val.count != 'null' && val.count != '') {
                                     if(checkdefined(val.count) == 'yes' || val.count == 0)
+                                    {
                                         green_count = val.count;
                                         alert(green_count)
                                     }
