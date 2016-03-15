@@ -154,9 +154,9 @@ jQuery(function ($)
 	
 	$(window).bind('scroll', function () 
 	{
-		//alert(localStorage.nextPageLink)
+		
     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10 && localStorage.nextPageLink != null) {
-			   getAjaxMoreUsers(localStorage.nextPageLink);
+			   getAjaxMoreUsers(localStorage.nextPageLink); //alert(localStorage.nextPageLink)
 		}  
 	});
     
@@ -190,7 +190,7 @@ jQuery(function ($)
       jQuery(document).ready(function($)
       {
       var add_url = $('.is_friend').val();
-      var main_url = server_url + 'user-add-friend/-/OCintranet-'+static_event_id+'/'+add_url+'/q-'+q+'?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+      var main_url = localStorage.url + 'user-add-friend/-/OCintranet-'+localStorage.event_id+'/'+add_url+'/q-'+q+'?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
       //alert(main_url);
       jQuery.ajax({
           url: main_url,
@@ -255,7 +255,7 @@ jQuery(function ($)
 		usersList.addClass('ni_loading'); */
     //history.pushState(null, null, link);
 		 //alert(link)
-     var main_url = server_url + "user-add-friend/-/OCintranet-" + static_event_id + "/p-"+localStorage.nextPageLink+"?gvm_json=1";
+     var main_url = localStorage.url + "user-add-friend/-/OCintranet-" + localStorage.event_id + "/p-"+localStorage.nextPageLink+"?gvm_json=1";
 		$.ajax({
 			type: 'POST',
 			url: main_url,

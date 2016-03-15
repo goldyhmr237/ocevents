@@ -1747,8 +1747,16 @@ function loadpoints() {
                     //alert(val.text);
                     label = val.text;
                 });
-                // alert(label);
-                localStorage.total_points = obj.totalPoints;
+                 //alert(obj.totalPoints);
+                 if(checkdefined(obj.totalPoints) == 'yes')
+                 {
+                    localStorage.total_points = obj.totalPoints;
+                 }
+                 else
+                 {
+                      localStorage.total_points = 0;
+                 }
+                
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
                     
@@ -2306,7 +2314,14 @@ function loadyourpoints() {
                     //alert(val.text);
                     label = val.text;
                 });
-                localStorage.total_points = obj.totalPoints;
+                if(checkdefined(obj.totalPoints) == 'yes')
+                 {
+                    localStorage.total_points = obj.totalPoints;
+                 }
+                 else
+                 {
+                      localStorage.total_points = 0;
+                 }
                 // alert(label);
                 var imagedatalength = obj.categories.length;
                 db.transaction(function(tx) {
@@ -2804,10 +2819,14 @@ function showcommoncontacts(obj,checkhide) {
     var fdivider = '';
     var ffirst_letter = '';
     //alert(obj.receivedFriendsRequests.length)
-    if (obj.receivedFriendsRequests.length > 0) {
+    if(checkdefined(obj.receivedFriendsRequests) == 'yes')
+    {
+      if (obj.receivedFriendsRequests.length > 0) {
         $('.contacts_request').show();
         $('.friends-requests-container').show();
-    }
+      }
+    
+    
     $.each(obj.receivedFriendsRequests, function(key, val) {
         if (checkdefined(val.event_user_id) == 'yes') {
 
@@ -2835,8 +2854,9 @@ function showcommoncontacts(obj,checkhide) {
 
         }
     });
-
-
+    }
+    if(checkdefined(obj.eventUserFriends) == 'yes')
+     {
     $.each(obj.eventUserFriends, function(key, val) {
         icon_class = '';
         link = '';
@@ -2882,6 +2902,8 @@ function showcommoncontacts(obj,checkhide) {
         $(".add-friends-container").show();
         // alert(divider+'<div class="friends-item-wrapper '+icon_class+'">  '+link+'  </div>')
     });
+    
+    }
 
 }
 
@@ -3070,6 +3092,21 @@ function loadprofile() {
 
         });
     });
+    var main_url = localStorage.url + 'user-profile/?gvm_json=1';
+    jQuery.ajax({
+        url: main_url,
+        dataType: "json",
+        method: "GET",
+        success: function(obj) {
+          if(obj.allowFacebook == "0" || obj.allowFacebook == 0)
+          {
+             $('#plid').hide();
+             $('.user-facebook-link').hide(); 
+          }
+        }
+        
+        });
+    
 }
 
 function loadcommonthings() {
