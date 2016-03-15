@@ -13138,9 +13138,17 @@ footer .footer-menu .label-container label {
   font-size: 15px;
   color: #fff;
   line-height: 16px;
+}              
+
+    
+
+.main-container .header-title p .nav-arrow,
+.main-container .header-title p .breadcrumbs {
+    display: inline-flex !important;
+    vertical-align: middle;
 }
 
 /*ONLY VALID FOR ANDROID BUILD, DON'T FORGET TO COMMENT FOR IOS BUILD*/
 /*header .header-login-wrapper {
  position: relative; 
-}     */
+}   */

@@ -1616,7 +1616,23 @@ function loadagendaitem() {
 
                 if (data.hasRating == true) {
                     $('.agenda-item-rating-container').show();
-                    $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="' + data.ratevalue + '" data-original-title="" title=""><a href="#" class="rate-star active" data-rate="1"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="2"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="3"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="4"><i class="fa fa-star"></i></a><a href="#" class="rate-star" data-rate="5"><i class="fa fa-star"></i></a></div>');
+                    var ratin = data.rating.rating;
+                    var maxratin = 5;
+                    $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="' + ratin + '" data-original-title="" title="">');
+                    
+                    for(k = 1; k<=maxratin;k++)
+                    {
+                        var active = '';
+                        if(k <= ratin )
+                        {
+                          active = 'active'
+                        }
+                        $('.item-interactions').append('<a href="#" class="rate-star '+active+'" data-rate="1"><i class="fa fa-star"></i></a>');
+                      
+                    }
+                    
+                    
+                   $('.item-interactions').append('</div>'); 
                 }
 
                 $(".agenda-item-container").show();
