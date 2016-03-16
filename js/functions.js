@@ -1549,16 +1549,49 @@ function loadagendaitem() {
                 } else {
                     $('.next i').hide();
                 }
-                $(".green-text").html(data.presentation.title.value);
-                $(".agenda-item-img-info h5").html(data.presentation.title.value);
+                if(checkdefined(data.presentation.title.value) == 'yes')
+                {
+                    $(".green-text").html(data.presentation.title.value);
+                    $(".agenda-item-img-info h5").html(data.presentation.title.value);
+                }
+                else
+                {
+                    $(".green-text").hide();
+                    $(".agenda-item-img-info h5").hide();
+                }           
+                
+                
+                
                 if(checkdefined(data.presentation.location) == 'yes')
                 {
                    $(".agenda-item-img-info h5").after('<p><i class="fa fa-map-marker"></i>'+data.presentation.location+'</p>');
                 }
+                if(checkdefined(data.presentation.group_item) == 'yes')
+                {
+                   $(".date p").html(data.presentation.group_item);
+                }
+                else
+                {
+                  $('.date-wrapper').hide();
+                }
+                if(checkdefined(data.presentation.speaker_name.value) == 'yes')
+                {
+                    $(".future-title").html(data.presentation.speaker_name.value);
+                }
+                else
+                {
+                    $(".future-title").hide();
+                }
+                if(checkdefined(data.presentation.description.value) == 'yes')
+                {
+                    $(".future-info").html(data.presentation.description.value);
+                }
+                else
+                {
+                    $(".future-info").hide();
+                }
                 
-                $(".date p").html(data.presentation.group_item);
-                $(".future-title").html(data.presentation.speaker_name.value);
-                $(".future-info").html(data.presentation.description.value);
+                
                 if (checkdefined(data.presentation.speaker_image) == 'yes') {
                     var imgurl = localStorage.url + 'resources/files/images/' + data.presentation.speaker_image.__extra.medium_file_name;
                     $(".agenda-main-img").attr("style", "background-image:url(" + imgurl + ")");
@@ -1617,6 +1650,7 @@ function loadagendaitem() {
                 if (data.hasRating == true) {
                     $('.agenda-item-rating-container').show();
                     var ratin = data.rating.rating;
+                    alert(ratin)
                     var maxratin = 5;
                     $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="' + ratin + '" data-original-title="" title="">');
                     
@@ -1625,6 +1659,8 @@ function loadagendaitem() {
                         var active = '';
                         if(k <= ratin )
                         {
+                          alert(ratin)
+                          alert(k)
                           active = 'active'
                         }
                         $('.item-interactions').append('<a href="#" class="rate-star '+active+'" data-rate="1"><i class="fa fa-star"></i></a>');
@@ -2462,11 +2498,13 @@ function loadagenda() {
         $(".agenda-container").hide();
         var main_url = localStorage.url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
         $("#presentations-list").html('&nbsp');
+        //alert(main_url)
         $.ajax({
             url: main_url,
             dataType: "json",
             method: "GET",
             success: function(obj) {
+                // alert(obj)
                 showcommonagendalist(obj);
                 jQuery(".agenda-container").show();
                 jQuery(".loading_agenda_items").hide();
@@ -2477,14 +2515,16 @@ function loadagenda() {
 
 //function to show common agenda list
 function showcommonagendalist(obj) {
+
     $.each(obj.data.presentations, function(key, val) {
         //if(val.group_title != null)
         // {
         var group_title = '';
-        if (val.group_title != group_title && val.group_title != null && val.group_title != '' && val.group_title != undefined) {
+        if (checkdefined(val.group_title) == 'yes') {
             $("#presentations-list").append('<div class="row"><div class="date-wrapper "><div class="date"><p>' + val.group_title + '</p></div></div></div>');
+            group_title = val.group_title;
         }
-        group_title = val.group_title;
+        
         $.each(val.items, function(key1, val1) {
             var duration = val1.duration; //7903980 =====  11978580
 
@@ -2509,9 +2549,15 @@ function showcommonagendalist(obj) {
                 img_str = '<div class="agenda-img" style="background-image: url(' + val1.speaker_image.small_url + ');">';
             } else {
                 img_str = '<div class="agenda-img">';
+            } 
+            
+            var time_str = '';
+            if(checkdefined(val1.time) == 'yes')
+            {
+              time_str = '<div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div>';
             }
 
-            $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda(' + val1.id + ')"><div class="agenda-info">' + img_str + '<svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="' + duration + '" data-eta="' + eta + '"><circle class="agenda-item-progress-bg" r="42.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="267.0353755551324" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="44.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="279.6017461694916" stroke-dashoffset="" style="stroke-dashoffset: ' + pct + ';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a><div class="agenda-footer">&nbsp;<div class="meeting-location"><i class="fa fa-clock-o"></i> ' + val1.time + '</div></div></div></div></div>');
+            $("#presentations-list").append('<div class="row"><div class="agenda-content"><div class="agenda-item col-xs-12"><a href="#" onclick="gotoagenda(' + val1.id + ')"><div class="agenda-info">' + img_str + '<svg class="agenda-item-progress" version="1.1" xmlns="http://www.w3.org/2000/svg" data-duration="' + duration + '" data-eta="' + eta + '"><circle class="agenda-item-progress-bg" r="42.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="267.0353755551324" stroke-dashoffset="0"></circle><circle class="agenda-item-progress-eta" r="44.5" cx="50%" cy="50%" fill="transparent" stroke-dasharray="279.6017461694916" stroke-dashoffset="" style="stroke-dashoffset: ' + pct + ';"></circle></svg></div><div class="agenda-wrapper"><span class="agenda-slogan">' + val1.title + '</span><i class="fa fa-angle-right"></i><div class="agenda-person-info"><span class="name">' + val1.speaker_name + '</span></div></div></div></a>'+time_str+'</div></div></div>');
         });
         // }
     });
@@ -3111,7 +3157,7 @@ function loadprofile() {
 
 function loadcommonthings() {
 
-jQuery("head").append("<link href='"+localStorage.url+"resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
+//jQuery("head").append("<link href='"+localStorage.url+"resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
    // alert(localStorage.event_id)
     db.transaction(function(tx) {
     

@@ -30,6 +30,8 @@
             
             
                 document.addEventListener("deviceready", onDeviceReady, false);
+                var css_url = localStorage.url+"resources/gamification/css/appearance.css.php?eid="+localStorage.event_id;
+                document.write('<link rel="stylesheet" type="text/css" href="'+css_url+'">');
                function onDeviceReady() {
         //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
            jQuery(document).ready(function($)
@@ -90,7 +92,7 @@
        <br />
         Loading Voting...
         <br />
-        <img src="img/loading.gif" />
+        
 </div>            
 <div class="container main-container voting-page-container">
 	<div class="header-title row">
