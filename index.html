@@ -36,14 +36,20 @@
                   window.location.href="gamification.html"; 
                 }
               
-                     
+               
                  
               });
+              function handleOpenURL(url) {
+                    setTimeout(function() {
+                       alert(url)
+                        // This timeout of at least 3 seconds is necessary - otherwise the handleOpenURL() function does not work when an external link is clicked and the App is closed.
+                    }, 3000);
+              } 
             </script>
             <script src="js/jquery.countdown.js" type="text/javascript"></script>
             <script type="text/javascript">
                 var localLink = '/';
-                var GHomepageLink = "index.html";
+                var GHomepageLink = "index.html";                    
             </script>
             </head>
     <body>
