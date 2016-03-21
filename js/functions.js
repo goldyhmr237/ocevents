@@ -1650,7 +1650,7 @@ function loadagendaitem() {
                 if (data.hasRating == true) {
                     $('.agenda-item-rating-container').show();
                     var ratin = data.rating.rating;
-                    alert(ratin)
+                    //alert(ratin)
                     var maxratin = 5;
                     $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="' + ratin + '" data-original-title="" title="">');
                     
@@ -1659,8 +1659,8 @@ function loadagendaitem() {
                         var active = '';
                         if(k <= ratin )
                         {
-                          alert(ratin)
-                          alert(k)
+                         // alert(ratin)
+                          //alert(k)
                           active = 'active'
                         }
                         $('.item-interactions').append('<a href="#" class="rate-star '+active+'" data-rate="1"><i class="fa fa-star"></i></a>');
