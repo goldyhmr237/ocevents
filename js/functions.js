@@ -841,7 +841,7 @@ function loginme() {
            // alert(email)
             //alert(pwd)
             var main_url = localStorage.url + 'api/index.php/auth/login?XDEBUG_SESSION_START=PHPSTORM';
-             alert(main_url);
+             //alert(main_url);
             $.ajax({
                 url: main_url,
                 dataType: "json",
@@ -851,7 +851,7 @@ function loginme() {
                     password: pwd
                 },
                 success: function(obj) {
-                    alert(obj.status);
+                    //alert(obj.status);
                     if (obj.status == 'error') {
                         alert(obj.message);
                         $("#login_submit").show();
