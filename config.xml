@@ -8,7 +8,7 @@
         Apache Cordova Team
     </author>
     <content src="index.html" />
-    <access origin="*" /> 
+    <allow-navigation href="*" /> 
        
 <!-- iPhone 6 / 6+ -->
 <icon src="icons/OCEM4-IOS_152-.png" gap:platform="ios" width="180" height="180" />
@@ -20,7 +20,7 @@
 <icon src="icons/OCEM4-Android_57.png" gap:platform="android" />
 <gap:plugin name="cordova-plugin-camera" source="pgb"  />
 <gap:plugin name="cordova-plugin-file" source="pgb"  />
-
+<gap:plugin name="cordova-plugin-whitelist" spec="1" />
 <gap:plugin name="cordova-plugin-customurlscheme" source="npm">
   <param name="URL_SCHEME" value="ocevents" />
 </gap:plugin>

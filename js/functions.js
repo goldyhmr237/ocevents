@@ -838,9 +838,10 @@ function loginme() {
             var email = base64_encode(fld_l_email);
             var pwd = base64_encode(fld_l_password);
             localStorage.url = fld_l_url + '/';
-            //alert(email)
+           // alert(email)
+            //alert(pwd)
             var main_url = localStorage.url + 'api/index.php/auth/login?XDEBUG_SESSION_START=PHPSTORM';
-             //alert('here');
+             alert(main_url);
             $.ajax({
                 url: main_url,
                 dataType: "json",
@@ -850,7 +851,7 @@ function loginme() {
                     password: pwd
                 },
                 success: function(obj) {
-                    //alert(obj.status);
+                    alert(obj.status);
                     if (obj.status == 'error') {
                         alert(obj.message);
                         $("#login_submit").show();
@@ -897,6 +898,9 @@ function loginme() {
                         });
                     }
 
+                },fail: function()
+                {
+                  alert('failed') ;
                 }
             });
         }
@@ -3294,6 +3298,7 @@ function importhomepage() {
         dataType: "json",
         method: "GET",
         success: function(dat) {
+        //alert('here 1');
         
         /*$.each( dat.data, function( key, val ) {
           db.transaction(function(tx) {
@@ -3315,6 +3320,7 @@ function importhomepage() {
                  tx.executeSql("SELECT * FROM OCEVENTS_events", [], function(tx, results) {
                   var len = results.rows.length;
                   //alert(len)
+                 // alert('here 2');
                if(len == 0)
                {
                    tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
@@ -3342,7 +3348,7 @@ function importhomepage() {
                   });
             
                  
-                   // alert(obj.data.type)         
+                  // alert(obj.data.type)         
                 if (obj.data.type == 'content') {
                      //alert('here content')
                     db.transaction(function(tx) {
