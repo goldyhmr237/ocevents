@@ -867,10 +867,7 @@ function loginme() {
                         //alert(obj.data.image.image_src);	
                         var img_src = obj.data.image.image_src;
 
-                        //var img_src = 'http://weknowyourdreams.com/images/love/love-09.jpg';
                         var image_name = getFileNameFromPath(img_src);
-                        // alert(img_src);
-                        //  alert(image_name);
                         var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
 
@@ -883,13 +880,12 @@ function loginme() {
                                     var ImgFullUrl = '';
                                     ImgFullUrl = theFile.toURI();
                                     // alert(ImgFullUrl);
-                                    db.transaction(function(tx) {
-                                        
+                                    db.transaction(function(tx) {                                        
                                         tx.executeSql("delete from OCEVENTS_user");
                                         tx.executeSql('INSERT INTO OCEVENTS_user (team,position,fb_user_id,fb_email,birthday_date,website,user_id,email,first_name,last_name,mobile,image_src,is_user_image,created,gender,player_code) VALUES ("' + obj.data.team + '","' + obj.data.position + '","' + obj.data.fb_user_id + '","' + obj.data.fb_email + '","' + obj.data.birthday_date + '","' + obj.data.website + '","' + obj.data.id + '","' + obj.data.email + '","' + obj.data.first_name + '","' + obj.data.last_name + '","' + obj.data.mobile + '","' + ImgFullUrl + '","' + obj.data.image.is_user_image + '","' + obj.data.created + '","' + obj.data.gender + '","' + obj.data.player_code + '")');
                                         localStorage.user_id = obj.data.id;
                                         localStorage.event_id = obj.data.event_id;
-                                        //alert(localStorage.event_id)
+                                        localStorage.event_language = obj.data.event_language;
                                         login_process();
                                     });
                                 });
@@ -1157,8 +1153,8 @@ var login = function() {
                                             tx.executeSql('INSERT INTO OCEVENTS_user (team,position,fb_user_id,fb_email,birthday_date,website,user_id,email,first_name,last_name,mobile,image_src,is_user_image,created,gender,player_code) VALUES ("' + obj.data.team + '","' + obj.data.position + '","' + obj.data.fb_user_id + '","' + obj.data.fb_email + '","' + obj.data.birthday_date + '","' + obj.data.website + '","' + obj.data.id + '","' + obj.data.email + '","' + obj.data.first_name + '","' + obj.data.last_name + '","' + obj.data.mobile + '","' + ImgFullUrl + '","' + obj.data.image.is_user_image + '","' + obj.data.created + '","' + obj.data.gender + '","' + obj.data.player_code + '")');
                                             localStorage.user_id = obj.data.id;
                                             localStorage.event_id = obj.data.event_id;
-                                            
-                                            login_process();
+                                            getLoggedInUser();                                             
+                                           // login_process();
                                         });
                                     });
 
@@ -1534,10 +1530,46 @@ function checkdefined(str) {
 //load agenda item
 function loadagendaitem() {
     jQuery(document).ready(function($) {
-        loadcommonthings(); 
+        
+        if(checkdefined(localStorage.direct_access_module_href) == 'yes')
+        {
+          if(localStorage.ins_id == localStorage.agenda_id)
+          {
+            //importfooter(localStorage.direct_access_module_href, 'agenda-item');
+            //var main_url = localStorage.url + localStorage.direct_access_module_href + '?gvm_json=1';
+            var inputString = localStorage.direct_access_module_href;
+            if ( inputString.indexOf("comment") > -1 ) {
+              window.location.href="add_comments.html";
+            } else if ( inputString.indexOf("seeker") > -1 ){
+              window.location.href="seeker.html";
+            }
+            else if ( inputString.indexOf("question") > -1 ){
+              window.location.href="add_questions.html";
+            }
+            else if ( inputString.indexOf("Quiz") > -1 ){
+              window.location.href="add_quiz.html";
+            }
+            else if ( inputString.indexOf("quiz") > -1 ){
+              window.location.href="add_quiz.html";
+            }
+            else if ( inputString.indexOf("vote") > -1 ){
+              window.location.href="voting.html";
+            }
+          }
+        else
+        {
+          importfooter('View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda-item');
+          var main_url = localStorage.url + 'View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
+          }
+        }
+        else
+        {
+          importfooter('View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda-item');
+          var main_url = localStorage.url + 'View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
+          }
+         loadcommonthings(); 
         isLoggedIn();
-        importfooter('View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda-item');
-        var main_url = localStorage.url + 'View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
+         //alert(main_url)
         $.ajax({
             url: main_url,
             dataType: "json",
@@ -1603,6 +1635,10 @@ function loadagendaitem() {
                 //alert(data.presentation.time)
                 if (checkdefined(data.presentation.time) == 'yes') {
                     $('.fa-clock-o').after(data.presentation.time)
+                }
+                else
+                {
+                  $('.time-wrapper').hide();
                 }
                 //alert(checkundefined(data.videoSrc));
                 if (checkdefined(data.videoSrc) == 'yes') {
@@ -1679,6 +1715,7 @@ function loadagendaitem() {
                 $(".loading_agenda_items").hide();
             }
         });
+       
         /*db.transaction(function(tx) {                                                
               tx.executeSql("SELECT * FROM OCEVENTS_agenda where user_id = '" + localStorage.user_id + "' and agenda_id = '"+localStorage.agenda_id+"'", [], function(tx, results) {
               var len_ag = results.rows.length;
@@ -1820,7 +1857,12 @@ function loadpoints() {
                                         green_count = val.count;
                                         //alert(green_count)
                                     }
-                                    tx.executeSql("insert into OCEVENTS_points (alias,user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal + "','" + green_count + "','" + hideTeamScores + "','" + label + "' ,'" + val.instance_id + "' )");
+                                   // if(checkdefined(val.userTotal) == 'yes')
+                                   // {
+                                        tx.executeSql("insert into OCEVENTS_points (alias,user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal + "','" + green_count + "','" + hideTeamScores + "','" + label + "' ,'" + val.instance_id + "' )");
+                                   // }
+                                    
+                                   // alert("insert into OCEVENTS_points (alias,user_id,name,position,userTotal,green_count,hideTeamScores,label,instance_id) values ('" + val.alias + "','" + localStorage.user_id + "','" + val.name + "','" + val.position + "','" + val.userTotal + "','" + green_count + "','" + hideTeamScores + "','" + label + "' ,'" + val.instance_id + "' )")
                                     //alert(val.position);
                                     co++;
                                     // alert(co);
@@ -1863,9 +1905,10 @@ function showPointsData() {
 
             //alert(results.rows.item(0).hideTeamScores);
             for (i = 0; i < len; i++) {
-                //alert(results.rows.item(i).description);
+                //alert(results.rows.item(i).userTotal);
                   var icon = '';
                   var user_total = '0';
+                   var id = results.rows.item(i).userTotal ;
                if(checkdefined(id) == 'yes')
                {
                   user_total = formatpoints(id);
@@ -1889,7 +1932,7 @@ function showPointsData() {
                 if (checkdefined(results.rows.item(i).green_count) == 'yes' || results.rows.item(i).green_count == '0') {
                     var green_count_html = '<span class="count">' + results.rows.item(i).green_count + '</span>';
                 }
-               var id = results.rows.item(i).userTotal ;
+              
                
                 
                 $(".table-striped tbody").append('<tr><td><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');"><span class="num">' + results.rows.item(i).position + '.</span>' + icon + '<span class="icon"></span>&nbsp;' + results.rows.item(i).name + '</a></td><td class="point"><a href="#" onclick="gotopoints(' + results.rows.item(i).instance_id + ');">' + green_count_html + user_total + '<i class="fa fa-angle-right"></i></a></td></tr>');
@@ -2286,7 +2329,7 @@ function loadyourdetailteampoints() {
                     } else {
                         var newtd = '<td class="avatar-col"></td>';
                     }
-                    //alert(newtd)        
+                    //alert(user_total)        
                     $(".team-points-table table tbody").append('<tr class=' + classcss + '><td class="num-col"><span class="num">' + i + '</span></td>' + newtd + '<td><span class="name">' + val.fName + ' ' + val.lName + '</span></td><td class="point">' + user_total + '</td></tr>');
 
                 });
@@ -2530,6 +2573,11 @@ function showcommonagendalist(obj) {
         }
         
         $.each(val.items, function(key1, val1) {
+        if(checkdefined(val1.direct_access_module_href) == 'yes')
+        {
+             localStorage.direct_access_module_href = val1.direct_access_module_href;
+             localStorage.ins_id = val1.id;
+        }
             var duration = val1.duration; //7903980 =====  11978580
 
             var eta = val1.eta; //3593396 ====   8691056
@@ -3166,14 +3214,63 @@ function loadcommonthings() {
     db.transaction(function(tx) {
     
    
-      /*  tx.executeSql("SELECT * FROM OCEVENTS_keywords where key_constant = 'EditUser'", [], function(tx, results) {
+        tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
                   var len = results.rows.length;
-                 // alert(len);
-                  //alert(results.rows.item(0).key_constant);
-                 // alert(results.rows.item(0).key_val);
-                 $('.edit-btn-wrapper a').html(results.rows.item(0).key_val)
-                 
-        }); */ 
+                  
+                  for (i = 0; i < len; i++) {
+                    if(results.rows.item(i).key_constant == 'EditUser')
+                    {
+                      $('.edit-btn-wrapper a').html(unescape(results.rows.item(i).key_val));
+                    }
+                    if(results.rows.item(i).key_constant == 'MyEvents')
+                    {
+                      $('.my-events-title').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'menuHome')
+                    {
+                      //$('.menu-items-wrapper ul li a .gicon-welcome').after().html('');
+                      $('.menu-items-wrapper ul li a .gicon-welcome').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'menuProfile')
+                    {
+                      //$('.menu-items-wrapper ul li a .gicon-my-profile').nextAll().remove();
+                      $('.menu-items-wrapper ul li a .gicon-my-profile').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'Agenda')
+                    {
+                     // $('.menu-items-wrapper ul li a .gicon-agenda').nextAll().remove();
+                      $('.menu-items-wrapper ul li a .gicon-agenda').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'Points')
+                    {
+                     // $('.menu-items-wrapper ul li a .gicon-points').nextAll().remove();
+                      $('.menu-items-wrapper ul li a .gicon-points').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'AddFriends')
+                    {
+                     // $('.menu-items-wrapper ul li a .gicon-friends').nextAll().remove();
+                      $('.menu-items-wrapper ul li a .gicon-friends').after(unescape(results.rows.item(i).key_val));                     
+                    }  
+                    if(results.rows.item(i).key_constant == 'MenuNotes')
+                    {
+                     // $('.menu-items-wrapper ul li a .gicon-notes').nextAll().remove();
+                      $('.menu-items-wrapper ul li a .gicon-notes').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                     if(results.rows.item(i).key_constant == 'MyTicket')
+                    {
+                     // $('.menu-items-wrapper ul li a .gicon-my-ticket').nextAll().remove();
+                      $('.menu-items-wrapper ul li a .gicon-my-ticket').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                    if(results.rows.item(i).key_constant == 'LogOut')
+                    {
+                      //$('.gicon-logout').nextAll().remove();
+                      $('.gicon-logout').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                    
+                  }
+        });  
      
         tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
@@ -3202,7 +3299,7 @@ function loadcommonthings() {
             //alert(len)
             if(len>0)
             {
-                $('.events').html('<p class="my-events-title">My networks</p>');
+//                $('.events').html('<p class="my-events-title">My networks</p>');
             }
             for (i = 0; i < len; i++) {                
                     
@@ -3232,6 +3329,8 @@ function getLoggedInUser()
           db.transaction(function(tx) {                                        
             tx.executeSql('update OCEVENTS_user set position = "' + obj.data.position + '", team = "'+obj.data.team+'"');
             //alert('done')
+            localStorage.event_language = obj.data.event_language;
+            //alert(localStorage.event_language)
             login_process();
           });                                
       }
@@ -3292,19 +3391,34 @@ function login_process() {
 
 function importhomepage() {
 
-    var main_urld = localStorage.url + 'api/index.php/main/keywords?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
+    
+    if(localStorage.event_language == 'en')
+    {
+       var main_urld = localStorage.url + 'api/index.php/main/keywords?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
+    }
+    else
+    {
+        var main_urld = localStorage.url + 'api/index.php/main/keywords?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id + '&locale='+localStorage.event_language;
+    }
+   // alert(main_urld)
     jQuery.ajax({
         url: main_urld,
         dataType: "json",
         method: "GET",
-        success: function(dat) {
+        success: function(ss) {
         //alert('here 1');
-        
-        /*$.each( dat.data, function( key, val ) {
-          db.transaction(function(tx) {
-            tx.executeSql("insert into OCEVENTS_keywords (key_constant,key_val) values ('"+key+"','"+val+"')");
-           }); 
-        });*/
+         db.transaction(function(tx) {
+         tx.executeSql('delete from OCEVENTS_keywords');
+        jQuery.each( ss.data, function( key, val ) {
+          
+        /* if(key == 'EditUser')
+         {
+            alert(escape(val))
+         } */
+          tx.executeSql("insert into OCEVENTS_keywords (key_constant,key_val) values ('"+key+"','"+escape(val)+"')");
+          
+        });
+         }); 
           
           var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
     jQuery.ajax({
