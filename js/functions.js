@@ -1531,6 +1531,20 @@ function checkdefined(str) {
 function loadagendaitem() {
     jQuery(document).ready(function($) {
         
+        db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'YourRating')
+                    {
+                        $('.agenda-item-rating-container span').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                    
+                 }
+           });
+        });
+        
         if(checkdefined(localStorage.direct_access_module_href) == 'yes')
         {
           if(localStorage.ins_id == localStorage.agenda_id)
@@ -1745,6 +1759,23 @@ function loadticket() {
         db.transaction(function(tx) {
             
             tx.executeSql('delete from OCEVENTS_ticket');
+            tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'MyTicket')
+                    {
+                        $('.ticketing-title-wrapper h1').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                 }
+           });
+           //alert("SELECT * FROM OCEVENTS_events where event_id = '"+localStorage.event_id+"' ")
+           tx.executeSql("SELECT * FROM OCEVENTS_events where event_id = '"+localStorage.event_id+"' ", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  var event_title = results.rows.item(0).title;
+                  //alert(event_title)
+                  $('.ticketing-content h3').html(event_title);
+           });       
+            
         });
         $(".ticketing-container").hide();
         var main_url = localStorage.url + 'ticketing/-/' + localStorage.event_id + '/?gvm_json=1';
@@ -2518,6 +2549,24 @@ function loadallagenda() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
         importfooter('agenda', 'agenda');
+        
+        db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'Agenda')
+                    {
+                        $('.header-title h1').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SeeCurrent')
+                    {
+                        $('.seealls span').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                 }
+           });
+        });
+        
         $(".agenda-container").hide();
         //showAgendaData();
         //http://www.oceventmanager.com/agenda/-/'+localStorage.short_url+'-100041/?ajax=1&all=1&gvm_json=1
@@ -2541,6 +2590,22 @@ function loadallagenda() {
 function loadagenda() {
     jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
+        db.transaction(function(tx) {
+        tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'Agenda')
+                    {
+                        $('.header-title h1').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SeeAll')
+                    {
+                        $('.seealls span').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                 }
+           });
+        });
         importfooter('agenda', 'agenda');
         $(".agenda-container").hide();
         var main_url = localStorage.url + 'api/index.php/main/agendaItems?XDEBUG_SESSION_START=PHPSTORM';
@@ -3097,9 +3162,12 @@ function loadprofile() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
     //jQuery("head").append("<link href='https://oceventmanager.com/resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
     loadcommonthings();
+    $(".user-profile-container").hide();
+        jQuery(".loading_agenda_items").show();
     importfooter('user-profile', 'profile');
+    
     db.transaction(function(tx) {
-
+                    
         tx.executeSql("SELECT * FROM OCEVENTS_qa", [], function(tx, results) {
             var len = results.rows.length;  
             if(len > 0)
@@ -3137,11 +3205,11 @@ function loadprofile() {
             //var image_source = getFileNameFromPath(image_src);  
             //alert(results.rows.item(0).is_user_image);
             if (results.rows.item(0).is_user_image == 'true') {
-                $(".selfie_button").html('<button class="pic-remove" onclick="removeprofileimage();" type="button" name="remove_pic" value="1">Remove Selfie From Your Profile</button>');
+                $(".selfie_button").html('<button class="pic-remove" onclick="removeprofileimage();" type="button" name="remove_pic" value="1"></button>');
             }
             $(".facebook-link").show();
             // alert(results.rows.item(0).fb_user_id);
-            if (results.rows.item(0).fb_user_id != null && results.rows.item(0).fb_user_id != 'null' && results.rows.item(0).fb_user_id != '' && results.rows.item(0).fb_user_id != undefined) {
+            if (checkdefined(results.rows.item(0).fb_user_id) == 'yes') {
                 //alert('here')
                 $(".facebook-link").hide();
                 $("#unlinkfacebook").show();
@@ -3189,6 +3257,98 @@ function loadprofile() {
 
 
         });
+        tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;
+                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'UserPage')
+                    {
+                        $('.header-title p').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                    if(results.rows.item(i).key_constant == 'RemoveSelfieFromProfile')
+                    {
+                        $('.pic-remove').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'Username')
+                    {
+                        $('.all_username').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'userEmail')
+                    {
+                        $('.all_email').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'userMobile')
+                    {
+                        $('.all_mobile').html(unescape(results.rows.item(i).key_val)); 
+                        $('#all_mobile').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'userGender')
+                    {
+                        $('.all_gender').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'EditProfileDetails')
+                    {
+                        $('.user-info-edit-btn').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'YourPlayedCode')
+                    {
+                        $('#plid h5').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'Firstname')
+                    {
+                        $('#all_fname').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'Lastname')
+                    {
+                        $('#all_lname').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'Email')
+                    {
+                        $('#all_email').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'RepeatEmail')
+                    {
+                        $('#all_remail').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SetNewPassword')
+                    {
+                       $('#all_pwd').html(unescape(results.rows.item(i).key_val));                      
+                    }
+                    if(results.rows.item(i).key_constant == 'RepeatNewPassword')
+                    {
+                       $('#all_rpwd').html(unescape(results.rows.item(i).key_val));                      
+                    }
+                    if(results.rows.item(i).key_constant == 'Save')
+                    {
+                       $('.user-info-save-btn').html(unescape(results.rows.item(i).key_val));                      
+                    }
+                    if(results.rows.item(i).key_constant == 'Cancel')
+                    {
+                       $('.user-info-cancel-btn').html(unescape(results.rows.item(i).key_val));                      
+                    } 
+                    
+                    if(results.rows.item(i).key_constant == 'fbAccountLinkYourFacebook')
+                    {
+                       $('.fa-facebook').after(unescape(results.rows.item(i).key_val));                      
+                    }
+                    if(results.rows.item(i).key_constant == 'fbAccountBenefits')
+                    {
+                       $('.facebook-description').html(unescape(results.rows.item(i).key_val));                      
+                    }
+                    if(results.rows.item(i).key_constant == 'AddSelfieToProfile')
+                    {
+                       $('.addselfie').after(unescape(results.rows.item(i).key_val));                      
+                    }
+                     
+                       
+                    
+                    
+                    
+              }
+              $(".user-profile-container").show();
+        jQuery(".loading_agenda_items").hide();
+        });
     });
     var main_url = localStorage.url + 'user-profile/?gvm_json=1';
     jQuery.ajax({
@@ -3234,7 +3394,8 @@ function loadcommonthings() {
                     if(results.rows.item(i).key_constant == 'menuProfile')
                     {
                       //$('.menu-items-wrapper ul li a .gicon-my-profile').nextAll().remove();
-                      $('.menu-items-wrapper ul li a .gicon-my-profile').after(unescape(results.rows.item(i).key_val));                     
+                      $('.menu-items-wrapper ul li a .gicon-my-profile').after(unescape(results.rows.item(i).key_val));
+                      //$('.header-title p').html(unescape(results.rows.item(i).key_val));                     
                     }
                     if(results.rows.item(i).key_constant == 'Agenda')
                     {
@@ -4094,6 +4255,50 @@ function showseekerresults(ur)
                    $('.seeall').html('All');
                    $('.seeall').attr('href','javascript:showseekerresults("l-full");');
                 }
+                db.transaction(function(tx) {
+                  tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'seekerFinishedTitle')
+                    {
+                        $('.seek-questions .green-text').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'seekerEndCongratulationsTitle')
+                    {
+                        $('.congrat-text-wrapper .green-text').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SeekerPlayAgain')
+                    {
+                        $('.reset_seek').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'seekerTopScoresTitle')
+                    {
+                        $('.seeker-scores-table-heading').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'seekerCorrectAnswers')
+                    {
+                        $('.crct').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'seekerHints')
+                    {
+                        //alert(results.rows.item(i).key_val)
+                        $('.hint_h').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'seekerPlaces')
+                    {
+                        $('.plcs').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SeeFullList')
+                    {
+                        $('.seeall').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                     
+                    
+                 }
+           });
+        });
+                
                 $(".seeker-game-container").show();
                 $(".loading_agenda_items").hide();  
            }
@@ -4191,15 +4396,42 @@ function showseeker()
                   }  
                   localStorage.correct_answer = obj.currentFloormapInstance.code.value;  
                   $('.seeker-description').html('');
-                  if(checkdefined(obj.currentFloormapInstance.floormap_image.value) == 'yes')
+                  if(checkdefined(obj.currentFloormapInstance.floormap_image) == 'yes')
                   {                                               
                      $('.seeker-description').append('<img src='+localStorage.url+'resources/files/images/'+obj.currentFloormapInstance.floormap_image.__extra.large_file_name+' />'); 
                   }           
                   $('.seeker-description').append(obj.currentFloormapInstance.description.value+'<div class="seeker-hint"></div>');
-                  $('.seeker-hint').html(obj.currentFloormapInstance.hint.value);
+                  if(checkdefined(obj.currentFloormapInstance.hint) == 'yes')
+                  {
+                    $('.seeker-hint').html(obj.currentFloormapInstance.hint.value);
+                  }
+                  else
+                  {
+                      $('.show-hint').hide();
+                  }
+                  
+                  
+                  localStorage.resubmit_code = obj.form.noResubmitCode;
+                  
+                  db.transaction(function(tx) {
+                  tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'SeekerShowHint')
+                    {
+                        $('.show-hint').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'seekerSendCode')
+                    {
+                        $('.submit_com').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                     
+                    
+                 }
+           });
+        });
                   $(".seeker-game-container").show();
                   $(".loading_agenda_items").hide();
-                  localStorage.resubmit_code = obj.form.noResubmitCode;
               }
            });        
         });
@@ -4337,7 +4569,7 @@ function showvoting()
                     }
                                                             
                     
-                      $('.voting-content-item ul').append('<li '+classcssli+'><a '+classcss+' href="#"><h4 class="vote-item-title">'+val.title.value+'</h4><p class="vote-item-subtitle"></p><div class="voting-item-count"><i class="icon-voting"></i>'+val.votes_count+' votes</div></a><div class="voting-confirm-wrapper"><h4>Give your vote!</h4><div class="confirm-btn-wrapper"><a href="" class="cancel">Cancel</a><a href="#" onclick="givevote('+val.instance_id.value+');" class="voting-toggle-btn">Yes</a></div></div></li>');
+                      $('.voting-content-item ul').append('<li '+classcssli+'><a '+classcss+' href="#"><h4 class="vote-item-title">'+val.title.value+'</h4><p class="vote-item-subtitle"></p><div class="voting-item-count"><i class="icon-voting"></i>'+val.votes_count+' <span class="forvotes"></span></div></a><div class="voting-confirm-wrapper"><h4>Give your vote!</h4><div class="confirm-btn-wrapper"><a href="" class="cancel">Cancel</a><a href="#" onclick="givevote('+val.instance_id.value+');" class="voting-toggle-btn">Yes</a></div></div></li>');
                           //alert('<li '+classcssli+'><a href="#"><h4 class="vote-item-title">'+val.title.value+'</h4><p class="vote-item-subtitle"></p><div class="voting-item-count"><i class="icon-voting"></i>'+val.votes_count+' votes</div></a><div class="voting-confirm-wrapper"><h4>Give your vote!</h4><div class="confirm-btn-wrapper"><a href="" class="cancel">Cancel</a><a href="#" onclick="givevote('+val.instance_id.value+');" class="voting-toggle-btn">Yes</a></div></div></li>')
                       });
                      
@@ -4392,8 +4624,16 @@ function showvoting()
                     });
                 });
          
-                $(".voting-page-container").show();
-                $(".loading_agenda_items").hide();
+                
+                if(obj.isFinished == 'true' || obj.isFinished == true)
+                {
+                   $('.voting-end-content-title').hide();
+                   $('.voting-closed-content-title').show(); 
+                }
+                else
+                {
+                  $('.voting-end-content-title').show();
+                   $('.voting-closed-content-title').hide();
                 $('.voting-countdown').countdown({
                   
             until: +obj.closesInTime, 
@@ -4401,6 +4641,59 @@ function showvoting()
             format: 'HMS', 
             compact: true
         });
+        }
+        
+         db.transaction(function(tx) {
+                      tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                             
+                      for (i = 0; i < len; i++) {  
+                        if(results.rows.item(i).key_constant == 'votes')
+                        {
+                            $('.votes-count .green-text').after(' '+unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'SortBy')
+                        {
+                            $('.votes-sort span').html(unescape(results.rows.item(i).key_val)+': ');                     
+                        }
+                        if(results.rows.item(i).key_constant == 'sortByTitle')
+                        {
+                            $('.tit_s').after(unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'sortByVotes')
+                        {
+                            $('.vot_s').after(unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'filterItems')
+                        {
+                            $('#vote-items-filter').attr('placeholder',unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'votingClosesIn')
+                        {
+                            $('.voting-end-content-title h3 .fa-clock-o').after(' '+unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'votingFinished')
+                        {
+                            $('.voting-closed-content-title h3 .fa-clock-o').after(' '+unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'voteItemConfirmation')
+                        {
+                            $('.voting-confirm-wrapper h4').html(unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'voteCancel')
+                        {
+                            $('.cancel').html(unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'votes')
+                        {
+                            $('.forvotes').html(unescape(results.rows.item(i).key_val));                     
+                        }
+                        
+                         
+                      }                 
+                  });
+              });
+              $(".voting-page-container").show();
+                $(".loading_agenda_items").hide();
              }
           });
           });      
@@ -4434,7 +4727,7 @@ function showquiz()
      jQuery(document).ready(function($) {
         loadcommonthings(); isLoggedIn();
         $(".quiz-container").hide();
-        
+         
         //alert('hi')
         importfooter('Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda');
         var main_url = localStorage.url + 'Quiz/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
@@ -4456,9 +4749,35 @@ function showquiz()
                 });
                 if(checkdefined(obj.results) == 'yes')
                 {
-                    $('.questionsdiv').hide();
-                    $('.quiz-header-title').after('<div class="quiz-results-wrapper"><div class="quiz-results"><h3 class="green-text">Results</h3><p>'+obj.results+'</p><span class="score green-text">'+obj.quizPoints+'</span></div><div class="quiz-btn-wrapper"><a class="btn btn-primary" href="javascript:resetquiz();">Try again</a><a class="btn btn-primary scoreboard"  href="javascript:gotoscorecard();">Scoreboard</a></div></div>');
-                }
+                     db.transaction(function(tx) {
+                      tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;  
+                  var tryagain = ''; 
+                  var resultss = '' ; 
+                  var score_card = '';             
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'quizMenuStartQuizTryAgain')
+                    {
+                        tryagain = unescape(results.rows.item(i).key_val);                     
+                    }
+                    if(results.rows.item(i).key_constant == 'quizResults')
+                    {
+                        resultss = unescape(results.rows.item(i).key_val);                     
+                    }
+                    
+                    if(results.rows.item(i).key_constant == 'seeScoreboard')
+                    {
+                        score_card = unescape(results.rows.item(i).key_val);                     
+                    }
+                    
+                    
+                 }
+                 $('.questionsdiv').hide();
+                    $('.quiz-header-title').after('<div class="quiz-results-wrapper"><div class="quiz-results"><h3 class="green-text">'+resultss+'</h3><p>'+obj.results+'</p><span class="score green-text">'+obj.quizPoints+'</span></div><div class="quiz-btn-wrapper"><a class="btn btn-primary" href="javascript:resetquiz();">'+tryagain+'</a><a class="btn btn-primary scoreboard"  href="javascript:gotoscorecard();">'+score_card+'</a></div></div>');
+              
+           });
+        });
+                      }
                 else
                 { 
                 $('.questionsdiv').show();
@@ -4503,7 +4822,7 @@ function showquiz()
                     if(obj.questionMultipleAnswers == 'true' || obj.questionMultipleAnswers == true)
                     {
                         var radio_button = '<label class="'+label_class+'"><div class="poeng-options"><input type="checkbox" class="ipt_quiz_a"  name="answer_position" id="ipt_quiz_a_1" value="'+value+'"><span class="check"></span><div class="text">'+arr[i]+'</div></div></label>';
-                        $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="submitmultipleanswers('+obj.question.instance_id+')" name="next_question" value="1">Submit</button>');  
+                        $('.quiz-btn-wrapper').html('<button class="btn btn-primary nxt_q" type="button" onclick="submitmultipleanswers('+obj.question.instance_id+')" name="next_question" value="1"></button>');  
                     }
                     else
                     {
@@ -4511,11 +4830,11 @@ function showquiz()
                     }
                     if(checkdefined(obj.correctAnswerPositions) == 'yes' && obj.questionNumber != obj.numQuestions)
                 {
-                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1">Next question</button>'); 
+                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary next_q" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1"></button>'); 
                 }
                    if(checkdefined(obj.correctAnswerPositions) == 'yes' && obj.questionNumber == obj.numQuestions)
                 {
-                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1">Results Page</button>'); 
+                   $('.quiz-btn-wrapper').html('<button class="btn btn-primary res_p" type="button" onclick="gotonextquestion('+obj.question.instance_id+')" name="next_question" value="1"></button>'); 
                 }  
                     
                      //alert(radio_button)
@@ -4536,6 +4855,26 @@ function showquiz()
                 
                 });
                 }
+                db.transaction(function(tx) {
+                      tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                             
+                      for (i = 0; i < len; i++) {  
+                        if(results.rows.item(i).key_constant == 'Submit')
+                        {
+                            $('.nxt_q').html(unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'quizNextQuestionquizNextQuestion')
+                        {
+                            $('.next_q').html(unescape(results.rows.item(i).key_val));                     
+                        }
+                        if(results.rows.item(i).key_constant == 'quizGoToResultsPage')
+                        {
+                            $('.res_p').html(unescape(results.rows.item(i).key_val));                     
+                        }
+                         
+                      }                 
+                  });
+              });
                $(".quiz-container").show(); 
                $(".loading_agenda_items").hide();  
             }
@@ -4723,7 +5062,12 @@ function showquestions()
             dataType: "json",
             method: "GET",
             success: function(obj) {
-
+               $(".close-btn-wrapper").click(function()
+               {
+                  //alert("here")
+                  $("#show-form-container").show();
+                  $(".questions-filter-items").fadeOut();
+               });
                 var label = '';
                 $.each(obj.breadcrumbs, function(key, val) {
 
@@ -4735,7 +5079,7 @@ function showquestions()
                     }
                 });
               $('.votes-count .green-text').html(obj.countQuestionInstances);
-              $('.votes-count .small-text').html(obj.countAnswerInstances.answers+' add question answers');
+              $('.votes-count .small-text').html(obj.countAnswerInstances.answers);
               
               
                  localStorage.resubmit_code = obj.qForm.noResubmitCode;
@@ -4757,16 +5101,16 @@ function showquestions()
                   name += ' '+val.lName;
               }
               var like_string = '';
-              var dislike_link = '<a href="#" onclick=likedislikequestion('+val.instance_id+',0)>dislike</a>';
+              var dislike_link = '<a href="#" class="chkdislikes" onclick=likedislikequestion('+val.instance_id+',0)>dislike</a>';
               if(val.like == 1)
               {
-                like_string = '<a class="liked-btn show"><i class="fa fa-heart"></i>Liked</a>';
+                like_string = '<a class="liked-btn"><i class="fa fa-thumbs-up"></i>Liked</a>';
                 dislike_link = 'Dislikes';  
               }
               else if(val.like == 0)
               {
                 like_string = '<a class="liked-btn show">Disliked</a>';
-                dislike_link = 'Dislikes';
+                dislike_link = '<span class="chkdislikes">Dislikes</span>';
               }
               else
               {
@@ -4776,7 +5120,7 @@ function showquestions()
               if(val.event_user_id == localStorage.user_id)
               {
                  like_string = ''; 
-                 dislike_link = 'Dislikes';
+                 dislike_link = '<span class="chkdislikes">Dislikes</span>';
                
               }
               var answer = '';
@@ -4784,8 +5128,8 @@ function showquestions()
               {
                   answer = '<div class="answer-inner"><div>A:</div><p>'+val.answer+'</p></div>';
               }
-              
-              $('.comment_loop').prepend('<div id="question_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div>Q:</div><p>'+val.question+' </p></div></div></div>'+answer+'<div class="clearfix"><div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-heart"></i>'+val.likes+' Likes</div><div class="dislikes-count">- '+val.dislikes+' '+dislike_link+'</div></div></div></div>');
+                 //alert(like_string)
+              $('.comment_loop').prepend('<div id="question_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div>Q:</div><p>'+val.question+' </p></div></div></div>'+answer+'<div class="clearfix"><div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-thumbs-up"></i><span class="chklikes">'+val.likes+'</span></div><div class="dislikes-count"><i class="fa fa-thumbs-down"></i>'+val.dislikes+' '+dislike_link+'</div></div></div></div>');
              
               
              
@@ -4798,6 +5142,63 @@ function showquestions()
             $('.alert-success').fadeOut(3000);
             localStorage.message = '';
         }
+           
+           db.transaction(function(tx) {
+                  tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'presentationQuestionsTitle')
+                    {
+                        $('.votes-count .green-text').after(' '+unescape(results.rows.item(i).key_val)+' /');                     
+                    }
+                    if(results.rows.item(i).key_constant == 'orderByTime')
+                    {
+                        $('.time_s').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'orderByLikes')
+                    {
+                        $('.like_s').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'addQuestionSubmit')
+                    {
+                        $('.submit_com').html(unescape(results.rows.item(i).key_val));                    
+                    }
+                     if(results.rows.item(i).key_constant == 'addQuestionAnswers')
+                    {
+                        $('.small-text').append(' '+unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'writeQuestion')
+                    {
+                       $('#frmfld_question').attr('placeholder',unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'ToggleForm')
+                    {
+                        $('#show-form-container .fa-comment').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'addQuestionLikes')
+                    {
+                        $('.chklikes').append(' '+unescape(results.rows.item(i).key_val));                     
+                    }
+                    /*
+                    if(results.rows.item(i).key_constant == 'removeComment')
+                    {
+                        $('.delete-comment .fa-times').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                    if(results.rows.item(i).key_constant == 'addCommentDislikes')
+                    {
+                        $('.chkdislikes').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'replyCancelButton')
+                    {
+                        $('.reply-cancel').html(unescape(results.rows.item(i).key_val));                     
+                    } */
+                    
+                    
+                 }
+           });
+        });
+           
             }
        }); 
    });             
@@ -4919,16 +5320,16 @@ function showcomments()
                   name += ' '+val.lName;
               }
               var like_string = '';
-              var dislike_link = '<a href="#" onclick=likedislikecomment('+val.instance_id+',0)>dislike</a>';
+              var dislike_link = '<a href="#" class="chkdislikes" onclick=likedislikecomment('+val.instance_id+',0)>dislike</a>';
               if(val.like == 1)
               {
-                like_string = '<a class="liked-btn show"><i class="fa fa-heart"></i>Liked</a>';
-                dislike_link = 'Dislikes';  
+                like_string = '<a class="liked-btn"><i class="fa fa-thumbs-up"></i>Liked</a>';
+                dislike_link = '<span class="chkdislikes"></span>';  
               }
               else if(val.like == 0)
               {
                 like_string = '<a class="liked-btn show">Disliked</a>';
-                dislike_link = 'Dislikes';
+                dislike_link = '<span class="chkdislikes"></span>';
               }
               else
               {
@@ -4938,8 +5339,8 @@ function showcomments()
               if(val.event_user_id == localStorage.user_id)
               {
                  like_string = ''; 
-                 dislike_link = 'Dislikes';
-                 delete_button = '<div onclick="deletecomment('+val.instance_id+')" class="pull-right delete-comment"><i class="fa fa-times"></i>Delete</div>';
+                 dislike_link = '<span class="chkdislikes"></span>';
+                 delete_button = '<div onclick="deletecomment('+val.instance_id+')" class="pull-right delete-comment"><i class="fa fa-times"></i></div>';
               }
               var comment_image = '';
               if(checkdefined(val.images) == 'yes')
@@ -4959,17 +5360,16 @@ function showcomments()
               
               if(val.reply_to_comment_id == 0 || val.reply_to_comment_id == 'null' || val.reply_to_comment_id == null)
               {
-                 $('.comment_loop').prepend('<div id="comment_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div>'+comment_image+comment_video+'<div class="clearfix">'+delete_button+'<div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-heart"></i>'+val.likes+' Likes</div><div class="dislikes-count">- '+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment"><i class="fa fa-reply"></i>Reply</div></div></div><div class="questions-filter-items reply-form clearfix hide"><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder="Partisipate, write a post"></textarea><span><i class="fa fa-comment"></i></span></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" onclick="submitcomment('+val.instance_id+')" name="submit">Send</button><button type="submit" class="btn-danger reply-cancel" name="cancel">Cancel</button></div></div></div>');
+                 $('.comment_loop').prepend('<div id="comment_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div>'+comment_image+comment_video+'<div class="clearfix">'+delete_button+'<div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-thumbs-up"></i><span class="chklikes">'+val.likes+'</span> </div><div class="dislikes-count"><i class="fa fa-thumbs-down"></i>'+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment"><i class="fa fa-reply"></i></div></div></div><div class="questions-filter-items reply-form clearfix hide"><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control textcomment" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder=""></textarea><span><i class="fa fa-comment"></i></span></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" class="reply-sub" onclick="submitcomment('+val.instance_id+')" name="submit"></button><button type="submit" class="btn-danger reply-cancel" name="cancel"></button></div></div></div>');
              }
               if(val.reply_to_comment_id != 0 && val.reply_to_comment_id != 'null' && val.reply_to_comment_id != null)
              {
-                 $('#comment_'+val.reply_to_comment_id).after('<div id="comment_'+val.instance_id+'" class="questions-item-container row comment-reply"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div>'+comment_image+'<div class="clearfix">'+delete_button+'<div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-heart"></i>'+val.likes+' Likes</div><div class="dislikes-count">- '+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment"><i class="fa fa-reply"></i>Reply</div></div></div><div class="questions-filter-items reply-form clearfix hide"><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder="Partisipate, write a post"></textarea><span><i class="fa fa-comment"></i></span></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" onclick="submitcomment('+val.instance_id+')" name="submit">Send</button><button type="submit" class="btn-danger reply-cancel" name="cancel">Cancel</button></div></div></div>');
+                 $('#comment_'+val.reply_to_comment_id).after('<div id="comment_'+val.instance_id+'" class="questions-item-container row comment-reply"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div>'+comment_image+'<div class="clearfix">'+delete_button+'<div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-thumbs-up"></i>'+val.likes+' </div><div class="dislikes-count"><i class="fa fa-thumbs-down"></i>'+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment"><i class="fa fa-reply"></i></div></div></div><div class="questions-filter-items reply-form clearfix hide"><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control textcomment" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder=""></textarea><span><i class="fa fa-comment"></i></span></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" class="reply-sub" onclick="submitcomment('+val.instance_id+')" name="submit"></button><button type="submit" class="btn-danger reply-cancel" name="cancel"></button></div></div></div>');
               }
              
         });
             
-              $(".loading_agenda_items").hide();  
-              $(".questions-container").show();
+            
         if(checkdefined(localStorage.message) == 'yes')
         {
             $('.comment_loop').before('<div class="alert alert-success">Deleted</div>');
@@ -4985,6 +5385,69 @@ function showcomments()
                   $('#createdform').toggle();
                  
               });
+              db.transaction(function(tx) {
+                  tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'addCommentComments')
+                    {
+                        $('.votes-count .green-text').after(' '+unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'orderByTime')
+                    {
+                        $('.time_s').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'orderByLikes')
+                    {
+                        $('.like_s').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'ToggleForm')
+                    {
+                        $('#show-form-container .fa-comment').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'replyToComment')
+                    {
+                        $('.reply-to-comment .fa-reply').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'writeACommentPlaceholder')
+                    {
+                        $('.textcomment').attr('placeholder',unescape(results.rows.item(i).key_val));
+                        $('#frmfld_comment').attr('placeholder',unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'removeComment')
+                    {
+                        $('.delete-comment .fa-times').after(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'addCommentLikes')
+                    {
+                        $('.chklikes').append(' '+unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'addCommentDislikes')
+                    {
+                        $('.chkdislikes').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'replyCancelButton')
+                    {
+                        $('.reply-cancel').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'addCommentSubmit')
+                    {
+                        $('.reply-sub').html(unescape(results.rows.item(i).key_val)); 
+                        $('.submit_com').html(unescape(results.rows.item(i).key_val));                    
+                    }
+                     
+                     
+                    //writeACommentPlaceholder
+                   // addCommentLikes
+                    
+                    
+                    
+                 }
+           });
+        });
+          $(".loading_agenda_items").hide();  
+              $(".questions-container").show();      
+              
             }
        }); 
    });             

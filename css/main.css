@@ -10357,7 +10357,7 @@ ul {
     font-weight: 400;
 }
 .quiz-container .quiz-results-wrapper .quiz-btn-wrapper .btn.scoreboard {
-  background-color: #fff;
+  background-color: #fff !important;
   color: #94be3e;
 }
 .quiz-container .quiz-results-wrapper .quiz-btn-wrapper .btn.scoreboard:hover {

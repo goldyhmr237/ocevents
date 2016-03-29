@@ -81,10 +81,17 @@
                             </div>
         </div>
     </div>
-</header>                          <div class="container main-container user-profile-container">
+</header> 
+<div align="center" class="container loading_agenda_items main-container">
+       <br />
+        Loading Your Profile...
+        <br />
+        
+</div> 
+                         <div class="container main-container user-profile-container">
 	<div class="header-title row">
 		<p>
-            User profile		</p>
+            		</p>
 	</div>
 	<div class="user-profile-add-container ">
 		<div class="main-img-wrapper">
@@ -93,9 +100,9 @@
         <form enctype="multipart/form-data" method="post" action="">
                                    <div class="selfie_button">
                                     <div class="pic-upload selfie_capture">
-                <input type="button" value="Add a selfie to your profile"  onclick="showbuttons();">
+                <input class="addselfie" type="button" value=""  onclick="showbuttons();">
                 
-                Add a selfie to your profile            </div>
+                            </div>
                 <div class="pic-upload hidden_button" style="display:none;">
                 <input type="button" value="Choose a Photo"  onclick="getPhoto(pictureSource.PHOTOLIBRARY);">
                 
@@ -124,56 +131,56 @@
 
         <div class="user-info-panel show_info_user">
             <dl class="dl-horizontal">
-                                <dt>Username</dt>
+                                <dt class="all_username"></dt>
                 <dd class="myname"></dd>
                 
-                                <dt>Email</dt>
+                                <dt class="all_email"></dt>
                 <dd class="myemail"></dd>
                 
-                                <dt>Mobile</dt>
+                                <dt class="all_mobile"></dt>
                 <dd class="mymobile"></dd>
                 
-                                <dt class="all_gender">Gender</dt>
+                                <dt class="all_gender"></dt>
                 <dd class="mygender"></dd>
                             </dl>
             <div class="btns-wrapper">
-                <a class="btn user-info-edit-btn" href="#">Edit your profile</a>
+                <a class="btn user-info-edit-btn" href="#"></a>
             </div>
         </div>
 
         <div class="user-info-edit-form edit_info_user user-info-panel hidden">
                         <dl class="dl-horizontal clearfix">
-                <dt>
+                <dt id="all_fname">
                     First Name                </dt>
                 <dd>
                     <input class="form-control" id="fname_edit" type="text" name="data[fName]" value="">
                 </dd>
-                <dt>
+                <dt id="all_lname">
                     Last Name                </dt>
                 <dd>
                     <input class="form-control" id="lname_edit" type="text" name="data[lName]" value="">
                 </dd>
-                <dt>
+                <dt id="all_email">
                     Email                </dt>
                 <dd>
                     <input class="form-control" id="email_edit" type="text" name="data[eMail]" value="">
                 </dd>
-                <dt>
+                <dt id="all_remail">
                     Repeat email                </dt>
                 <dd>
                     <input class="form-control" id="emailrepeat_edit" type="text" name="data[email_repeat]" value="">
                 </dd>
-                <dt>
+                <dt id="all_mobile">
                     Mobile                </dt>
                 <dd>
                     <input class="form-control" id="mobile_edit" type="text" name="data[mobile]" value="">
                 </dd>
-                <dt>
+                <dt id="all_pwd">
                     SetNewPassword                </dt>
                 <dd>
                     <input class="form-control" id="pwd_edit" type="password" name="data[password]">
                 </dd>
-                <dt>
+                <dt id="all_rpwd">
                     RepeatNewPassword                </dt>
                 <dd>
                     <input class="form-control" id="pwdrepeat_edit" type="password" name="data[password_repeat]">
@@ -187,17 +194,12 @@
 	
 	</div>
     	<div class="user-facebook-link row facebook-link">
-        		<h4>Link your Facebook</h4>
+        		<h4></h4>
         <div class="facebook-description">
-            Linking your gamification experience with Facebook:
-<br><br>
-• Easy access to the gamification platform<br>
-• Earn points by connecting<br>
-• Get connected with your friends on Facebook<br>
-• Putting your profile image to it all        </div>
+                   </div>
 		<div class="facebook-btn-wrapper">
 			<a href="#" onclick="linkwithfacebook();">
-                <i class="fa fa-facebook"></i> Link your Facebook            </a>
+                <i class="fa fa-facebook"></i>            </a>
 		</div>
 	</div>
   <div class="user-facebook-link" id="unlinkfacebook">

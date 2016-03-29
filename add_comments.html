@@ -94,7 +94,7 @@
        <br />
         Action in Progress...
         <br />
-        <img src="img/loading.gif" />
+        
 </div>
 
  <div class="container main-container questions-container">
@@ -110,23 +110,23 @@
 			<div class="votes-count col-xs-6">
 				<i class="fa fa-comment"></i>
           <span class="green-text">0</span> 
-          All comments			
+          			
       </div>
 			<div class="votes-sort col-xs-6">
 				<span>Sort by:</span>
                 <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
-                                        <i class="fa fa-caret-down"></i> 
-                                        Time                </a>
+                                        <i class="fa fa-caret-down time_s"></i> 
+                                                        </a>
                 <a href="#" onclick="sortcomments('sort/likes/asc');">
-                                        <i class="fa fa-caret-down"></i> 
-                                        Likes                </a>
+                                        <i class="fa fa-caret-down like_s"></i> 
+                                                        </a>
 			</div>
 		</div>
                      <div class="comment_loop">
                      
                      <div id="show-form-container">
             <i class="fa fa-comment"></i>
-            Write post        </div>
+                    </div>
                      <div class="questions-filter-items main-questions-form-container" style="display:none;">
 		
 <div class="has-file-upload" id="createdform">
@@ -137,7 +137,7 @@
 <i class="gicon-camera file-upload" onclick="showimagebuttons();">
 </i></div>
 <div class="form-group textarea frmfld_comment" data-role="fieldcontain">
-<textarea placeholder="Partisipate, write a post" maxlength="4096" name="comment" id="frmfld_comment" class="form-control">
+<textarea placeholder="" maxlength="4096" name="comment" id="frmfld_comment" class="form-control">
 </textarea>
 <span><i class="fa fa-comment"></i></span></div>
 <div class="form-group hidden frmfld_presentation_id" data-role="fieldcontain">
@@ -162,7 +162,7 @@
         <button name="capture_image" style="display:none;" class="captureimage" onclick="captureImage();" type="button">Take a photo</button>
         <button name="upload_image" style="display:none;" class="uploadimage" onclick="uploadImage(pictureSource.PHOTOLIBRARY);" type="button">Choose a Photo</button>
         
-        <button name="submit" onclick="submitcomment();" class="submit_com" type="submit">Send</button>
+        <button name="submit" onclick="submitcomment();" class="submit_com" type="submit"></button>
         <img src="img/loading.gif" class="loading_send" style="display:none" />
         </div>
  

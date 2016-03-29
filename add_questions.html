@@ -110,27 +110,32 @@
 			<div class="votes-count col-xs-6">
 				<i class="fa fa-question"></i>
                 <span class="green-text">3</span> 
-                Questions / 
+                
                 <span class="small-text">2 
-                add question answers</span>
+                </span>
 			</div>
 			<div class="votes-sort col-xs-6">
 				<span>Sort by:</span>
                 <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
-                                        <i class="fa fa-caret-down"></i> 
-                                        Time                </a>
+                                        <i class="fa fa-caret-down time_s"></i> 
+                                                        </a>
                 <a href="#" onclick="sortcomments('sort/likes/asc');">
-                                        <i class="fa fa-caret-down"></i> 
-                                        Likes                </a>
+                                        <i class="fa fa-caret-down like_s"></i> 
+                                                     </a>
 			</div>
 		</div>
                      <div class="comment_loop">
-                     <div class="questions-filter-items main-questions-form-container">
+                     	<div id="show-form-container">
+			<i class="fa fa-comment"></i>
+					</div>
+                     <div class="questions-filter-items main-questions-form-container" style="display: none;">
 		
 <div class="has-file-upload" id="createdform">
-
+<div class="close-btn-wrapper">
+    <i class="fa fa-times close-btn"></i>
+</div>
 <div data-role="fieldcontain" class="form-group textarea frmfld_question">
-<textarea class="form-control" id="frmfld_question" name="question" maxlength="4096" placeholder="Write a question"></textarea>
+<textarea class="form-control" id="frmfld_question" name="question" maxlength="4096" placeholder=""></textarea>
 <span>
 <i class="fa fa-question"></i>
 </span></div>
@@ -153,7 +158,7 @@
 
 <div class="clearfix">
         <div class="frm_field submit" data-role="fieldcontain">
-        <button name="submit" onclick="submitquestion();" class="submit_com" type="submit">Send</button>
+        <button name="submit" onclick="submitquestion();" class="submit_com" type="submit"></button>
         <button name="submits" class="loading_send" style="display:none" type="submit">Sending...</button>
         </div>
  
