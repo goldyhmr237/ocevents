@@ -2772,22 +2772,7 @@ function loadallagenda() {
         loadcommonthings(); isLoggedIn();
         importfooter('agenda', 'agenda');
         
-        db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
-                  var len = results.rows.length;                  
-                  for (i = 0; i < len; i++) {                    
-                    if(results.rows.item(i).key_constant == 'Agenda')
-                    {
-                        $('.header-title h1').html(unescape(results.rows.item(i).key_val));                     
-                    }
-                    if(results.rows.item(i).key_constant == 'SeeCurrent')
-                    {
-                        $('.seealls span').html(unescape(results.rows.item(i).key_val));                     
-                    }
-                    
-                 }
-           });
-        });
+        
         
         $(".agenda-container").hide();
         //showAgendaData();
@@ -2800,7 +2785,23 @@ function loadallagenda() {
             dataType: "json",
             method: "GET",
             success: function(obj) {
-                showcommonagendalist(obj);
+                showcommonagendalist(obj); 
+                db.transaction(function(tx) {
+                  tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'Agenda')
+                    {
+                        $('.header-title h1').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SeeCurrent')
+                    {
+                        $('.seealls span').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    
+                 }
+               });
+            });
                 jQuery(".agenda-container").show();
                 jQuery(".loading_agenda_items").hide();
             }
@@ -2919,6 +2920,21 @@ function loadallsponsors() {
             method: "GET",
             success: function(obj) {
                 showcommonagendalist(obj);
+                db.transaction(function(tx) {
+                tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'isSponsorLabel')
+                    {
+                        $('.header-title h1').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SeeCurrent')
+                    {
+                        $('.seal').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                  }
+                });
+              });
                 jQuery(".agenda-container").show();
                 jQuery(".loading_agenda_items").hide();
 
@@ -2944,6 +2960,21 @@ function loadsponsors() {
             method: "GET",
             success: function(obj) {
                 showcommonagendalist(obj);
+                db.transaction(function(tx) {
+                tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'isSponsorLabel')
+                    {
+                        $('.header-title h1').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'SeeAll')
+                    {
+                        $('.seal').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                  }
+                });
+              });
                 jQuery(".agenda-container").show();
                 jQuery(".loading_agenda_items").hide();
 
