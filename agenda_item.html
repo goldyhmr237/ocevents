@@ -142,24 +142,42 @@
     	
     <div class="row">
 		<div class="agenda-item-rating-container" style="display:none;">
-			<span></span>
+			<span class="urrate"></span>
 			<div class="item-interactions">
-				
+				  <div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="1" data-original-title="" title="">		
+                    			        <a href="javascript:void(0)" onclick="rateme(1);" class="rate-star f1" data-rate="1">
+			            <i class="fa fa-star"></i>
+			        </a>
+                    			        <a href="javascript:void(0)" onclick="rateme(2);" class="rate-star f2" data-rate="2">
+			            <i class="fa fa-star"></i>
+			        </a>
+                    			        <a href="javascript:void(0)" onclick="rateme(3);" class="rate-star f3" data-rate="3">
+			            <i class="fa fa-star"></i>
+			        </a>
+                    			        <a href="javascript:void(0)" onclick="rateme(4);" class="rate-star f4" data-rate="4">
+			            <i class="fa fa-star"></i>
+			        </a>
+                    			        <a href="javascript:void(0)" onclick="rateme(5);" class="rate-star f5" data-rate="5">
+			            <i class="fa fa-star"></i>
+			        </a>
+                    				</div>
 			</div>   
-            			<!--a id="rate" href="javascript:void();">Rate</a>
+            			
+                  <a id="rate" onclick="submitrating();" class="hidden" href="javascript:void();"></a>
             			<div class="after-rating-container hidden">
                                 <p class="msg"></p>
                 <div class="comment-form hidden">
                     <div class="form-group">
-                        <input type="text" class="form-control comment-input" placeholder="Write a comment">
+                        <input type="text" class="form-control comment-input" placeholder="">
                         <span><i class="fa fa-comment"></i></span>
                     </div>
                     <div class="after-rate-btn-wrapper">
-                        <a class="cancel-btn send-comment" href="">Cancel</a>
-                        <a class="send-btn send-comment" href="">Send</a>					
+                        <a class="cancel-btn send-comment" onclick="submitagendacomment();" href="javascript:void(0)"></a>
+                        <a class="send-btn send-comment" href="javascript:void(0)"></a>					
                     </div>
                 </div>
-                			</div-->
+                			</div>
+                    
 		</div>
 	</div>
     </div>

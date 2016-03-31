@@ -1531,19 +1531,7 @@ function checkdefined(str) {
 function loadagendaitem() {
     jQuery(document).ready(function($) {
         
-        db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
-                  var len = results.rows.length;                  
-                  for (i = 0; i < len; i++) {                    
-                    if(results.rows.item(i).key_constant == 'YourRating')
-                    {
-                        $('.agenda-item-rating-container span').html(unescape(results.rows.item(i).key_val));                     
-                    }
-                    
-                    
-                 }
-           });
-        });
+        
         
         if(checkdefined(localStorage.direct_access_module_href) == 'yes')
         {
@@ -1582,7 +1570,7 @@ function loadagendaitem() {
           var main_url = localStorage.url + 'View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '?gvm_json=1';
           }
          loadcommonthings(); 
-        isLoggedIn();
+         isLoggedIn();
          //alert(main_url)
         $.ajax({
             url: main_url,
@@ -1703,28 +1691,71 @@ function loadagendaitem() {
 
                 if (data.hasRating == true) {
                     $('.agenda-item-rating-container').show();
-                    var ratin = data.rating.rating;
+                    var ratin = data.ratevalue;
                     //alert(ratin)
                     var maxratin = 5;
-                    $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="' + ratin + '" data-original-title="" title="">');
-                    
+                   // $('.item-interactions').html('<div class="item-interaction item-interaction-rate interaction-box" data-ratevalue="'+ratin+'" data-original-title="" title="">');
+                   $('.item-interaction-rate').attr('data-ratevalue',ratin);
+                    var str = '';
                     for(k = 1; k<=maxratin;k++)
                     {
-                        var active = '';
+                        //var active = '';
                         if(k <= ratin )
                         {
                          // alert(ratin)
-                          //alert(k)
-                          active = 'active'
+                         // alert(k)
+                          //active = 'active'
+                          $('.f'+k).addClass('active');
                         }
-                        $('.item-interactions').append('<a href="#" class="rate-star '+active+'" data-rate="1"><i class="fa fa-star"></i></a>');
+                    //    str += '<a href="#" class="rate-star '+active+'" data-rate="'+k+'"><i class="fa fa-star"></i></a>';
+                        
                       
+                    }
+                    //alert(str)
+                    //$('.item-interactions').append(str);
+                  // $('.item-interactions').append('</div>'); 
+                  if(data.displayComment == true)
+                  {
+                     $('#rate').removeClass('hidden'); 
+                     //$('.after-rating-container').removeClass('hidden'); 
+                  }
+                }
+                db.transaction(function(tx) {
+                tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'YourRating')
+                    {
+                        $('.agenda-item-rating-container .urrate').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'addRatingSubmit')
+                    {
+                        $('#rate').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'WriteCommentPlaceholder')
+                    {
+                        $('.comment-input').attr('placeholder',unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'RatingPlacedMessage')
+                    {
+                        $('.msg').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'addCommentSubmit')
+                    {
+                        $('.send-btn').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                    if(results.rows.item(i).key_constant == 'Cancel')
+                    {
+                        $('.cancel-btn').html(unescape(results.rows.item(i).key_val));                     
                     }
                     
                     
-                   $('.item-interactions').append('</div>'); 
-                }
-
+                    
+                     
+                    
+                 }
+           });
+        });
                 $(".agenda-item-container").show();
                 $(".loading_agenda_items").hide();
             }
@@ -1743,6 +1774,60 @@ function loadagendaitem() {
          }); */
 
     });
+}
+
+function submitrating()
+{
+    var main_url = localStorage.url + 'View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/submit/rating?gvm_json=1';
+    $('#rate').hide();
+    $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data:{rate:localStorage.ratin},
+            success: function(data) {
+            //alert(data)
+              $('.after-rating-container').removeClass('hidden');
+              $('.comment-form').removeClass('hidden');
+            }
+          });    
+}
+
+function submitagendacomment()
+{
+   var main_url = localStorage.url + 'View-presentation/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/submit/comment?gvm_json=1';
+   var comm = $('.comment-input').val();
+  // alert(comm)
+   var status = 1; 
+    $.ajax({
+            url: main_url,
+            dataType: "json",
+            method: "POST",
+            data:{comment:comm,status:status},
+            success: function(data) {
+            //alert(data)
+              //$('.after-rating-container').removeClass('hidden');
+              $('.comment-form').addClass('hidden');
+              
+              db.transaction(function(tx) {
+                tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length;                  
+                  for (i = 0; i < len; i++) {                    
+                    if(results.rows.item(i).key_constant == 'CommentPlacedMessage')
+                    {
+                        $('.msg').html(unescape(results.rows.item(i).key_val));                     
+                    }
+                  }
+                });
+              });                    
+            }
+          });   
+}
+
+function rateme(id)
+{
+  //alert(id)
+  localStorage.ratin = id;
 }
 
 //got to agenda item
