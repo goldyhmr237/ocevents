@@ -1253,7 +1253,10 @@ function loadgamification() {
                                      
                                  
                    //var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '");><img src="img/bigplay.png" style="width:auto !important;top:0px !important;padding: 10% 30% !important;" class="video_comment" /></div></div></div></div>';
-                   var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <iframe webkit-playsinline width="200" height="200" src="https://www.youtube.com/embed/GOiIxqcbzyM?feature=player_detailpage&playsinline=1" frameborder="0"></iframe></div></div></div></div>';
+                   //var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                   var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <iframe webkit-playsinline class="future-video video" src="http://player.vimeo.com/video/34104487&playsinline=1" frameborder="0"></iframe></div></div></div></div>'; 
+                  //<iframe webkit-playsinline width="200" height="200" src="https://www.youtube.com/embed/GOiIxqcbzyM?feature=player_detailpage&playsinline=1" frameborder="0"></iframe>
+                                                         
                     //alert(comment_video)
                    $('.welcome-slider').html(comment_video);
                 }
