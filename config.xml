@@ -38,6 +38,6 @@
 <gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance">
     <false/>
 </gap:config-file>
-    
+ <preference name="AllowInlineMediaPlayback" value="true" />   
 </widget>
 
