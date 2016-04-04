@@ -1098,12 +1098,14 @@ var login = function() {
                 //alert('here 1');
                 var newstr = JSON.stringify(response.authResponse.userID).replace(/\"/g, '');
                 var access_token = JSON.stringify(response.authResponse.accessToken).replace(/\"/g, '');
-
+                //alert(access_token)
                 var encoded_newstr = base64_encode(newstr);
                 var encoded_access_token = base64_encode(access_token);
                 // $("#login_submit").hide();
                 //   $(".loading").show();
-                //alert(localStorage.url);
+                alert(encoded_newstr);
+                alert(encoded_access_token);
+                alert(localStorage.event_id)
                 createTables();
                 var main_url = localStorage.url + 'api/index.php/auth/FBlogin?XDEBUG_SESSION_START=PHPSTORM';
                 jQuery.ajax({
@@ -1116,7 +1118,7 @@ var login = function() {
                         event_id: localStorage.event_id
                     },
                     success: function(obj) {
-                        // alert(obj.message);
+                         alert(obj.message);
                         if (obj.status == "success") {
 
 
