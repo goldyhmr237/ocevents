@@ -1103,9 +1103,9 @@ var login = function() {
                 var encoded_access_token = base64_encode(access_token);
                 // $("#login_submit").hide();
                 //   $(".loading").show();
-                alert(encoded_newstr);
-                alert(encoded_access_token);
-                alert(localStorage.event_id)
+              //  alert(encoded_newstr);
+               // alert(encoded_access_token);
+               // alert(localStorage.event_id)
                 createTables();
                 var main_url = localStorage.url + 'api/index.php/auth/FBlogin?XDEBUG_SESSION_START=PHPSTORM';
                 jQuery.ajax({
@@ -1114,11 +1114,12 @@ var login = function() {
                     method: "POST",
                     data: {
                         fb_access_token: encoded_access_token,
-                        fb_user_id: encoded_newstr,
-                        event_id: localStorage.event_id
+                        fb_user_id: encoded_newstr
+                        //event_id: localStorage.event_id
                     },
                     success: function(obj) {
                          alert(obj.message);
+                         alert(obj.status)
                         if (obj.status == "success") {
 
 
@@ -1641,8 +1642,6 @@ function loadagendaitem() {
                 {
                     $(".future-info").hide();
                 }
-                
-                
                 if (checkdefined(data.presentation.speaker_image) == 'yes') {
                     var imgurl = localStorage.url + 'resources/files/images/' + data.presentation.speaker_image.__extra.medium_file_name;
                     $(".agenda-main-img").attr("style", "background-image:url(" + imgurl + ")");
@@ -1657,11 +1656,14 @@ function loadagendaitem() {
                 }
                 //alert(checkundefined(data.videoSrc));
                 if (checkdefined(data.videoSrc) == 'yes') {
-                    $('.future-video').show();
+                    /*$('.future-video').show();
                     $('.future-video').attr('onclick', 'playvideo("' + localStorage.url + data.videoSrc + '")');
                     $('.playme').attr('src', localStorage.url + data.videoPoster);
                     $('.playme').attr('style', 'width:100%;height:400px;');
-                    $('.future-info').attr('style', 'position:relative;bottom:128px;');
+                    $('.future-info').attr('style', 'position:relative;bottom:128px;');  */
+                    
+                    var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url + data.videoSrc + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                    $('.here-video').html(comment_video);
                 }
                 if (checkdefined(data.presentation.embeded_html.value) == 'yes') {
                     $(".future-info").append('<div class="video-wrapper">' + data.presentation.embeded_html.value + '</div>');
@@ -4442,7 +4444,8 @@ function loadnotes()
               var comment_video = '';
               if(checkdefined(val.video_filename) == 'yes')
               {
-                  comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
+                  //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
+                  comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
                  
               }
                       var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i> '+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div>'+comment_image+comment_video+'</div>'+remstr+'</div>';
@@ -5773,7 +5776,8 @@ function showcomments()
               var comment_video = '';
               if(checkdefined(val.video_filename) == 'yes')
               {
-                  comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
+                  //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';  
+                  comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>';  
                  // alert(comment_video)
               }
               
