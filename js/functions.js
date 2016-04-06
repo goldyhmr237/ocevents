@@ -1118,11 +1118,12 @@ var login = function() {
                         //event_id: localStorage.event_id
                     },
                     success: function(obj) {
-                         alert(obj.message);
-                         alert(obj.status)
+                         //alert(obj.message);
+                         //alert(obj.status)
+                         //alert(JSON.stringify(obj));
                         if (obj.status == "success") {
 
-
+                           
                             var DIR_Name = 'oc_photos';
                             var a = new DirManager();
                             a.create_r(DIR_Name, Log('created successfully'));
