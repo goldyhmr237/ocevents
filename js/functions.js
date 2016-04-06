@@ -1123,25 +1123,25 @@ var login = function() {
                          //alert(JSON.stringify(obj));
                         if (obj.status == "success") {
 
-                            alert('1')
+                           // alert('1')
                             var DIR_Name = 'oc_photos';
-                            alert('2')
+                           // alert('2')
                             var a = new DirManager();
-                            alert('3')
+                            //alert('3')
                             a.create_r(DIR_Name, Log('created successfully'));
-                            alert('4')
+                            //alert('4')
                             var b = new FileManager();
-                            alert('5')
+                            //alert('5')
                             //alert(obj.data.image.image_src);	
                             var img_src = obj.data.image.image_src;
 
                             //var img_src = 'http://weknowyourdreams.com/images/love/love-09.jpg';
                             var image_name = getFileNameFromPath(img_src);
-                            // alert(img_src);
-                            //  alert(image_name);
+                             alert(img_src);
+                              alert(image_name);
                             var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
-
+                            alert('hi')
                             $.ajax({
                                 url: STR,
                                 dataType: "html",
@@ -1149,7 +1149,7 @@ var login = function() {
 
                                     //alert(DtatURL);  
                                     //adb logcat *:E		 
-                                     alert(obj.data.image.image_src);
+                                     //alert(obj.data.image.image_src);
                                     b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.image.image_src), function(theFile) {
 
                                         var ImgFullUrl = '';
@@ -1161,7 +1161,7 @@ var login = function() {
                                             tx.executeSql('INSERT INTO OCEVENTS_user (team,position,fb_user_id,fb_email,birthday_date,website,user_id,email,first_name,last_name,mobile,image_src,is_user_image,created,gender,player_code) VALUES ("' + obj.data.team + '","' + obj.data.position + '","' + obj.data.fb_user_id + '","' + obj.data.fb_email + '","' + obj.data.birthday_date + '","' + obj.data.website + '","' + obj.data.id + '","' + obj.data.email + '","' + obj.data.first_name + '","' + obj.data.last_name + '","' + obj.data.mobile + '","' + ImgFullUrl + '","' + obj.data.image.is_user_image + '","' + obj.data.created + '","' + obj.data.gender + '","' + obj.data.player_code + '")');
                                             localStorage.user_id = obj.data.id;
                                             localStorage.event_id = obj.data.event_id;
-                                            alert('started')
+                                            //alert('started')
                                             getLoggedInUser();                                             
                                            // login_process();
                                         });
