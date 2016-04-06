@@ -1119,15 +1119,19 @@ var login = function() {
                     },
                     success: function(obj) {
                          //alert(obj.message);
-                         alert(obj.status)
+                        // alert(obj.status)
                          //alert(JSON.stringify(obj));
                         if (obj.status == "success") {
 
-                           
+                            alert('1')
                             var DIR_Name = 'oc_photos';
+                            alert('2')
                             var a = new DirManager();
+                            alert('3')
                             a.create_r(DIR_Name, Log('created successfully'));
+                            alert('4')
                             var b = new FileManager();
+                            alert('5')
                             //alert(obj.data.image.image_src);	
                             var img_src = obj.data.image.image_src;
 
