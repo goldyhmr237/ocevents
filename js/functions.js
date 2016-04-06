@@ -1170,7 +1170,7 @@ var login = function() {
 
                         } else {
                             localStorage.user_fid = '';
-                            alert(obj.message); 
+                           // alert(obj.message); 
                         }
                     }
                 });
