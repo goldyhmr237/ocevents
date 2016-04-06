@@ -3967,7 +3967,7 @@ function importhomepage() {
         method: "GET",
         success: function(obj) {
             if (obj.status == 'error') {
-                alert(obj.message);
+                //alert(obj.message);
                 window.location.href = "index.html";
             } else {
                  db.transaction(function(tx) {
