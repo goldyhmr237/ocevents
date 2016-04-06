@@ -3714,7 +3714,7 @@ function loadprofile() {
                     
                     if(results.rows.item(i).key_constant == 'fbAccountLinkYourFacebook')
                     {
-                       $('.fa-facebook').after(unescape(results.rows.item(i).key_val));                      
+                       $('.fbs').after(unescape(results.rows.item(i).key_val));                      
                     }
                     if(results.rows.item(i).key_constant == 'fbAccountBenefits')
                     {
