@@ -79,9 +79,9 @@ cordova.define("com.phonegap.plugins.facebookconnect.FacebookConnectPlugin", fun
                 
                 FB.login(function (response) {
                     if (response.authResponse) {
-                        s(response);
+                        //s(response);
                     } else {
-                        f(response.status);
+                        //f(response.status);
                     }
                 }, permissionObj);
             },

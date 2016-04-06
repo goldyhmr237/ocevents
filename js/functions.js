@@ -1119,49 +1119,46 @@ var login = function() {
                     },
                     success: function(obj) {
                          //alert(obj.message);
-                        // alert(obj.status)
+                         //alert(obj.status)
                          //alert(JSON.stringify(obj));
                         if (obj.status == "success") {
 
-                           // alert('1')
-                            var DIR_Name = 'oc_photos';
-                           // alert('2')
+                           
+                            var DIR_Name = 'oc_photos'; 
                             var a = new DirManager();
-                            //alert('3')
-                            a.create_r(DIR_Name, Log('created successfully'));
-                            //alert('4')
-                            var b = new FileManager();
-                            //alert('5')
+                            a.create_r(DIR_Name, Log('created successfully')); 
+                            var b = new FileManager();   
                             //alert(obj.data.image.image_src);	
                             var img_src = obj.data.image.image_src;
 
                             //var img_src = 'http://weknowyourdreams.com/images/love/love-09.jpg';
                             var image_name = getFileNameFromPath(img_src);
                             // alert(img_src);
-                              //alert(image_name);
+                            //  alert(image_name);
                             var STR = localStorage.url + "api/index.php/main/base64Image?XDEBUG_SESSION_START=PHPSTORM&image=" + img_src;
 
-                            //alert('hi')
+
                             $.ajax({
                                 url: STR,
                                 dataType: "html",
                                 success: function(DtatURL) {
-                                    alert(DtatURL)
-                                   
+                                    
+                                    //alert(DtatURL);  
+                                    //adb logcat *:E		 
+                                    // alert(obj.data.image.image_src);
                                     b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.image.image_src), function(theFile) {
 
                                         var ImgFullUrl = '';
                                         ImgFullUrl = theFile.toURI();
-                                        alert(ImgFullUrl)
+                                        // alert(ImgFullUrl);
                                         db.transaction(function(tx) {
                                             tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_user (id integer primary key autoincrement,team,position,fb_user_id,fb_email,birthday_date,website, user_id, email, first_name, last_name,mobile, image_src, is_user_image, created,gender,player_code)');
                                             tx.executeSql("delete from OCEVENTS_user");
                                             tx.executeSql('INSERT INTO OCEVENTS_user (team,position,fb_user_id,fb_email,birthday_date,website,user_id,email,first_name,last_name,mobile,image_src,is_user_image,created,gender,player_code) VALUES ("' + obj.data.team + '","' + obj.data.position + '","' + obj.data.fb_user_id + '","' + obj.data.fb_email + '","' + obj.data.birthday_date + '","' + obj.data.website + '","' + obj.data.id + '","' + obj.data.email + '","' + obj.data.first_name + '","' + obj.data.last_name + '","' + obj.data.mobile + '","' + ImgFullUrl + '","' + obj.data.image.is_user_image + '","' + obj.data.created + '","' + obj.data.gender + '","' + obj.data.player_code + '")');
                                             localStorage.user_id = obj.data.id;
-                                            localStorage.event_id = obj.data.event_id;
-                                            
+                                            localStorage.event_id = obj.data.event_id;  
                                             getLoggedInUser();                                             
-                                           
+                                           // login_process();
                                         });
                                     });
 
@@ -3712,7 +3709,7 @@ function loadprofile() {
                     
                     if(results.rows.item(i).key_constant == 'fbAccountLinkYourFacebook')
                     {
-                       $('.fbs').after(unescape(results.rows.item(i).key_val));                      
+                       $('.fa-facebook').after(unescape(results.rows.item(i).key_val));                      
                     }
                     if(results.rows.item(i).key_constant == 'fbAccountBenefits')
                     {
