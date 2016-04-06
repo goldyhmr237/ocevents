@@ -1146,13 +1146,13 @@ var login = function() {
                                 url: STR,
                                 dataType: "html",
                                 success: function(DtatURL) {
-
+                                    alert(DtatURL)
                                    
                                     b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.image.image_src), function(theFile) {
 
                                         var ImgFullUrl = '';
                                         ImgFullUrl = theFile.toURI();
-                                        
+                                        alert(ImgFullUrl)
                                         db.transaction(function(tx) {
                                             tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_user (id integer primary key autoincrement,team,position,fb_user_id,fb_email,birthday_date,website, user_id, email, first_name, last_name,mobile, image_src, is_user_image, created,gender,player_code)');
                                             tx.executeSql("delete from OCEVENTS_user");
