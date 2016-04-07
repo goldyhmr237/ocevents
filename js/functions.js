@@ -630,6 +630,8 @@ function resetpassword() {
         },
         success: function(resp) {
             //alert(resp)
+            alert('Please check your email for new password!');
+            window.location.href = 'index.html';
             if (resp.login_success != '') {
                 alert(resp.login_success);
             } else {
@@ -3916,7 +3918,7 @@ function login_process() {
         success: function(obj) {
          //alert('here')
          //alert(JSON.stringify(obj));
-         alert('success')
+         //alert('success')
             $.each(obj.userQA, function(i, dataVal) {
                 localStorage.qlabel = obj.userQA[0].label;
                 if (i != 0 && dataVal.question != undefined && dataVal.answer != undefined) {
@@ -3930,7 +3932,7 @@ function login_process() {
            
             importhomepage();
         },error: function(XMLHttpRequest, textStatus, errorThrown) { 
-                    alert("Status: " + textStatus); 
+                   // alert("Status: " + textStatus); 
                     alert("Error: " + errorThrown); 
                     //alert("Errors: " + XMLHttpRequest); 
                 }  
