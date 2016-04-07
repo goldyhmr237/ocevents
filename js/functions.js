@@ -3729,7 +3729,7 @@ function loadprofile() {
               $(".user-profile-container").show();
         jQuery(".loading_agenda_items").hide();
         });
-    });
+    }); 
     var main_url = localStorage.url + 'user-profile/?gvm_json=1';
     jQuery.ajax({
         url: main_url,
@@ -3871,7 +3871,7 @@ function getLoggedInUser()
             tx.executeSql('update OCEVENTS_user set position = "' + obj.data.position + '", team = "'+obj.data.team+'"');
             //alert('done')
             localStorage.event_language = obj.data.event_language;
-            alert(localStorage.event_language)
+           // alert(localStorage.event_language)
             login_process();
           });                                
       }
@@ -3902,18 +3902,21 @@ function changecurrentevent(event_id)
 }
 
 function login_process() {
-alert('here')
+//alert('here')
     db.transaction(function(tx) {
         tx.executeSql('delete from OCEVENTS_qa');
         tx.executeSql('delete from OCEVENTS_homepage');
-    });
-    
-    var main_url = localStorage.url + 'user-profile/?gvm_json=1';
+    });    
+    var main_url = localStorage.url + 'user-profile/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+    //alert(main_url)
     jQuery.ajax({
         url: main_url,
         dataType: "json",
         method: "GET",
         success: function(obj) {
+         //alert('here')
+         //alert(JSON.stringify(obj));
+         alert('success')
             $.each(obj.userQA, function(i, dataVal) {
                 localStorage.qlabel = obj.userQA[0].label;
                 if (i != 0 && dataVal.question != undefined && dataVal.answer != undefined) {
@@ -3924,11 +3927,15 @@ alert('here')
                     }
                 }
             });
-            alert('here1')
+           
             importhomepage();
-        }
+        },error: function(XMLHttpRequest, textStatus, errorThrown) { 
+                    alert("Status: " + textStatus); 
+                    alert("Error: " + errorThrown); 
+                    //alert("Errors: " + XMLHttpRequest); 
+                }  
 
-    });
+    }); 
 
 }
 
@@ -3949,7 +3956,7 @@ function importhomepage() {
         dataType: "json",
         method: "GET",
         success: function(ss) {
-        alert('here 2');
+       // alert('here 2');
          db.transaction(function(tx) {
          tx.executeSql('delete from OCEVENTS_keywords');
         jQuery.each( ss.data, function( key, val ) {
