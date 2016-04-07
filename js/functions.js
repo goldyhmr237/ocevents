@@ -1123,7 +1123,7 @@ var login = function() {
                          //alert(JSON.stringify(obj));
                         if (obj.status == "success") {
 
-                           alert(obj.status)
+                          // alert(obj.status)
                             var DIR_Name = 'oc_photos'; 
                             var a = new DirManager();
                             a.create_r(DIR_Name, Log('created successfully')); 
@@ -1143,7 +1143,7 @@ var login = function() {
                                 dataType: "html",
                                 success: function(DtatURL) {
                                     
-                                    alert(DtatURL);  
+                                    //alert(DtatURL);  
                                     //adb logcat *:E		 
                                     // alert(obj.data.image.image_src);
                                     b.download_file(DtatURL, DIR_Name + '/', getFileNameFromPath(obj.data.image.image_src), function(theFile) {
@@ -1157,7 +1157,7 @@ var login = function() {
                                             tx.executeSql('INSERT INTO OCEVENTS_user (team,position,fb_user_id,fb_email,birthday_date,website,user_id,email,first_name,last_name,mobile,image_src,is_user_image,created,gender,player_code) VALUES ("' + obj.data.team + '","' + obj.data.position + '","' + obj.data.fb_user_id + '","' + obj.data.fb_email + '","' + obj.data.birthday_date + '","' + obj.data.website + '","' + obj.data.id + '","' + obj.data.email + '","' + obj.data.first_name + '","' + obj.data.last_name + '","' + obj.data.mobile + '","' + ImgFullUrl + '","' + obj.data.image.is_user_image + '","' + obj.data.created + '","' + obj.data.gender + '","' + obj.data.player_code + '")');
                                             localStorage.user_id = obj.data.id;
                                             localStorage.event_id = obj.data.event_id; 
-                                            alert('started') 
+                                            //alert('started') 
                                             getLoggedInUser();                                             
                                            // login_process();
                                         });
@@ -3871,7 +3871,7 @@ function getLoggedInUser()
             tx.executeSql('update OCEVENTS_user set position = "' + obj.data.position + '", team = "'+obj.data.team+'"');
             //alert('done')
             localStorage.event_language = obj.data.event_language;
-            //alert(localStorage.event_language)
+            alert(localStorage.event_language)
             login_process();
           });                                
       }
@@ -3902,6 +3902,7 @@ function changecurrentevent(event_id)
 }
 
 function login_process() {
+alert('here')
     db.transaction(function(tx) {
         tx.executeSql('delete from OCEVENTS_qa');
         tx.executeSql('delete from OCEVENTS_homepage');
@@ -3923,6 +3924,7 @@ function login_process() {
                     }
                 }
             });
+            alert('here1')
             importhomepage();
         }
 
@@ -3947,7 +3949,7 @@ function importhomepage() {
         dataType: "json",
         method: "GET",
         success: function(ss) {
-        //alert('here 1');
+        alert('here 2');
          db.transaction(function(tx) {
          tx.executeSql('delete from OCEVENTS_keywords');
         jQuery.each( ss.data, function( key, val ) {
