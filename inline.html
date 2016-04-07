@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" >
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width">
+
+	<title>HTML canvas video player</title>
+
+
+	<link rel="stylesheet" href="demo/demo.css">
+</head>
+
+<body>
+	<div class="header">
+	</div>    <!--button onclick="playPause()" style="
+    position: relative!important;
+    top: 50%!important;
+    z-index: 1000!important;left: 43%;!important;">Play/Pause</button> 
+   <br-->
+   
+	<div class="video-wrapper js-video-wrapper">
+  
+    
+      
+      
+		<div class="video-responsive">
+    
+    
+      
+			<video  class="video js-video">
+
+				<source src="http://www.quirksmode.org/html5/videos/big_buck_bunny.mp4" type="video/mp4">
+				Your browser does not support HTML5 video.
+			</video>
+
+			<canvas class="canvas js-canvas"></canvas>
+
+			<div class="video-timeline js-timeline">
+				<div class="video-timeline-passed js-timeline-passed">
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	
+	<script src="demo/demo.js"></script>
+
+	<script src="js/canvas-video-player.js"></script>
+
+
+	<script>
+		var canvasVideo = new CanvasVideoPlayer({
+			videoSelector: '.js-video',
+			canvasSelector: '.js-canvas',
+			timelineSelector: '.js-timeline',
+			audio: true
+      
+		});
+    
+ /*   var myVideo = document.getElementById("video1"); 
+
+function playPause() { 
+    if (myVideo.paused) 
+        myVideo.play(); 
+    else 
+        myVideo.pause(); 
+} */
+
+</script>
+</body>
+</html>
