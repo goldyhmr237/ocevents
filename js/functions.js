@@ -1306,6 +1306,18 @@ function loadgamification() {
     });
 }
 
+function playPause() { 
+    var myVideo = document.getElementById("video1");
+    
+    if (myVideo.paused) 
+    $('.video_comment').hide();
+        myVideo.play(); 
+    else 
+        myVideo.pause(); 
+        $('.video_comment').show();
+}
+
+
 function cancelagendasubmit()
 {
   $('.after-rating-container').addClass('hidden');
