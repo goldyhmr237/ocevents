@@ -499,8 +499,12 @@ div.img {
 .questions-container .alert {
     margin-top: 20px;
 }
-
-.video-container {
+.video-wrapper {
+    position: relative;
+    /*Comment for iphone only
+    padding-bottom: 56.25%; */  
+}
+.video-container {             
     width: 100%;
     position: absolute;
     height: 100%;

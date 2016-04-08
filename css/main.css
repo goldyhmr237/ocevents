@@ -13217,8 +13217,3 @@ footer .footer-menu .label-container label {
  position: relative; 
 }  */
 
-.video-wrapper {
-    position: relative;
-    /*Comment for iphone only*/
-   /* padding-bottom: 56.25%;*/   
-}
