@@ -499,10 +499,7 @@ div.img {
 .questions-container .alert {
     margin-top: 20px;
 }
-.video-wrapper {
-    position: relative;
-    /*padding-bottom: 56.25%;   */
-}
+
 .video-container {
     width: 100%;
     position: absolute;

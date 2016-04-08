@@ -13155,7 +13155,6 @@ footer .footer-menu .label-container label {
 	padding-bottom: 56.25%;
 	position: relative;
 	width: 100%;
-  
 }
 
 .canvas,
@@ -13216,4 +13215,10 @@ footer .footer-menu .label-container label {
 /*ONLY VALID FOR ANDROID BUILD, DON'T FORGET TO COMMENT FOR IOS BUILD*/
 /*header .header-login-wrapper {
  position: relative; 
-}*/ 
+}  */
+
+.video-wrapper {
+    position: relative;
+    /*Comment for iphone only*/
+   /* padding-bottom: 56.25%;*/   
+}
