@@ -4481,11 +4481,11 @@ function loadnotes()
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
                   //comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
                   
-                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
+                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
                   var canvasVideo = new CanvasVideoPlayer({
-                  			videoSelector: '.js-video',
-                  			canvasSelector: '.js-canvas',
-                  			timelineSelector: '.js-timeline',
+                  			videoSelector: '.js-video_'+val.instance_id,
+                  			canvasSelector: '.js-canvas_'+val.instance_id,
+                  			timelineSelector: '.js-timeline_'+val.instance_id,
                   			audio: true
                     });
               }
@@ -5756,8 +5756,8 @@ function showcomments()
               $('.votes-count .green-text').html(obj.countCommentInstances);
               //$('.comment_loop').html('&nbsp;'); 
               var prop = 'reply_to_comment_id';
-        var asc = true;
-        var element = obj.commentInstances.sort(function (a, b) {
+              var asc = true;
+              var element = obj.commentInstances.sort(function (a, b) {
         if (asc) {
           return (parseInt(a[prop]) > parseInt(b[prop])) ? 1 : ((parseInt(a[prop]) < parseInt(b[prop])) ? -1 : 0);
         } else {
@@ -5820,12 +5820,12 @@ function showcomments()
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';  
                   //comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
                   
-                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
+                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
                  // alert(comment_video)
                  var canvasVideo = new CanvasVideoPlayer({
-                  			videoSelector: '.js-video',
-                  			canvasSelector: '.js-canvas',
-                  			timelineSelector: '.js-timeline',
+                  			videoSelector: '.js-video_'+val.instance_id,
+                  			canvasSelector: '.js-canvas_'+val.instance_id,
+                  			timelineSelector: '.js-timeline_'+val.instance_id,
                   			audio: true
                     });
               }
