@@ -3207,9 +3207,7 @@ function loadfrienddetail() {
                       if(results.rows.item(i).key_constant == 'registrationQuestions')
                       {
                         $('.registration-questions-title').html(unescape(results.rows.item(i).key_val)+': ');                     
-                      } 
-                      
-                      
+                      }
                    }
                  });
                });       
@@ -4516,11 +4514,11 @@ function loadnotes()
                   var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
                    if(isIphone)
                    {
-                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video jsv_'+val.instance_id+' js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas jsc_'+val.instance_id+' js-canvas"></canvas><div class="video-timeline jst_'+val.instance_id+' js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
+                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
                   var canvasVideo = new CanvasVideoPlayer({
-                  			videoSelector: '.jsv_'+val.instance_id,
-                  			canvasSelector: '.jsc_'+val.instance_id,
-                  			timelineSelector: '.jst_'+val.instance_id,
+                  			videoSelector: '.js-video',
+                			canvasSelector: '.js-canvas',
+                			timelineSelector: '.js-timeline',
                   			audio: true
                     });
                   }
@@ -5863,12 +5861,12 @@ function showcomments()
                   var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
                    if(isIphone)
                    {
-                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video jsv_'+val.instance_id+' js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas jsc_'+val.instance_id+' js-canvas"></canvas><div class="video-timeline jst_'+val.instance_id+' js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
+                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
                  // alert(comment_video)
                  var canvasVideo = new CanvasVideoPlayer({
-                  			videoSelector: '.jsv_'+val.instance_id,
-                  			canvasSelector: '.jsc_'+val.instance_id,
-                  			timelineSelector: '.jst_'+val.instance_id,
+                  			videoSelector: '.js-video',
+                			canvasSelector: '.js-canvas',
+                			timelineSelector: '.js-timeline',
                   			audio: true
                     });
                     }
