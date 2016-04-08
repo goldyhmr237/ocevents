@@ -1252,6 +1252,7 @@ function loadgamification() {
                     $(".main_banner_image").attr('src', results.rows.item(0).main_banner_image);
                 }
                 // alert(results.rows.item(0).banner_video)
+                var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;  
                 if(checkdefined(results.rows.item(0).banner_video) == 'yes')
                 {
                    $('.welcome-slider').addClass('video'); 
@@ -1262,7 +1263,7 @@ function loadgamification() {
 });
                    $('.welcome-slider').html('');                                                                          
                                      
-                   var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;              
+                               
                    //var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '");><img src="img/bigplay.png" style="width:auto !important;top:0px !important;padding: 10% 30% !important;" class="video_comment" /></div></div></div></div>';
                    //
                   if(isIphone)
@@ -1712,6 +1713,7 @@ function loadagendaitem() {
                   $('.time-wrapper').hide();
                 }
                 //alert(checkundefined(data.videoSrc));
+                var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
                 if (checkdefined(data.videoSrc) == 'yes') {
                     /*$('.future-video').show();
                     $('.future-video').attr('onclick', 'playvideo("' + localStorage.url + data.videoSrc + '")');
@@ -1720,16 +1722,11 @@ function loadagendaitem() {
                     $('.future-info').attr('style', 'position:relative;bottom:128px;');  */
                     
                    // 
-                   var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
+                   
                    if(isIphone)
                    {
                      var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url + data.videoSrc + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
-                     var canvasVideo = new CanvasVideoPlayer({
-                  			videoSelector: '.js-video',
-                  			canvasSelector: '.js-canvas',
-                  			timelineSelector: '.js-timeline',
-                  			audio: true
-                    });
+                     
                    }
                    else
                    {
@@ -1740,6 +1737,15 @@ function loadagendaitem() {
                     
                     
                     $('.here-video').html(comment_video);
+                    if(isIphone)
+                   {
+                       var canvasVideo = new CanvasVideoPlayer({
+                      			videoSelector: '.js-video',
+                      			canvasSelector: '.js-canvas',
+                      			timelineSelector: '.js-timeline',
+                      			audio: true
+                        });
+                   }   
                 }
                 if (checkdefined(data.presentation.embeded_html.value) == 'yes') {
                     $(".future-info").append('<div class="video-wrapper">' + data.presentation.embeded_html.value + '</div>');
@@ -4525,21 +4531,17 @@ function loadnotes()
                   comment_image = '<div class="images-container clearfix"><div class="col-xs-6 col-md-4 col-lg-2 image-container"><span data-mfp-src="'+localStorage.url+'resources/files/images/'+val.images[0].large+'" class="mfp-image"><img alt="" src="'+localStorage.url+'resources/files/images/'+val.images[0].small+'" class="resize-img"></span></div></div>';
               }
               var comment_video = '';
+              var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
               if(checkdefined(val.video_filename) == 'yes')
               {
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
                   //
-                  var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
+                  
                    if(isIphone)
                    {
-                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
-                  var canvasVideo = new CanvasVideoPlayer({
-                  			videoSelector: '.js-video',
-                			canvasSelector: '.js-canvas',
-                			timelineSelector: '.js-timeline',
-                  			audio: true
-                    });
-                  }
+                      comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
+                  
+                   }
                   else
                   {
                      comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
@@ -4547,7 +4549,16 @@ function loadnotes()
                     
               }
                       var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i> '+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div>'+comment_image+comment_video+'</div>'+remstr+'</div>';
-                   $('#allnotes').append(str);   
+                   $('#allnotes').append(str); 
+                   if(isIphone && checkdefined(val.video_filename) == 'yes')
+                   {
+                      var canvasVideo = new CanvasVideoPlayer({
+                    			videoSelector: '.js-video',
+                  			canvasSelector: '.js-canvas',
+                  			timelineSelector: '.js-timeline',
+                    			audio: true
+                      });
+                   }  
                   });
                   
                }
@@ -5872,26 +5883,21 @@ function showcomments()
                    comment_image = '<div class="images-container clearfix"><div class="col-xs-6 col-md-4 col-lg-2 image-container"><span data-mfp-src="'+localStorage.url+'resources/files/images/'+val.images[0].large+'" class="mfp-image"><img alt="" src="'+localStorage.url+'resources/files/images/'+val.images[0].small+'" class="resize-img"></span></div></div>';
               }
               var comment_video = '';
+              var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
               if(checkdefined(val.video_filename) == 'yes')
               {
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';  
                   //
-                  var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
+                  
                    if(isIphone)
                    {
-                  comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
-                 // alert(comment_video)
-                 var canvasVideo = new CanvasVideoPlayer({
-                  			videoSelector: '.js-video',
-                			canvasSelector: '.js-canvas',
-                			timelineSelector: '.js-timeline',
-                  			audio: true
-                    });
-                    }
-                    else
-                    {
-                      comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
-                    }
+                       comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
+                       // alert(comment_video)
+                   }
+                  else
+                  {
+                    comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                  }
               }
               
               
@@ -5904,6 +5910,15 @@ function showcomments()
              {
                  $('#comment_'+val.reply_to_comment_id).after('<div id="comment_'+val.instance_id+'" class="questions-item-container row comment-reply"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div>'+comment_image+'<div class="clearfix">'+delete_button+'<div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-thumbs-up"></i>'+val.likes+' </div><div class="dislikes-count"><i class="fa fa-thumbs-down"></i>'+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment"><i class="fa fa-reply"></i></div></div></div><div class="questions-filter-items reply-form clearfix hide"><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control textcomment" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder=""></textarea><span><i class="fa fa-comment"></i></span></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" class="reply-sub" onclick="submitcomment('+val.instance_id+')" name="submit"></button><button type="submit" class="btn-danger reply-cancel" name="cancel"></button></div></div></div>');
               }
+              if(isIphone && checkdefined(val.video_filename) == 'yes')
+              {
+                  var canvasVideo = new CanvasVideoPlayer({
+                			videoSelector: '.js-video',
+              			canvasSelector: '.js-canvas',
+              			timelineSelector: '.js-timeline',
+                			audio: true
+                  });
+              } 
              
         });
             
