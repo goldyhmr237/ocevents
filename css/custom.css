@@ -501,7 +501,7 @@ div.img {
 }
 .video-wrapper {
     position: relative;
-    padding-bottom: 56.25%;
+    /*padding-bottom: 56.25%;   */
 }
 .video-container {
     width: 100%;
