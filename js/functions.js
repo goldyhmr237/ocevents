@@ -1265,7 +1265,7 @@ function loadgamification() {
                    //
                   if(isIphone)
                   {
-                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div><img src="img/bigplay.png" style="z-index:999999;width:auto !important;top:-100px !important;padding: 10% 30% !important;" class="video_comment" /></div></div>';
+                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div><img src="img/bigplay.png" style="z-index:999999;width:auto !important;top:-200px !important;padding: 10% 30% !important;" class="video_comment" /></div></div>';
                      var canvasVideo = new CanvasVideoPlayer({
                 			videoSelector: '.js-video',
                 			canvasSelector: '.js-canvas',
