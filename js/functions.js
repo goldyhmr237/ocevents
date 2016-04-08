@@ -1280,7 +1280,8 @@ function loadgamification() {
                   			videoSelector: '.js-video',
                 			canvasSelector: '.js-canvas',
                 			timelineSelector: '.js-timeline',
-                  			audio: true
+                  			audio: true,
+                        autoplay: true,
                     });
                   }
                   else
