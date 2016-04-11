@@ -1290,7 +1290,7 @@ function loadgamification() {
                       $('.hideme_video').click(function(){
                           $('.hideme_video').hide();
                           $('.video-item').show();
-                          $('#video1').play(); ;
+                          $('#video1').play();
                       });
                        
                   }
