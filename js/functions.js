@@ -3893,7 +3893,7 @@ function loadcommonthings() {
      
         tx.executeSql("SELECT * FROM OCEVENTS_user", [], function(tx, results) {
             var len = results.rows.length;
-            alert(results.rows.item(0).image_src)
+            //alert(results.rows.item(0).image_src)
             $("#profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $("#medium_profile_pic").attr("style", "background-image:url(" + results.rows.item(0).image_src + ")");
             $(".log-info p").html(results.rows.item(0).first_name + " " + results.rows.item(0).last_name);
