@@ -1339,6 +1339,7 @@ function hidev()
   alert('here')
   jQuery('.video-item').show();  
   jQuery('.hideme_video').hide();
+  $('#video1').trigger( "play" );
 }
 
 function playPause() { 
