@@ -13222,3 +13222,7 @@ footer .footer-menu .label-container label {
     /*Comment for iphone only 
     padding-bottom: 56.25%;    */
 }
+.video-item
+{
+  display:none;
+}
