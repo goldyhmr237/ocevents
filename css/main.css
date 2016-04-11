@@ -13210,6 +13210,10 @@ footer .footer-menu .label-container label {
 .video-wrapper:hover .video-timeline-event {
 	background: #790c17;
 	opacity: 0.8;
+} 
+.video-item
+{
+  /*display:none;  */
 }
 
 /*ONLY VALID FOR ANDROID BUILD, DON'T FORGET TO COMMENT FOR IOS BUILD*/
@@ -13221,8 +13225,4 @@ footer .footer-menu .label-container label {
     position: relative;
     /*Comment for iphone only 
     padding-bottom: 56.25%;    */
-}
-.video-item
-{
-  display:none;
 }
