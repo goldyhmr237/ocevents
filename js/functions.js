@@ -1279,7 +1279,7 @@ function loadgamification() {
                       
                 		}); */
                      //alert(localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video)
-                     var comment_video = '<div class="hideme_video video-wrapper"><img src="img/playvideo.png" /></div><div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video id="video1" class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
+                     var comment_video = '<div class="hideme_video" onclick="hidev();"><img src="img/playvideo.png" /></div><div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video id="video1" class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
                        $('.welcome-slider').html(comment_video); 
                     var canvasVideo = new CanvasVideoPlayer({
                     			videoSelector: '.js-video',
@@ -1288,13 +1288,7 @@ function loadgamification() {
                     			audio: true
                       });
                       
-                      $('.hideme_video').click(function(){
-                          
-                          $('.video-item').show();  
-                          $('.hideme_video').hide();
-                          //$('#video1').trigger('click');
-                          //$('.js-video').trigger('click');
-                      });
+                     
                        
                   }
                   else
@@ -1339,6 +1333,13 @@ function loadgamification() {
     });
     });
 } 
+
+function hidev()
+{
+  alert('here')
+  jQuery('.video-item').show();  
+  jQuery('.hideme_video').hide();
+}
 
 function playPause() { 
     var myVideo = document.getElementById("video1");
