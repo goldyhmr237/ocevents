@@ -5891,7 +5891,7 @@ function showcomments()
                   
                    if(isIphone)
                    {
-                       comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
+                       comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
                        // alert(comment_video)
                    }
                   else
@@ -5913,9 +5913,9 @@ function showcomments()
               if(isIphone && checkdefined(val.video_filename) == 'yes')
               {
                   var canvasVideo = new CanvasVideoPlayer({
-                			videoSelector: '.js-video',
-              			canvasSelector: '.js-canvas',
-              			timelineSelector: '.js-timeline',
+                			videoSelector: '.js-video_'+val.instance_id,
+              			canvasSelector: '.js-canvas_'+val.instance_id,
+              			timelineSelector: '.js-timeline_'+val.instance_id,
                 			audio: true
                   });
               } 
