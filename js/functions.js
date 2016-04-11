@@ -1280,7 +1280,7 @@ function loadgamification() {
                 		}); */
                      //alert(localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video)
                      //<div class="hideme_video" onclick="hidev();"><img src="img/playvideo.png" /></div>
-                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video id="video1" class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><img src="img/dummy_video.gif" style="position:relative;bottom:25px;left:75px;" width="40" height="40" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
+                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video id="video1" class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><img src="img/dummy_video.gif" style="position:relative;" width="80" height="80" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
                        $('.welcome-slider').html(comment_video); 
                     var canvasVideo = new CanvasVideoPlayer({
                     			videoSelector: '.js-video',
