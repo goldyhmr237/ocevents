@@ -1289,8 +1289,9 @@ function loadgamification() {
                       });
                       $('.video-item').hide();
                       $('.hideme_video').click(function(){
+                          
+                          $('.video-item').show();  
                           $('.hideme_video').hide();
-                          $('.video-item').show();
                           //$('#video1').trigger('click');
                           //$('.js-video').trigger('click');
                       });
