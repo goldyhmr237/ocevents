@@ -1287,7 +1287,7 @@ function loadgamification() {
                   			timelineSelector: '.js-timeline',
                     			audio: true
                       });
-                      $('.video-item').hide();
+                      //$('.video-item').hide();
                      /* $('.hideme_video').click(function(){
                           
                           $('.video-item').show();  
