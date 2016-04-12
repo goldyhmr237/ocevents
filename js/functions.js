@@ -1734,7 +1734,7 @@ function loadagendaitem() {
                    
                    if(isIphone)
                    {
-                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url + data.videoSrc + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
+                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url + data.videoSrc + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><img onclick="hideimg();" src="img/dummy_video.gif" style="width:auto !important;top:-140px !important;left:85px;" id="myimg" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
                      
                    }
                    else
@@ -4549,7 +4549,7 @@ function loadnotes()
                   
                    if(isIphone)
                    {
-                      comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
+                      comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><img onclick="hideimg();" src="img/dummy_video.gif" style="width:auto !important;top:-140px !important;left:85px;" id="myimg" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
                   
                    }
                   else
@@ -5901,7 +5901,7 @@ function showcomments()
                   
                    if(isIphone)
                    {
-                       comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
+                       comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><img onclick="hideimg();" src="img/dummy_video.gif" style="width:auto !important;top:-140px !important;left:85px;" id="myimg" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
                        // alert(comment_video)
                    }
                   else
