@@ -4727,7 +4727,17 @@ function removenote(id)
                         con = unescape(results.rows.item(i).key_val);                        
                       }
                    }
-  if(confirm(con))
+  
+  navigator.notification.alert(
+            'You are the winner!',  // message
+            alertDismissed,         // callback
+            'Game Over',            // title
+            'Done'                  // buttonName
+        );
+        function alertDismissed() {
+       alert('do something');
+    }
+  /*if(confirm(con))
   {
     var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-' + localStorage.event_id +'/delete/'+id+'/?gvm_json=1';
           $.ajax({
@@ -4738,7 +4748,7 @@ function removenote(id)
                 window.location.href = 'notes.html';
              }
         });
-   }  
+   } */ 
                  });
                  });     
          
