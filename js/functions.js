@@ -4728,7 +4728,7 @@ function removenote(id)
                       }
                    }
   
-  navigator.notification.alert(
+ /* navigator.notification.alert(
             'You are the winner!',  // message
             alertDismissed,         // callback
             'Game Over',            // title
@@ -4736,8 +4736,8 @@ function removenote(id)
         );
         function alertDismissed() {
        alert('do something');
-    }
-  /*if(confirm(con))
+    } */
+  if(confirm(con))
   {
     var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-' + localStorage.event_id +'/delete/'+id+'/?gvm_json=1';
           $.ajax({
@@ -4748,7 +4748,7 @@ function removenote(id)
                 window.location.href = 'notes.html';
              }
         });
-   } */ 
+   }  
                  });
                  });     
          
