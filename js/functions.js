@@ -946,7 +946,49 @@ function base64_encode(data) {
 
 //UnLink your facebook account
 function unlinkwithfacebook() {
-    if (confirm('Are you sure you want to unlink facebook from your account?')) {
+
+
+   db.transaction(function(tx) {
+                  tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length; 
+                   
+                  var pr = '';  
+                  var ys = '';  
+                  var noo = '';              
+                  for (i = 0; i < len; i++) {
+                    
+                      if(results.rows.item(i).key_constant == 'GFacebookSettings')
+                      {
+                         pr = unescape(results.rows.item(i).key_val); 
+                      } 
+                      if(results.rows.item(i).key_constant == 'Yes')
+                      {
+                         ys = unescape(results.rows.item(i).key_val); 
+                      }
+                      if(results.rows.item(i).key_constant == 'NO')
+                      {
+                         noo = unescape(results.rows.item(i).key_val); 
+                      }  
+                      
+                   }
+                   var con = 'Are you sure you want to unlink facebook from your account?';
+    
+
+    // Show a custom confirmation dialog
+    //
+    
+        navigator.notification.confirm(
+            con,  // message
+            onConfirmFacebook,              // callback to invoke with index of button pressed
+            pr,            // title
+            ys+","+noo         // buttonLabels
+        );
+   
+
+      });
+    });
+
+    /*if (confirm('Are you sure you want to unlink facebook from your account?')) {
 
 
         var main_url = localStorage.url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
@@ -964,7 +1006,28 @@ function unlinkwithfacebook() {
             }
 
         });
-    }
+    }   */
+}
+
+function onConfirmFacebook(buttonIndex) {
+        if(buttonIndex == '1')
+        {
+            var main_url = localStorage.url + 'api/index.php/auth/FBRemoveData?XDEBUG_SESSION_START=PHPSTORM';
+              jQuery.ajax({
+                  url: main_url,
+                  dataType: "json",
+                  method: "POST",
+                  data: {
+                      event_id: localStorage.event_id
+                  },
+                  success: function(obj) {
+                      alert("Facebook Account Unlinked Successfully");
+                      jQuery(".facebook-link").show();
+                      jQuery("#unlinkfacebook").hide();
+                  }
+      
+              });
+        }
 }
 
 //Link your facebook account
@@ -1205,6 +1268,8 @@ function logout() {
                 localStorage.event_id = '';
                 localStorage.short_url = '';
                 localStorage.url = '';
+                localStorage.noteid = '';
+                localStorage.instance = '';
                 if (localStorage.fid != '' && localStorage.fid != undefined && localStorage.fid != null) {
                     facebookConnectPlugin.logout(
                         function(response) {
@@ -4713,19 +4778,53 @@ function addnote()
     }       
 }
 
+ function onConfirmNote(buttonIndex) {
+        if(buttonIndex == '1')
+        {
+            //alert('hello');
+            var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-' + localStorage.event_id +'/delete/'+localStorage.noteid+'/?gvm_json=1';
+            $.ajax({
+              url: main_url,
+              dataType: "json",
+              method: "GET",
+              success: function(obj) {
+                window.location.href = 'notes.html';
+             }
+        });
+        }
+      
+    }
+
 //function to remove note
 function removenote(id)
 {
    
+   localStorage.noteid = id;
    db.transaction(function(tx) {
                   tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
                   var len = results.rows.length; 
-                  var con = '';                 
+                  var con = ''; 
+                  var pr = '';  
+                  var ys = '';  
+                  var noo = '';              
                   for (i = 0; i < len; i++) {
                       if(results.rows.item(i).key_constant == 'commentDeleteConfirmation')
                       {
                         con = unescape(results.rows.item(i).key_val);                        
                       }
+                      if(results.rows.item(i).key_constant == 'Notes')
+                      {
+                         pr = unescape(results.rows.item(i).key_val); 
+                      } 
+                      if(results.rows.item(i).key_constant == 'Yes')
+                      {
+                         ys = unescape(results.rows.item(i).key_val); 
+                      }
+                      if(results.rows.item(i).key_constant == 'NO')
+                      {
+                         noo = unescape(results.rows.item(i).key_val); 
+                      }  
+                      
                    }
   
  /* navigator.notification.alert(
@@ -4737,7 +4836,19 @@ function removenote(id)
         function alertDismissed() {
        alert('do something');
     } */
-  if(confirm(con))
+    
+
+    // Show a custom confirmation dialog
+    //
+    
+        navigator.notification.confirm(
+            con,  // message
+            onConfirmNote,              // callback to invoke with index of button pressed
+            pr,            // title
+            ys+","+noo         // buttonLabels
+        );
+   
+  /*if(confirm(con))
   {
     var main_url = localStorage.url + 'Add-note/-/'+localStorage.short_url+'-' + localStorage.event_id +'/delete/'+id+'/?gvm_json=1';
           $.ajax({
@@ -4748,9 +4859,9 @@ function removenote(id)
                 window.location.href = 'notes.html';
              }
         });
-   }  
-                 });
-                 });     
+        } */ 
+      });
+    });     
          
 }
 
@@ -6026,10 +6137,72 @@ function showcomments()
    });             
 }
 
+function onConfirmComment(buttonIndex) {
+// alert('You selected button ' + buttonIndex);
+if(buttonIndex == '1')
+{
+      var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/delete/'+localStorage.instance+'/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+      jQuery.ajax({
+        url: main_url,
+        dataType: "json",
+        method: "GET",
+        success: function(resp) {
+            window.location.href="add_comments.html";
+            localStorage.message = 'Deleted';
+        }
+      });
+  }
+}
+
+
 //function to delete a comment
 function deletecomment(instance_id)
 {
-  if(confirm("Delete confirmation"))
+   localStorage.instance = instance_id;
+   db.transaction(function(tx) {
+                  tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
+                  var len = results.rows.length; 
+                  var con = ''; 
+                  var pr = '';  
+                  var ys = '';  
+                  var noo = '';              
+                  for (i = 0; i < len; i++) {
+                      if(results.rows.item(i).key_constant == 'commentDeleteConfirmation')
+                      {
+                        con = unescape(results.rows.item(i).key_val);                        
+                      }
+                      if(results.rows.item(i).key_constant == 'Comments')
+                      {
+                         pr = unescape(results.rows.item(i).key_val); 
+                      } 
+                      if(results.rows.item(i).key_constant == 'Yes')
+                      {
+                         ys = unescape(results.rows.item(i).key_val); 
+                      }
+                      if(results.rows.item(i).key_constant == 'NO')
+                      {
+                         noo = unescape(results.rows.item(i).key_val); 
+                      }  
+                      
+                   }
+    
+
+    // Show a custom confirmation dialog
+    //
+    
+        navigator.notification.confirm(
+            con,  // message
+            onConfirmComment,              // callback to invoke with index of button pressed
+            pr,            // title
+            ys+","+noo         // buttonLabels
+        );
+   
+
+      });
+    });
+  
+  
+  /*if(confirm("Delete confirmation"))
   {
       var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/delete/'+instance_id+'/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
       jQuery.ajax({
@@ -6041,7 +6214,7 @@ function deletecomment(instance_id)
             localStorage.message = 'Deleted';
         }
       });
-  }  
+  }  */
 }
 
 //function to submit a comment
