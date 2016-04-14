@@ -13218,14 +13218,25 @@ footer .footer-menu .label-container label {
   padding: 20px;
   padding-bottom:0px;
 }
+.form-group {
+    margin-bottom: 5px;
+}
+.login-page-container .form-container .btn-wrapper div{
+padding-top:0px;
+padding-bottom:6px;
+}
+.login-page-container .form-container .btn-wrapper button
+{
+  margin-bottom:10px;
+}
 /*ONLY VALID FOR ANDROID BUILD, DON'T FORGET TO COMMENT FOR IOS BUILD*/
-/*header .header-login-wrapper {
+header .header-login-wrapper {
  position: relative; 
-}  */ 
+}  
 
 .video-wrapper {
     position: relative;
-    /*Comment for iphone only 
-    padding-bottom: 56.25%;  */
+    /*Comment for iphone only */
+    padding-bottom: 56.25%;  
 }
 
