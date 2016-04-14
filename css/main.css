@@ -13239,4 +13239,6 @@ header .header-login-wrapper {
     /*Comment for iphone only */
     padding-bottom: 56.25%;  
 }
-
+body{
+  background-color:#0A2C4B !important;
+}
