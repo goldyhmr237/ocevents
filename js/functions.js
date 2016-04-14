@@ -611,11 +611,14 @@ function resetpassword() {
   var fld_l_url = jQuery("#fld_l_url").val();
     
   if (fld_l_url == '') {
-      alert("Please Enter Url");
+      //alert("Please Enter Url");
+     shownotification('Please Enter Url',"Login");
       return false;
   }
   else if (email == '') {
-      alert("Please Enter Email");
+      //alert("Please Enter Email");
+      shownotification('Please Enter Email',"Login");
+      
       return false;
   }
   else
@@ -630,12 +633,13 @@ function resetpassword() {
         },
         success: function(resp) {
             //alert(resp)
-            alert('Please check your email for new password!');
+            //alert('Please check your email for new password!');
+            shownotification('Please check your email for new password!',"Login");        
             window.location.href = 'index.html';
             if (resp.login_success != '') {
-                alert(resp.login_success);
+               shownotification(resp.login_success,"Login");
             } else {
-                alert(resp.login_error);
+                shownotification(resp.login_error,"Login");                
             }
         }
     });
@@ -686,6 +690,16 @@ function removeprofileimage() {
     });
 }
 
+function shownotification(msg,title)
+{
+  navigator.notification.alert(
+                        msg,  // message
+                        alertDismissed,         // callback
+                        title,            // title
+                        'Ok'                  // buttonName
+              );
+}
+
 //function to update profile
 function saveprofile() {
     jQuery(document).ready(function($) {
@@ -699,36 +713,42 @@ function saveprofile() {
         var password = $("#pwd_edit").val();
         var password_repeat = $("#pwdrepeat_edit").val();
         if (fname == '') {
-            alert("Please Enter First Name");
+            //alert("Please Enter First Name");
+            shownotification("Please Enter First Name","Profile");
             $("#fname_edit").focus();
             return false;
         }
         if (lname == '') {
-            alert("Please Enter Last Name");
+            //alert("Please Enter Last Name");
+            shownotification("Please Enter Last Name","Profile");
             $("#lname_edit").focus();
             return false;
         }
 
         if (email == '') {
-            alert("Please Enter Your Email Address");
+            //alert("Please Enter Your Email Address");
+            shownotification("Please Enter Your Email Address","Profile");
             $("#email_edit").focus();
             return false;
         }
         if (repeat_email != '') {
             if (email != repeat_email) {
-                alert("Emails Don't Match");
+                //alert("Emails Don't Match");
+                shownotification("Emails Don't Match","Profile");
                 $("#emailrepeat_edit").focus();
                 return false;
             }
         }
         if (mobile == '') {
-            alert("Please Enter Mobile Number");
+            //alert("Please Enter Mobile Number");
+            shownotification("Please Enter Mobile Number","Profile");
             $("#mobile_edit").focus();
             return false;
         }
         if (password != '') {
             if (password !== password_repeat) {
-                alert("Passwords Don't Match");
+                //alert("Passwords Don't Match");
+                shownotification("Passwords Don't Match","Profile");
                 $("#pwdrepeat_edit").focus();
                 return false;
             }
@@ -775,7 +795,8 @@ function saveprofile() {
                         //$(".user-info-cancel-btn").trigger("click");  
                     });
                 } else {
-                    alert(obj.message);
+                    //alert(obj.message);
+                    shownotification(obj.message,"Profile");
                 }
                 //alert(obj.message);
             }
@@ -823,16 +844,20 @@ function loginme() {
         var fld_l_url = $("#fld_l_url").val();
         var fld_l_password = $("#fld_l_password").val();
         if (fld_l_email == '') {
-            alert("Please Enter Your Email");
+            //alert("Please Enter Your Email");
+            shownotification("Please Enter Your Email","Login");
             return false;
         } else if (fld_l_password == '') {
-            alert("Please Enter Your Password");
+            //alert("Please Enter Your Password");
+            shownotification("Please Enter Your Password","Login");
             return false;
         } else if (fld_l_url == '') {
-            alert("Please Enter Url");
+            //alert("Please Enter Url");
+            shownotification("Please Enter Url","Login");
             return false;
         } else if(!checkURL(fld_l_url)){
-              alert("Please Enter A Valid Url");
+              //alert("Please Enter A Valid Url");
+              shownotification("Please Enter A Valid Url","Login");
             return false;
         } else {
          $("#login_submit").hide();
@@ -855,7 +880,8 @@ function loginme() {
                 success: function(obj) {
                     //alert(obj.status);
                     if (obj.status == 'error') {
-                        alert(obj.message);
+                        //alert(obj.message);
+                        shownotification(obj.message,"Profile");
                         $("#login_submit").show();
                         $(".loading").hide();
                     } else {
@@ -898,7 +924,8 @@ function loginme() {
 
                 },fail: function()
                 {
-                  alert('failed') ;
+                  //alert('failed') ;
+                  shownotification("Failed","Login");
                 }
             });
         }
@@ -1021,13 +1048,26 @@ function onConfirmFacebook(buttonIndex) {
                       event_id: localStorage.event_id
                   },
                   success: function(obj) {
-                      alert("Facebook Account Unlinked Successfully");
+                      //navigator.notification.alert();
+                      navigator.notification.alert(
+                        'Facebook Account Unlinked Successfully',  // message
+                        alertDismissed,         // callback
+                        'Facebook',            // title
+                        'Ok'                  // buttonName
+                    );
+      
+                     // alert("Facebook Account Unlinked Successfully");
                       jQuery(".facebook-link").show();
                       jQuery("#unlinkfacebook").hide();
                   }
       
               });
         }
+}
+
+function alertDismissed()
+{
+  //do nothing here
 }
 
 //Link your facebook account
@@ -1076,7 +1116,8 @@ function linkwithfacebook() {
                         } else {
                             localStorage.user_fid = '';
 
-                            alert("Error in Fb Login");
+                           // alert("Error in Fb Login");
+                           shownotification("Error in Fb Login","Login");
 
 
                         }
@@ -1149,10 +1190,12 @@ var login = function() {
         var fld_l_url = jQuery("#fld_l_url").val();
           if(fld_l_url == '')
           {
-             alert('Please Enter Url');
+             //alert('Please Enter Url');
+             shownotification("Please Enter Url","Fb Login");
           }
           else if(!checkURL(fld_l_url)){
-              alert("Please Enter A Valid Url");
+             // alert("Please Enter A Valid Url");
+             shownotification("Please Enter A Valid Url","Fb Login");
             return false;
         }
            else {
@@ -1285,7 +1328,8 @@ function logout() {
                 window.location.href = "index.html";
             } else {
                 localStorage.user_id = '';
-                alert(obj.message);
+                //alert(obj.message);
+                shownotification(obj.message,"Logout");
                 window.location.href = "index.html";
             }
         }
@@ -4691,7 +4735,8 @@ function addnote()
     var code = jQuery('#frmfld_note').val();
     if(checkdefined(code) != 'yes')
     {
-        alert('Please enter note!');
+        //alert('Please enter note!');
+        shownotification('Please enter note!',"Note");
         $('#frmfld_note').focus();
     }
     else
@@ -5110,7 +5155,8 @@ function submitseekeranswer()
     var code = jQuery('#frmfld_code').val();
     if(checkdefined(code) != 'yes')
     {
-        alert('Please submit your answer!');
+        //alert('Please submit your answer!');
+        shownotification('Please submit your answer!',"Seeker");
         $('#frmfld_code').focus();
     }
     else
