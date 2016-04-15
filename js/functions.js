@@ -1845,7 +1845,7 @@ function loadagendaitem() {
                    
                    if(isIphone)
                    {
-                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><img onclick="hideimg();" src="img/dummy_video.gif" style="width:auto !important;top:-200px !important;left:85px;" id="myimg" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
+                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
                      
                    }
                    else
