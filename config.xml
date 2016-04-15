@@ -22,11 +22,11 @@
 <!-- iPhone / iPod Touch  -->
 <icon src="icons/LiveIcon.png" gap:platform="ios" width="57" height="57" />
 <icon src="icons/LiveIcon.png" gap:platform="ios" width="120" height="120" />
-<splash src="icons/screen.png" gap:platform="ios" />
+<!--splash src="icons/screen.png" gap:platform="ios" /-->
 
 
 <icon src="icons/LiveIcon.png" gap:platform="android" />
-<splash src="icons/screen.png" gap:platform="android" />
+<!--splash src="icons/screen.png" gap:platform="android" /-->
 
 <!--icon src="icons/OCEM4-Android_57.png" gap:platform="android" /-->
 <gap:plugin name="cordova-plugin-camera" source="pgb"  />
@@ -39,6 +39,8 @@
 <gap:plugin name="cordova-plugin-file-transfer" source="pgb"  />
 <gap:plugin name="cordova-plugin-dialogs" source="pgb"  />
 <gap:plugin name="cordova-plugin-media-capture" source="pgb"  />
+
+<gap:plugin name="cordova-plugin-splashscreen" source="pgb"  />
 <gap:plugin name="com.phonegap.plugins.facebookconnect" version="0.8.0">
      <param name="APP_ID" value="1419525454987223" />
      <param name="APP_NAME" value="EVENTMANAGER" />
@@ -46,6 +48,33 @@
 <gap:config-file platform="ios" parent="UIStatusBarHidden">
     <true/>
 </gap:config-file>
+
+<platform name="android">
+    <!-- you can use any density that exists in the Android project -->
+    <splash src="icons/screen.png" density="land-hdpi"/>
+    <splash src="icons/screen.png" density="land-ldpi"/>
+    <splash src="icons/screen.png" density="land-mdpi"/>
+    <splash src="icons/screen.png" density="land-xhdpi"/>
+
+    <splash src="icons/screen.png" density="port-hdpi"/>
+    <splash src="icons/screen.png" density="port-ldpi"/>
+    <splash src="icons/screen.png" density="port-mdpi"/>
+    <splash src="icons/screen.png" density="port-xhdpi"/>
+</platform>
+
+<platform name="ios">
+    <!-- images are determined by width and height. The following are supported -->
+    <splash src="icons/screen.png" width="320" height="480"/>
+    <splash src="icons/screen.png" width="640" height="960"/>
+    <splash src="icons/screen.png" width="768" height="1024"/>
+    <splash src="icons/screen.png" width="1536" height="2048"/>
+    <splash src="icons/screen.png" width="1024" height="768"/>
+    <splash src="icons/screen.png" width="2048" height="1536"/>
+    <splash src="icons/screen.png" width="640" height="1136"/>
+    <splash src="icons/screen.png" width="750" height="1334"/>
+    <splash src="icons/screen.png" width="1242" height="2208"/>
+    <splash src="icons/screen.png" width="2208" height="1242"/>
+</platform>
 
 <gap:config-file platform="ios" parent="UIViewControllerBasedStatusBarAppearance">
     <false/>
