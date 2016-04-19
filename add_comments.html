@@ -114,16 +114,16 @@
       </div>
 			<div class="votes-sort col-xs-6">
 				<span>Sort by:</span>
-                <a class="active" href="#" onclick="sortcomments('sort/timestamp/desc');">
-                                        <i class="fa fa-caret-down time_s"></i> 
+                <a class="active sortbytime" href="#" onclick="sortcomments('timestamp','desc');">
+                                        <i class="fa fa-caret-up time_s"></i> 
                                                         </a>
-                <a href="#" onclick="sortcomments('sort/likes/asc');">
-                                        <i class="fa fa-caret-down like_s"></i> 
+                <a href="#" class="sortbylikes" onclick="sortcomments('likes','asc');">
+                                        <i class="fa fa-caret-up like_s"></i> 
                                                         </a>
 			</div>
 		</div>
                      <div class="comment_loop">
-                     
+                       <div class="inner_comment_loop"> </div>
                      <div id="show-form-container">
             <i class="fa fa-comment"></i>
                     </div>

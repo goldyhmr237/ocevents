@@ -13231,11 +13231,11 @@ padding-bottom:6px;
 }
 /*ONLY VALID FOR ANDROID BUILD, DON'T FORGET TO COMMENT FOR IOS BUILD*/
 /*header .header-login-wrapper {
- position: relative; 
-}   */
-
+ position: relative;  
+}   
+                  */
 .video-wrapper {
     position: relative;
-    /*Comment for iphone only 
-    padding-bottom: 56.25%;    */
+    /*Comment for iphone only  
+    padding-bottom: 56.25%;   */ 
 }
