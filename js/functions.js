@@ -5761,7 +5761,8 @@ function add_questions()
 function sortquestions(s,r)
 {
   $('.loading_agenda_items').show();
-  // alert(r)
+   //alert(r)
+   //alert(s)
   var l = 1;
   if(s == 'timestamp')
   {
@@ -5830,6 +5831,8 @@ function showquestions(sortby,sortdr,l)
             dataType: "json",
             method: "GET",
             success: function(obj) {
+            //alert(obj.sortDir)
+            //alert(obj.sortBy)
                $(".close-btn-wrapper").click(function()
                {
                   //alert("here")
@@ -5854,6 +5857,7 @@ function showquestions(sortby,sortdr,l)
               
               
               $.each(obj.questionInstances, function(key, val) {
+              
               var image_url = localStorage.url+'resources/gamification/img/avatar-placeholder.png';
               if(checkdefined(val.image) == "yes")
               {
@@ -6105,7 +6109,8 @@ function showcomments(sortby,sortdr,l)
             dataType: "json",
             method: "GET",
             success: function(obj) {
-            //alert(obj.sortDir)
+            //console.log(obj.sortDir)
+            //console.log(obj.sortBy)
             $('.questions-item-container').remove();
             $(".close-btn-wrapper").click(function()
             {
