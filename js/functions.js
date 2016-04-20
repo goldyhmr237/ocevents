@@ -1429,6 +1429,52 @@ function loadgamification() {
                     $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
                 }
                 $(".main-container").html('<iframe src=' + results.rows.item(0).iframe_url + ' id="homepage-content" />');
+                $('.main-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
+                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="100002" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation"><li><a target="homepage-content" href="/OCI_News">News</a></li><li><a target="homepage-content" href="/The-team">The team</a></li><li><a target="homepage-content" href="/Media">Media</a><ul><li><a target="homepage-content" href="/Cool-videos-October-2015">Cool videos October 2015</a></li></ul></li><li><a target="homepage-content" href="/Activities-Calendar">Activities</a></li><li><a target="homepage-content" href="/OCHeroes">Heroes</a><ul><li><a target="homepage-content" href="/OC-Heroes/Youtube-ContentID">Mike Walsh </a></li></ul></li><li><a target="homepage-content" href="/Tools">Tools</a><ul><li><a target="homepage-content" href="/Tools/Clients">Clients</a></li><li><a target="homepage-content" href="/Tools/External-Iframes">External Iframes</a><ul><li><a target="homepage-content" href="/Tools/External-Iframes/sitepoint-com">sitepoint.com</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Medium">Medium</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Jira">Jira</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Analytics-not_unique-0">IPSOS</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Analytics-not_unique-0-not_unique-0-not_unique-0">IPSOS home</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/SaraBeauty">SaraBeauty</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Analytics">Analytics</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Bitcoin">Bitcoin (BTC)</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/BTC-USD">BTC - USD</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/sitepoint-com-not_unique-1">onecoin</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Hangouts">Hangouts</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Spotify">Spotify</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Hangouts-not_unique-3">Hangouts</a></li></ul></li><li><a target="homepage-content" href="/Tools/New-TLD-s">New TLD´s</a><ul><li><a target="homepage-content" href="/Tools/New-TLD-s/TLD-Rules-ICANN">TLD Rules ICANN</a></li></ul></li><li><a target="homepage-content" href="/Tools/Tasks-Marketing-automation">Tasks-Marketing automation</a></li><li><a target="homepage-content" href="/Tools/Periscope">Periscope Live</a></li><li><a target="homepage-content" href="/Tools/Pimpm-my-device">Pimpm my device</a></li></ul></li><li><a target="homepage-content" href="/OC-Cast">OC Cast</a></li></div></ul><div id="gamificationMobileSearch"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div></div></div>');
+                $(document).ready(function () {
+        if (typeof $("#homepage-content")[0] !== "undefined") {
+            var navCounter = 0;
+
+            function getNavigation() {
+                if (navCounter == 20) {
+                    return false;
+                }
+
+                if (typeof $("#homepage-content")[0].contentWindow.sbGamificationNavigation !== "undefined") {
+                    $(".gamification-footer-menu").addClass('show-menu');
+                    $(".gamification-mobile-aside-wrapper").addClass('show-menu');
+
+                    $("#gamification-footer-menu").on("click", function () {
+                        $("#gamificationMobileMenu").show();
+                        $("#gamificationMobileSearch").hide();
+                        $('.main-wrapper').toggleClass("gamification-mobile-aside-wrapper-open");
+
+                        return false;
+                    });
+
+
+                    var sbGamificationNavigation = $("#homepage-content")[0].contentWindow.sbGamificationNavigation;
+
+                    $("#sitebuilderNavigation").html(sbGamificationNavigation);
+
+                    $("#sitebuilderNavigation li a").on("click", function () {
+                        $("#sitebuilderNavigation li a").removeClass("active");
+                        $(this).addClass("active");
+                    });
+                } else {
+                    setTimeout(function () {
+                        getNavigation();
+                    }, 1000);
+                }
+
+                navCounter++;
+
+                return true;
+            }
+
+            getNavigation();
+        }
+    });
             }
             else if (results.rows.item(0).type == 'module') {
                     localStorage.agenda_id = results.rows.item(0).main_title;
