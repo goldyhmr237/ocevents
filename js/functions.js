@@ -826,7 +826,8 @@ function createTables()
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footerlinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
-      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_keywords (id integer primary key autoincrement,key_constant,key_val)'); 
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_keywords (id integer primary key autoincrement,key_constant,key_val)');
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_menu (id integer primary key autoincrement,parent_id,title,url)'); 
   }); 
 }
 
@@ -1429,16 +1430,32 @@ function loadgamification() {
                     $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
                 }
                 $(".main-container").html('<iframe src=' + results.rows.item(0).iframe_url + ' id="homepage-content" />');
+                tx.executeSql("SELECT * FROM OCEVENTS_menu", [], function(tx, results) {
+                var len = results.rows.length;
+                //alert(len)
+                if(len > 0)
+                {
                 $('.main-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
-                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="100002" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation"><li><a target="homepage-content" href="/OCI_News">News</a></li><li><a target="homepage-content" href="/The-team">The team</a></li><li><a target="homepage-content" href="/Media">Media</a><ul><li><a target="homepage-content" href="/Cool-videos-October-2015">Cool videos October 2015</a></li></ul></li><li><a target="homepage-content" href="/Activities-Calendar">Activities</a></li><li><a target="homepage-content" href="/OCHeroes">Heroes</a><ul><li><a target="homepage-content" href="/OC-Heroes/Youtube-ContentID">Mike Walsh </a></li></ul></li><li><a target="homepage-content" href="/Tools">Tools</a><ul><li><a target="homepage-content" href="/Tools/Clients">Clients</a></li><li><a target="homepage-content" href="/Tools/External-Iframes">External Iframes</a><ul><li><a target="homepage-content" href="/Tools/External-Iframes/sitepoint-com">sitepoint.com</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Medium">Medium</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Jira">Jira</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Analytics-not_unique-0">IPSOS</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Analytics-not_unique-0-not_unique-0-not_unique-0">IPSOS home</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/SaraBeauty">SaraBeauty</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Analytics">Analytics</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Bitcoin">Bitcoin (BTC)</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/BTC-USD">BTC - USD</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/sitepoint-com-not_unique-1">onecoin</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Hangouts">Hangouts</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Spotify">Spotify</a></li><li><a target="homepage-content" href="/Tools/External-Iframes/Hangouts-not_unique-3">Hangouts</a></li></ul></li><li><a target="homepage-content" href="/Tools/New-TLD-s">New TLD´s</a><ul><li><a target="homepage-content" href="/Tools/New-TLD-s/TLD-Rules-ICANN">TLD Rules ICANN</a></li></ul></li><li><a target="homepage-content" href="/Tools/Tasks-Marketing-automation">Tasks-Marketing automation</a></li><li><a target="homepage-content" href="/Tools/Periscope">Periscope Live</a></li><li><a target="homepage-content" href="/Tools/Pimpm-my-device">Pimpm my device</a></li></ul></li><li><a target="homepage-content" href="/OC-Cast">OC Cast</a></li></div></ul><div id="gamificationMobileSearch"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div></div></div>');
+                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="100002" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation">');
+                
+              /* for (i = 0; i < len; i++) {  
+                if(results.rows.item(i).parent_id == '0' || results.rows.item(i).parent_id == 0)
+                {
+                  $('.main-container').append('<li><a target="_blank" href="'+results.rows.item(i).url+'">'+results.rows.item(i).title+'</a></li>');
+                } 
+              } */
+                $('.main-container').append('</div></ul><div id="gamificationMobileSearch"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div></div></div>');
+                
+                
+                
                 $(document).ready(function () {
-        if (typeof $("#homepage-content")[0] !== "undefined") {
-            var navCounter = 0;
-
-            function getNavigation() {
-                if (navCounter == 20) {
-                    return false;
-                }
+                if (typeof $("#homepage-content")[0] !== "undefined") {
+                  var navCounter = 0;
+      
+                  function getNavigation() {
+                      if (navCounter == 20) {
+                          return false;
+                    }
 
                 if (typeof $("#homepage-content")[0].contentWindow.sbGamificationNavigation !== "undefined") {
                     $(".gamification-footer-menu").addClass('show-menu');
@@ -1456,8 +1473,14 @@ function loadgamification() {
                     var sbGamificationNavigation = $("#homepage-content")[0].contentWindow.sbGamificationNavigation;
 
                     $("#sitebuilderNavigation").html(sbGamificationNavigation);
-
+                    $("#sitebuilderNavigation li a").each(function(k, v)
+                    {
+                      var href = $(v).attr("href"); 
+                       //alert(localStorage.url+href);
+                       $(v).attr("href",localStorage.url+href);
+                    });
                     $("#sitebuilderNavigation li a").on("click", function () {
+                    
                         $("#sitebuilderNavigation li a").removeClass("active");
                         $(this).addClass("active");
                     });
@@ -1475,6 +1498,9 @@ function loadgamification() {
             getNavigation();
         }
     });
+    }
+    });
+    
             }
             else if (results.rows.item(0).type == 'module') {
                     localStorage.agenda_id = results.rows.item(0).main_title;
@@ -4214,9 +4240,24 @@ function importhomepage() {
           
         });
          }); 
-          
+        var ajax_url = localStorage.url + 'api/index.php/main/sitebuilderMenu?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
+        jQuery.ajax({
+        url: ajax_url,
+        dataType: "json",
+        method: "GET",
+        success: function(obja) {
+        
+         if(checkdefined(obja.data) == 'yes')
+         {
+            db.transaction(function(tx) {
+            tx.executeSql('delete from OCEVENTS_menu');
+                $.each( obja.data, function( ke, va ) {
+                   tx.executeSql('INSERT INTO OCEVENTS_menu (parent_id,title,url) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '")');
+                });
+            });
+         } 
           var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
-    jQuery.ajax({
+          jQuery.ajax({
         url: main_url,
         dataType: "json",
         method: "GET",
@@ -4390,6 +4431,9 @@ function importhomepage() {
             }
         }
     });
+    }
+        
+        });
         }
         
         });
@@ -6667,6 +6711,7 @@ function truncatealltables() {
         tx.executeSql('delete from OCEVENTS_footermorelinks');
         tx.executeSql('delete from OCEVENTS_events');
         tx.executeSql('delete from OCEVENTS_keywords');
+        tx.executeSql('delete from OCEVENTS_menu');
         
     });
 }
