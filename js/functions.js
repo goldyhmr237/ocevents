@@ -1497,6 +1497,7 @@ function loadgamification() {
 
             getNavigation();
         }
+        document.write('<style>.hidden-xs, tr.hidden-xs, th.hidden-xs, td.hidden-xs {     display: none !important; }</style>');
     });
     }
     });
