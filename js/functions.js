@@ -827,7 +827,7 @@ function createTables()
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_footermorelinks (id integer primary key autoincrement,name,icon,friends_requests_count,menu_text)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_events (id integer primary key autoincrement,event_id,user_id,title,description,logo,image, short_url)');
       tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_keywords (id integer primary key autoincrement,key_constant,key_val)');
-      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_menu (id integer primary key autoincrement,parent_id,title,url)'); 
+      tx.executeSql('CREATE TABLE IF NOT EXISTS OCEVENTS_menu (id integer primary key autoincrement,parent_id,title,url,website_id)'); 
   }); 
 }
 
@@ -1435,21 +1435,22 @@ function loadgamification() {
                 //alert(len)
                 if(len > 0)
                 {
-                $('.main-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
-                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="100002" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation">');
                 
+                   var website_id =  results.rows.item(0).website_id;
+                  // alert(website_id)
+                $(document).ready(function () {
+                if (typeof $("#homepage-content")[0] !== "undefined") {
+                $('.main-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
+                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="'+website_id+'" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation">');
+                 
               /* for (i = 0; i < len; i++) {  
                 if(results.rows.item(i).parent_id == '0' || results.rows.item(i).parent_id == 0)
                 {
                   $('.main-container').append('<li><a target="_blank" href="'+results.rows.item(i).url+'">'+results.rows.item(i).title+'</a></li>');
                 } 
               } */
-                $('.main-container').append('</div></ul><div id="gamificationMobileSearch"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div></div></div>');
+                $('.main-container').append('</div></ul><div id="gamificationMobileSearch" style="display:none;"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div></div></div>');
                 
-                
-                
-                $(document).ready(function () {
-                if (typeof $("#homepage-content")[0] !== "undefined") {
                   var navCounter = 0;
       
                   function getNavigation() {
@@ -1463,7 +1464,7 @@ function loadgamification() {
 
                     $("#gamification-footer-menu").on("click", function () {
                         $("#gamificationMobileMenu").show();
-                        $("#gamificationMobileSearch").hide();
+                        $("#gamificationMobileSearch").hide(); 
                         $('.main-wrapper').toggleClass("gamification-mobile-aside-wrapper-open");
 
                         return false;
@@ -1497,7 +1498,80 @@ function loadgamification() {
 
             getNavigation();
         }
-        $('.main-wrapper, header').attr('display','display: none !important;');
+        //$(' .main-wrapper > header:first-child').css('display','none !important;');
+        $("#homepage-content").contents().find("header").css("display", "none !important;");
+        
+    var interval = 300;
+    var websiteId = $('.mobile_search_string').data('website');
+    $('.mobile_search_string').keyup(function () {
+        var filter = $(this).val();
+         //alert(websiteId)
+          //alert(filter)
+            //alert(localStorage.url + 'modules/sitebuilder/ajax/fe_search_ws.php')
+        if (filter != "") {
+            delay(function () {
+                $.ajax({
+                    type: "POST",
+                    url: localStorage.url + 'modules/sitebuilder/ajax/fe_search_ws.php',
+                    data: {
+                        action: 'search_string',
+                        filter: filter,
+                        website_id: websiteId
+                    },
+                    dataType: 'json',
+                    success: function (jsonData) {
+                        //alert(JSON.stringify(jsonData));
+                        var res = '';
+
+                        if (jsonData['status'] != 'error') {
+
+                            $.each(jsonData['results']['categories'], function (ci, category) {
+
+                                if (category['count'] > 0) {
+
+                                    res += '<div class="mobile-aside-result-list-title">\
+											' + category["title"] + ':\
+										</div>\
+										<ul class="search-results-list">';
+
+                                    $.each(category["search"], function (si, searchResult) {
+                                        res += '<li>\
+												<a href="' + searchResult["url"] + '" target="homepage-content">\
+													 ' + searchResult["title"] + '\
+												</a>\
+											</li>';
+                                    });
+
+                                    res += '</ul>';
+
+                                }
+
+                            });
+
+                        } else { //No results
+                            res += jsonData['no_results'];
+                        }
+                        //alert(res)
+                        $('.mobile-aside-search-results').html(res);
+                        $('#gamificationMobileMenu').hide();
+                        $('#gamificationMobileSearch').show();
+                    }
+                });
+            }, interval);
+        } else {
+            $("#gamificationMobileMenu").show();
+            $("#gamificationMobileSearch").hide();
+        }
+    });
+    
+var delay = (function () {
+    var timer = 0;
+    return function (callback, ms) {
+        clearTimeout(timer);
+        timer = setTimeout(callback, ms);
+    };
+})();           
+        
         
     });
     }
@@ -4254,7 +4328,7 @@ function importhomepage() {
             db.transaction(function(tx) {
             tx.executeSql('delete from OCEVENTS_menu');
                 $.each( obja.data, function( ke, va ) {
-                   tx.executeSql('INSERT INTO OCEVENTS_menu (parent_id,title,url) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '")');
+                   tx.executeSql('INSERT INTO OCEVENTS_menu (parent_id,title,url,website_id) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '","' + va.website_id + '")');
                 });
             });
          } 

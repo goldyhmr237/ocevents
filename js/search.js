@@ -3,7 +3,9 @@ $(function () {
     var websiteId = $('.mobile_search_string').data('website');
     $('.mobile_search_string').keyup(function () {
         var filter = $(this).val();
-
+         alert(websiteId)
+          alert(filter)
+            alert(localStorage.url + 'modules/sitebuilder/ajax/fe_search_ws.php')
         if (filter != "") {
             delay(function () {
                 $.ajax({
@@ -16,7 +18,7 @@ $(function () {
                     },
                     dataType: 'json',
                     success: function (jsonData) {
-
+                        alert(JSON.stringify(jsonData));
                         var res = '';
 
                         if (jsonData['status'] != 'error') {
