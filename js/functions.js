@@ -1497,7 +1497,7 @@ function loadgamification() {
 
             getNavigation();
         }
-        $('.hidden-xs').attr('display','display: none !important;');
+        $('.main-wrapper, header').attr('display','display: none !important;');
         
     });
     }
