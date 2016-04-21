@@ -1440,11 +1440,9 @@ function loadgamification() {
                 $(document).ready(function () {
                 if (typeof $("#homepage-content")[0] !== "undefined") {
                 $('.main-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
-                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="'+website_id+'" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation"></div></ul>');
+                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="'+website_id+'" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation"></div></ul></div></div>');
                 
-                $('.main-container').append('<div id="gamificationMobileSearch"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div>');
-                
-                $('.main-container').append('</div></div>');
+           
                 
                   var navCounter = 0;
       
@@ -5403,25 +5401,91 @@ function voting()
     window.location.href="voting.html"
 }
 
+function sortvoting(s,r)
+{
+  $('.loading_agenda_items').show();
+ // alert(r)
+  var l = 1;
+  if(s == 'title_value')
+  {
+     $('.sortbylikes').removeClass('active');
+     $('.sortbytime').addClass('active');
+  }
+  if(s == 'votes_count')
+  {
+     $('.sortbytime').removeClass('active');
+     $('.sortbylikes').addClass('active');
+  }
+  if(r == 'desc' && s == 'title_value')
+  {
+     $('.time_s').removeClass('fa-caret-up');
+     $('.time_s').addClass('fa-caret-down');      
+     $('.sortbytime').attr('onclick',"sortvoting('title_value','asc')");
+  }
+  if(r == 'asc' && s == 'title_value')
+  {
+    $('.time_s').removeClass('fa-caret-down');
+    $('.time_s').addClass('fa-caret-up');
+    $('.sortbytime').attr('onclick',"sortvoting('title_value','desc')");
+  }
+  
+  if(r == 'asc' && s == 'votes_count')
+  {
+    $('.like_s').removeClass('fa-caret-down');
+    $('.like_s').addClass('fa-caret-up');
+    $('.sortbylikes').attr('onclick',"sortvoting('votes_count','desc')");
+  }
+  
+  if(r == 'desc' && s == 'votes_count')
+  {
+     //$('.time_s').removeClass('fa-caret-up');
+     // $('.time_s').addClass('fa-caret-down');
+     $('.like_s').removeClass('fa-caret-up');
+     $('.like_s').addClass('fa-caret-down');
+     $('.sortbylikes').attr('onclick',"sortvoting('votes_count','asc')");
+  }
+  
+   //alert(s)
+   //alert(r)
+   showvoting(s,r,l)
+}
 
 
 //function to show voting
-function showvoting()
+function showvoting(sortby,sortdr,l)
 {
    jQuery(document).ready(function($) {
-        loadcommonthings(); isLoggedIn();
+        if(l != 1)
+        {
+          loadcommonthings(); isLoggedIn();
+        }
         $(".voting-page-container").hide();
+        if(checkdefined(sortby) != 'yes')
+        {
+          sortby = 'title_value';
+        }
+        if(checkdefined(sortdr) != 'yes')
+        {
+          sortdr = 'asc';
+        }
+        
+ 
+
+
+        
+        
         
         //alert('hi')
         importfooter('Add-vote/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id, 'agenda');
-        var main_url = localStorage.url + 'Add-vote/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/?gvm_json=1';
-
+        var main_urgl = localStorage.url + 'Add-vote/-/'+localStorage.short_url+'-' + localStorage.event_id + '/' + localStorage.agenda_id + '/sort/'+sortby+'/'+sortdr+'/?XDEBUG_SESSION_START=PHPSTORM&gvm_json=1';
+          //alert(main_urgl)
         $.ajax({
-            url: main_url,
+            url: main_urgl,
             dataType: "json",
             method: "GET",
             success: function(obj) {
-               
+                 //alert(obj.sortBy)
+                 //alert(obj.sortDir)
                $.each(obj.breadcrumbs, function(key, val) {
 
                     if (key == 0) {
@@ -5533,7 +5597,7 @@ function showvoting()
             compact: true
         });
         }
-        
+         if(l != 1){
          db.transaction(function(tx) {
                       tx.executeSql("SELECT * FROM OCEVENTS_keywords", [], function(tx, results) {
                   var len = results.rows.length;                             
@@ -5583,6 +5647,7 @@ function showvoting()
                       }                 
                   });
               });
+              }
               $(".voting-page-container").show();
                 $(".loading_agenda_items").hide();
              }
