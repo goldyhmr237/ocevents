@@ -1467,7 +1467,7 @@ function loadgamification() {
 
 
                     var sbGamificationNavigation = $("#homepage-content")[0].contentWindow.sbGamificationNavigation;
-                          alert(sbGamificationNavigation)
+                          //alert(sbGamificationNavigation)
                     $("#sitebuilderNavigation").html(sbGamificationNavigation);
                     $("#sitebuilderNavigation li a").each(function(k, v)
                     {
