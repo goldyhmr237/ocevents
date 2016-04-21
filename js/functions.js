@@ -1546,7 +1546,7 @@ function loadgamification() {
                         } else { //No results
                             res += jsonData['no_results'];
                         }
-                        alert(res)
+                        //alert(res)
                         $('.mobile-aside-search-results').html(res);
                         $('#gamificationMobileMenu').hide();
                         $('#gamificationMobileSearch').show();
