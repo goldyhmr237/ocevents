@@ -1505,7 +1505,7 @@ function loadgamification() {
     var websiteId = $('.mobile_search_string').data('website');
     $('.mobile_search_string').keyup(function () {
         var filter = $(this).val();
-         //alert(websiteId)
+         alert(websiteId)
           //alert(filter)
             //alert(localStorage.url + 'modules/sitebuilder/ajax/fe_search_ws.php')
         if (filter != "") {
@@ -1520,7 +1520,7 @@ function loadgamification() {
                     },
                     dataType: 'json',
                     success: function (jsonData) {
-                        //alert(JSON.stringify(jsonData));
+                        alert(JSON.stringify(jsonData));
                         var res = '';
 
                         if (jsonData['status'] != 'error') {
@@ -1551,7 +1551,7 @@ function loadgamification() {
                         } else { //No results
                             res += jsonData['no_results'];
                         }
-                        //alert(res)
+                        alert(res)
                         $('.mobile-aside-search-results').html(res);
                         $('#gamificationMobileMenu').hide();
                         $('#gamificationMobileSearch').show();
@@ -4322,15 +4322,26 @@ function importhomepage() {
         dataType: "json",
         method: "GET",
         success: function(obja) {
-        
+           alert(JSON.stringify(obja.data))
          if(checkdefined(obja.data) == 'yes')
          {
             db.transaction(function(tx) {
-            tx.executeSql('delete from OCEVENTS_menu');
-                $.each( obja.data, function( ke, va ) {
-                   tx.executeSql('INSERT INTO OCEVENTS_menu (parent_id,title,url,website_id) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '","' + va.website_id + '")');
-                });
+              tx.executeSql('delete from OCEVENTS_menu');
             });
+                $.each( obja.data, function( ke, va ) {
+                   //alert('INSERT INTO OCEVENTS_menu (parent_id,title,url,website_id) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '","' + va.website_id + '")')
+                  db.transaction(function(tx) {
+                    tx.executeSql('INSERT INTO OCEVENTS_menu (parent_id,title,url,website_id) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '","' + va.website_id + '")');
+                  }); 
+                });
+                /*db.transaction(function(tx) {
+                tx.executeSql("SELECT * FROM OCEVENTS_menu", [], function(tx, results) {
+                var len = results.rows.length;
+                    alert(len)
+                });
+                });*/
+            
+            
          } 
           var main_url = localStorage.url + 'api/index.php/main/homepageSettings?XDEBUG_SESSION_START=PHPSTORM&event_id=' + localStorage.event_id;
           jQuery.ajax({
