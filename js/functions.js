@@ -1547,10 +1547,12 @@ function loadgamification() {
                             res += jsonData['no_results'];
                         }
                         //alert(res)
-                        $('.mobile-aside-search-results').html(res);
-                        $('#gamificationMobileMenu').hide();
-                        $('#gamificationMobileSearch').show();
-                        
+                        //$('.mobile-aside-search-results').html(res);
+                        //$('#gamificationMobileMenu').hide();
+                        //$('#gamificationMobileSearch').show();
+                        $("#sitebuilderNavigation").html('<div id="gamificationMobileSearch" style="display: block;"><h3>Search results</h3>');
+                        $("#sitebuilderNavigation").append(res);
+                        $("#sitebuilderNavigation").append('</div>');
                     }
                 });
             }, interval);
