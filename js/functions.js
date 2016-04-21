@@ -1430,26 +1430,21 @@ function loadgamification() {
                     $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
                 }
                 $(".main-container").html('<iframe src=' + results.rows.item(0).iframe_url + ' id="homepage-content" />');
-                tx.executeSql("SELECT * FROM OCEVENTS_menu", [], function(tx, results) {
-                var len = results.rows.length;
+                
                 //alert(len)
-                if(len > 0)
+                if(checkdefined(localStorage.menu) == 'yes')
                 {
                 
-                   var website_id =  results.rows.item(0).website_id;
+                   var website_id =  localStorage.website_id;
                   // alert(website_id)
                 $(document).ready(function () {
                 if (typeof $("#homepage-content")[0] !== "undefined") {
                 $('.main-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
-                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="'+website_id+'" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation">');
-                 
-              /* for (i = 0; i < len; i++) {  
-                if(results.rows.item(i).parent_id == '0' || results.rows.item(i).parent_id == 0)
-                {
-                  $('.main-container').append('<li><a target="_blank" href="'+results.rows.item(i).url+'">'+results.rows.item(i).title+'</a></li>');
-                } 
-              } */
-                $('.main-container').append('</div></ul><div id="gamificationMobileSearch" style="display:none;"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div></div></div>');
+                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="'+website_id+'" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation"></div></ul>');
+                
+                $('.main-container').append('<div id="gamificationMobileSearch"><h3>Search results</h3><div class="mobile-aside-search-results"></div></div>');
+                
+                $('.main-container').append('</div></div>');
                 
                   var navCounter = 0;
       
@@ -1464,7 +1459,7 @@ function loadgamification() {
 
                     $("#gamification-footer-menu").on("click", function () {
                         $("#gamificationMobileMenu").show();
-                        $("#gamificationMobileSearch").hide(); 
+                       // $("#gamificationMobileSearch").hide(); 
                         $('.main-wrapper').toggleClass("gamification-mobile-aside-wrapper-open");
 
                         return false;
@@ -1472,7 +1467,7 @@ function loadgamification() {
 
 
                     var sbGamificationNavigation = $("#homepage-content")[0].contentWindow.sbGamificationNavigation;
-
+                          alert(sbGamificationNavigation)
                     $("#sitebuilderNavigation").html(sbGamificationNavigation);
                     $("#sitebuilderNavigation li a").each(function(k, v)
                     {
@@ -1505,7 +1500,7 @@ function loadgamification() {
     var websiteId = $('.mobile_search_string').data('website');
     $('.mobile_search_string').keyup(function () {
         var filter = $(this).val();
-         alert(websiteId)
+         //alert(websiteId)
           //alert(filter)
             //alert(localStorage.url + 'modules/sitebuilder/ajax/fe_search_ws.php')
         if (filter != "") {
@@ -1520,7 +1515,7 @@ function loadgamification() {
                     },
                     dataType: 'json',
                     success: function (jsonData) {
-                        alert(JSON.stringify(jsonData));
+                        //alert(JSON.stringify(jsonData));
                         var res = '';
 
                         if (jsonData['status'] != 'error') {
@@ -1536,7 +1531,7 @@ function loadgamification() {
 
                                     $.each(category["search"], function (si, searchResult) {
                                         res += '<li>\
-												<a href="' + searchResult["url"] + '" target="homepage-content">\
+												<a href="'+ localStorage.url + searchResult["url"] + '" target="homepage-content">\
 													 ' + searchResult["title"] + '\
 												</a>\
 											</li>';
@@ -1555,6 +1550,7 @@ function loadgamification() {
                         $('.mobile-aside-search-results').html(res);
                         $('#gamificationMobileMenu').hide();
                         $('#gamificationMobileSearch').show();
+                        
                     }
                 });
             }, interval);
@@ -1575,7 +1571,7 @@ var delay = (function () {
         
     });
     }
-    });
+   
     
             }
             else if (results.rows.item(0).type == 'module') {
@@ -4322,24 +4318,28 @@ function importhomepage() {
         dataType: "json",
         method: "GET",
         success: function(obja) {
-           alert(JSON.stringify(obja.data))
+           //alert(JSON.stringify(obja.data))
          if(checkdefined(obja.data) == 'yes')
          {
-            db.transaction(function(tx) {
+            localStorage.menu = 'yes';
+            localStorage.website_id = obja.data[0].website_id;
+            //alert(localStorage.website_id)
+            /// alert(localStorage.menu)
+            /*db.transaction(function(tx) {
               tx.executeSql('delete from OCEVENTS_menu');
             });
                 $.each( obja.data, function( ke, va ) {
-                   //alert('INSERT INTO OCEVENTS_menu (parent_id,title,url,website_id) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '","' + va.website_id + '")')
+                   alert('INSERT INTO OCEVENTS_menu (parent_id,title,url,website_id) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '","' + va.website_id + '")')
                   db.transaction(function(tx) {
                     tx.executeSql('INSERT INTO OCEVENTS_menu (parent_id,title,url,website_id) VALUES ("' + va.parent_id + '","' + va.title + '","' + va.__url + '","' + va.website_id + '")');
                   }); 
                 });
-                /*db.transaction(function(tx) {
+                db.transaction(function(tx) {
                 tx.executeSql("SELECT * FROM OCEVENTS_menu", [], function(tx, results) {
                 var len = results.rows.length;
                     alert(len)
                 });
-                });*/
+                }); */
             
             
          } 
