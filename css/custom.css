@@ -1422,6 +1422,12 @@ tbody .hints-count-label {
     padding:10%;        
 }
 
+.video-player-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    text-align: center;
+}
 .video-player-wrapper iframe {
     position: absolute;
     top: 0;

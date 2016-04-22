@@ -1979,7 +1979,7 @@ function loadagendaitem() {
                 }
                 //alert(checkundefined(data.videoSrc));
                 var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
-                if (checkdefined(data.video) == 'yes') {
+                if (checkdefined(data.presentation.__videoItem) == 'yes') {
                     /*$('.future-video').show();
                     $('.future-video').attr('onclick', 'playvideo("' + localStorage.url + data.videoSrc + '")');
                     $('.playme').attr('src', localStorage.url + data.videoPoster);
@@ -1990,19 +1990,21 @@ function loadagendaitem() {
                    
                    if(isIphone)
                    {
-                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
+                    // var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
+                     var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + data.presentation.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + data.presentation.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
                      
                    }
                    else
                    {
-                      var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                      var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + data.presentation.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + data.presentation.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
+                     // var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
                    }
                    
-                    
+                     //alert(comment_video)
                     
                     
                     $('.here-video').html(comment_video);
-                    if(isIphone)
+                    /*if(isIphone)
                    {
                        var canvasVideo = new CanvasVideoPlayer({
                       			videoSelector: '.js-video',
@@ -2010,7 +2012,7 @@ function loadagendaitem() {
                       			timelineSelector: '.js-timeline',
                       			audio: true
                         });
-                   }   
+                   }*/   
                 }
                 if (checkdefined(data.presentation.embeded_html.value) == 'yes') {
                     $(".future-info").append('<div class="video-wrapper">' + data.presentation.embeded_html.value + '</div>');
