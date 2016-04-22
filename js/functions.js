@@ -4834,21 +4834,23 @@ function loadnotes()
               }
               var comment_video = '';
               var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
-              if(checkdefined(val.video_filename) == 'yes')
+              if(checkdefined(val.__videoItem) == 'yes')
               {
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';
                   //
-                  
-                   if(isIphone)
-                   {
-                      comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
-                  
-                   }
-                  else
+                  if(checkdefined(val.__videoItem.hosted_vimeo_id) == 'yes')
                   {
-                     comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
-                  } 
-                    
+                     if(isIphone)
+                     {
+                        //comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
+                        comment_video = '<div style="width:60%;padding:20px;margin:0 auto;" align="center"><div class="video-player-wrapper"><iframe id="videoPlayer-' + val.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + val.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div></div>';
+                     }
+                    else
+                    {
+                      comment_video = '<div style="width:60%;padding:20px;margin:0 auto;" align="center"><div class="video-player-wrapper"><iframe id="videoPlayer-' + val.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + val.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div></div>';
+                      // comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                    } 
+                }    
               }
                       var str = '<div id="note_'+val.instance_id+'" class="questions-item-container row"><div class="clearfix"><div class="col-xs-12 question-item-info"><h3 class="clearfix">'+val.fName+' '+val.lName+'<span><i class="fa fa-clock-o"></i> '+val.time_since+'</span></h3><div class="question-inner"><div><i class="gicon-notes"></i></div><p>'+val.notes+'</p></div></div>'+comment_image+comment_video+'</div>'+remstr+'</div>';
                    $('#allnotes').append(str); 
@@ -6438,23 +6440,27 @@ function showcomments(sortby,sortdr,l)
               }
               var comment_video = '';
               var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
-              if(checkdefined(val.video_filename) == 'yes')
+              if(checkdefined(val.__videoItem) == 'yes')
               {
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';  
                   //
-                  
-                   if(isIphone)
-                   {
-                       comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
-                       // alert(comment_video)
-                   }
-                  else
+                  if(checkdefined(val.__videoItem.hosted_vimeo_id) == 'yes')
                   {
-                    comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
-                  }
+                      if(isIphone)
+                      {
+                         //comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
+                         // alert(comment_video)
+                         comment_video = '<div style="width:60%;padding:20px;margin:0 auto;" align="center"><div class="video-player-wrapper"><iframe id="videoPlayer-' + val.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + val.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div></div>';
+                      }
+                      else
+                      {
+                        comment_video = '<div style="width:60%;padding:20px;margin:0 auto;" align="center"><div class="video-player-wrapper"><iframe id="videoPlayer-' + val.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + val.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div></div>';
+                        //comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                      }
+                 }
               }
               
-              
+                
               
               if(val.reply_to_comment_id == 0 || val.reply_to_comment_id == 'null' || val.reply_to_comment_id == null)
               {
@@ -6464,7 +6470,7 @@ function showcomments(sortby,sortdr,l)
              {
                 // $('#comment_'+val.reply_to_comment_id).after('<div id="comment_'+val.instance_id+'" class="questions-item-container row comment-reply"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div>'+comment_image+'<div class="clearfix">'+delete_button+'<div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-thumbs-up"></i>'+val.likes+' </div><div class="dislikes-count"><i class="fa fa-thumbs-down"></i>'+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment"><i class="fa fa-reply"></i></div></div></div><div class="questions-filter-items reply-form clearfix hide"><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control textcomment" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder=""></textarea><span><i class="fa fa-comment"></i></span></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" class="reply-sub" onclick="submitcomment('+val.instance_id+')" name="submit"></button><button type="submit" class="btn-danger reply-cancel" name="cancel"></button></div></div></div>');
              }
-              if(isIphone && checkdefined(val.video_filename) == 'yes')
+              /*if(isIphone && checkdefined(val.video_filename) == 'yes')
               {
                   var canvasVideo = new CanvasVideoPlayer({
                 			videoSelector: '.js-video_'+val.instance_id,
@@ -6472,7 +6478,7 @@ function showcomments(sortby,sortdr,l)
               			timelineSelector: '.js-timeline_'+val.instance_id,
                 			audio: true
                   });
-              } 
+              }*/ 
              
         });
         $.each(obj.commentInstances, function(key, val) {
@@ -6523,19 +6529,21 @@ function showcomments(sortby,sortdr,l)
               }
               var comment_video = '';
               var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
-              if(checkdefined(val.video_filename) == 'yes')
+              if(checkdefined(val.__videoItem.hosted_vimeo_id) == 'yes')
               {
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';  
                   //
                   
                    if(isIphone)
                    {
-                       comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';  
+                       //comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
+                       comment_video = '<div style="width:60%;padding:20px;margin:0 auto;" align="center"><div class="video-player-wrapper"><iframe id="videoPlayer-' + val.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + val.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div></div>'; 
                        // alert(comment_video)
                    }
                   else
                   {
-                    comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                    //comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>';
+                    comment_video = '<div style="width:60%;padding:20px;margin:0 auto;" align="center"><div class="video-player-wrapper"><iframe id="videoPlayer-' + val.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + val.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div></div>'; 
                   }
               }
               
@@ -6546,7 +6554,7 @@ function showcomments(sortby,sortdr,l)
              {
                  $('#comment_'+val.reply_to_comment_id).after('<div id="comment_'+val.instance_id+'" class="questions-item-container row comment-reply"><div class="clearfix"><div class="col-xs-2 questions-item-img"><div class="img-wrapper" style="background-image:url('+image_url+')"></div></div><div class="col-xs-10 question-item-info"><h3 class="clearfix">'+name+'<span><i class="fa fa-clock-o"></i>'+val.time_since+'</span></h3><div class="question-inner"><div><i class="fa fa-comment"></i></div><p>'+val.comments+' </p></div></div></div>'+comment_image+'<div class="clearfix">'+delete_button+'<div class="likes-container">'+like_string+'<div class="likes-count"><i class="fa fa-thumbs-up"></i>'+val.likes+' </div><div class="dislikes-count"><i class="fa fa-thumbs-down"></i>'+val.dislikes+' '+dislike_link+'</div><div class="reply-to-comment"><i class="fa fa-reply"></i></div></div></div><div class="questions-filter-items reply-form clearfix hide"><div data-role="fieldcontain" class="form-group textarea c'+val.instance_id+'_comment"><textarea class="form-control textcomment" id="c'+val.instance_id+'_comment" name="comment" maxlength="4096" placeholder=""></textarea><span><i class="fa fa-comment"></i></span></div><div class="success-status hide"><div class="success-icon-wrapper"><i class="icon-check"></i></div><p></p></div><div class="error-status hide"><div class="error-icon-wrapper"><i class="fa fa-ban"></i></div><p></p></div><div class="clearfix"><div data-role="fieldcontain" class="frm_field submit"><button type="submit" class="reply-sub" onclick="submitcomment('+val.instance_id+')" name="submit"></button><button type="submit" class="btn-danger reply-cancel" name="cancel"></button></div></div></div>');
               }
-              if(isIphone && checkdefined(val.video_filename) == 'yes')
+              /*if(isIphone && checkdefined(val.video_filename) == 'yes')
               {
                   var canvasVideo = new CanvasVideoPlayer({
                 			videoSelector: '.js-video_'+val.instance_id,
@@ -6554,7 +6562,7 @@ function showcomments(sortby,sortdr,l)
               			timelineSelector: '.js-timeline_'+val.instance_id,
                 			audio: true
                   });
-              } 
+              } */
              
         });    
             
