@@ -1421,3 +1421,11 @@ tbody .hints-count-label {
     width:100%;
     padding:10%;        
 }
+
+.video-player-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

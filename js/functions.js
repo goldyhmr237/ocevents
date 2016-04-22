@@ -1392,21 +1392,22 @@ function loadgamification() {
                      //<div class="hideme_video" onclick="hidev();"><img src="img/playvideo.png" /></div>
                      
                      
-                     var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video id="video1" class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><img onclick="hideimg();" src="img/dummy_video.gif" style="width:auto !important;top:-140px !important;left:85px;" id="myimg" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
+                  /*   var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video id="video1" class="video future-video js-video"><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><img onclick="hideimg();" src="img/dummy_video.gif" style="width:auto !important;top:-140px !important;left:85px;" id="myimg" /><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>';
                        $('.welcome-slider').html(comment_video); 
                        var canvasVideo = new CanvasVideoPlayer({
                       		videoSelector: '.js-video',
                     			canvasSelector: '.js-canvas',
                     			timelineSelector: '.js-timeline',
                       		audio: true
-                        });
+                        });  */
                        
-                     
+                     var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + results.rows.item(0).banner_video + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + results.rows.item(0).banner_video + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
                        
                   }
                   else
                   {
-                     var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>';
+                     var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + results.rows.item(0).banner_video + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + results.rows.item(0).banner_video + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
+                    // var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>';
                      $('.welcome-slider').html(comment_video);   
                   }
                   
@@ -4408,7 +4409,8 @@ function importhomepage() {
                                 if(checkdefined(obj.GSettingsExtraData.main_banner_video) == 'yes')
                                 {
                                      db.transaction(function(tx) {
-                                         tx.executeSql('update OCEVENTS_homepage set banner_video = "' + obj.GSettingsExtraData.main_banner_video.__extra.filename + '"');                                         
+                                         tx.executeSql('update OCEVENTS_homepage set banner_video = "' + obj.GSettingsExtraData.main_banner_video.__videoItem.hosted_vimeo_id + '"'); 
+                                         //alert(obj.GSettingsExtraData.main_banner_video.__videoItem.hosted_vimeo_id);                                        
                                      });
                                 }
                             }
