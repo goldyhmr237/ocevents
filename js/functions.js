@@ -1408,10 +1408,10 @@ function loadgamification() {
                   {
                      var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + results.rows.item(0).banner_video + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + results.rows.item(0).banner_video + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
                     // var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + results.rows.item(0).banner_video + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>';
-                     $('.welcome-slider').html(comment_video);   
+                        
                   }
-                  
-                    alert(comment_video) 
+                    $('.welcome-slider').html(comment_video);
+                    //alert(comment_video) 
                    
                    //var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <iframe webkit-playsinline  src="http://player.vimeo.com/video/34104487" frameborder="0"></iframe></div></div></div></div>'; 
                   //<iframe webkit-playsinline width="200" height="200" src="https://www.youtube.com/embed/GOiIxqcbzyM?feature=player_detailpage&playsinline=1" frameborder="0"></iframe>
