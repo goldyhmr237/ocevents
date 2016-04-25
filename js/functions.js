@@ -1987,23 +1987,22 @@ function loadagendaitem() {
                     $('.future-info').attr('style', 'position:relative;bottom:128px;');  */
                     
                    // 
-                   
-                   if(isIphone)
-                   {
-                    // var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
-                     var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + data.presentation.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + data.presentation.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
+                   if (checkdefined(data.presentation.__videoItem.hosted_vimeo_id) == 'yes') {
                      
-                   }
-                   else
-                   {
-                      var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + data.presentation.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + data.presentation.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
-                     // var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
-                   }
-                   
-                     //alert(comment_video)
-                    
+                     if(isIphone)
+                     {
+                      // var comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video"><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas"></canvas><div class="video-timeline js-timeline"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
+                       var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + data.presentation.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + data.presentation.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
+                       
+                     }
+                     else
+                     {
+                        var comment_video = '<div class="video-player-wrapper"><iframe id="videoPlayer-' + data.presentation.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + data.presentation.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div>';
+                       // var comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url +'resources/files/videos/'+ data.video.filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>'; 
+                     }
                     
                     $('.here-video').html(comment_video);
+                    }
                     /*if(isIphone)
                    {
                        var canvasVideo = new CanvasVideoPlayer({
@@ -6529,11 +6528,12 @@ function showcomments(sortby,sortdr,l)
               }
               var comment_video = '';
               var isIphone = navigator.userAgent.indexOf('iPhone') >= 0;
-              if(checkdefined(val.__videoItem.hosted_vimeo_id) == 'yes')
+              if(checkdefined(val.__videoItem) == 'yes')
               {
                   //comment_video = '<div style=background-image:url("'+ localStorage.url+'resources/files/videos/'+val.thumb_filename+'") class="video-item"><div class="video-wrapper"><div class="video-container"><div class="future-video video" style="display:block;" onclick=playvideo("' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '");><img src="img/bigplay.png" class="video_comment" /></div></div></div></div>';  
                   //
-                  
+                 if(checkdefined(val.__videoItem.hosted_vimeo_id) == 'yes')
+              { 
                    if(isIphone)
                    {
                        //comment_video = '<div class="video-item"><div class="video-wrapper js-video-wrapper"><div class="video-responsive"><video  class="video future-video js-video_'+val.instance_id+'"><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '">Your browser does not support HTML5 video.</video><canvas class="canvas js-canvas_'+val.instance_id+'"></canvas><div class="video-timeline js-timeline_'+val.instance_id+'"><div class="video-timeline-passed js-timeline-passed"></div></div></div></div></div>'; 
@@ -6544,6 +6544,7 @@ function showcomments(sortby,sortdr,l)
                   {
                     //comment_video = '<div class="video-item"><div class="video-wrapper"><div class="video-container"> <video class="future-video video" controls><source src="' + localStorage.url+ 'resources/files/videos/' + val.video_filename + '" webkit-playsinline width="480" height="320" type="video/mp4"></video></div></div></div></div>';
                     comment_video = '<div style="width:60%;padding:20px;margin:0 auto;" align="center"><div class="video-player-wrapper"><iframe id="videoPlayer-' + val.__videoItem.hosted_vimeo_id + '" class="videoVimeoPlayer" src="https://player.vimeo.com/video/' + val.__videoItem.hosted_vimeo_id + '?api=1" frameborder="0" title="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe></div></div>'; 
+                  }
                   }
               }
               
@@ -6841,19 +6842,19 @@ function likedislikecomment(id,like)
 {
   jQuery(document).ready(function($)
   {
-    $(".loading_cancel").show();  
-    $(".questions-container").hide();
-  var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
-       //  alert(main_url);
+      $(".loading_cancel").show();  
+      $(".questions-container").hide();
+      var main_url = localStorage.url + 'Add-comment/-/'+localStorage.short_url+'-'+localStorage.event_id+'/'+localStorage.agenda_id+'/?action=like&gvm_json=1&like='+like+'&c_id='+id;
+         //  alert(main_url);
         $.ajax({
-            url: main_url,
-            dataType: "json",
-            method: "GET",
-            success: function(obj) {
-            window.location.href = 'add_comments.html';
-            }
+              url: main_url,
+              dataType: "json",
+              method: "GET",
+              success: function(obj) {
+                window.location.href = 'add_comments.html';
+              }
             });
-   });
+    });
 }
 
 function sortResults(prop, asc) {
