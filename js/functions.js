@@ -1338,12 +1338,21 @@ function logout() {
 
 }
 
+function changetoprofile()
+{
+  $('.welcome-container').hide();
+  //alert('hi')
+  loadprofile();  
+}
+
 
 function loadgamification() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
     loadcommonthings(); 
     //window.location.href= 'inline.html'
     isLoggedIn(); 
+    $(".user-profile-container").hide();
+    $(".loading_agenda_items").hide();
     importfooter('g-homepage', 'home');
     jQuery( document ).ready(function() {
     
@@ -1430,7 +1439,7 @@ function loadgamification() {
                 if (results.rows.item(0).main_logo_small_image != undefined && results.rows.item(0).main_logo_small_image != null && results.rows.item(0).main_logo_small_image != '') {
                     $(".logo_inner").attr('src', results.rows.item(0).main_logo_small_image);
                 }
-                $(".main-container").html('<iframe src=' + results.rows.item(0).iframe_url + ' id="homepage-content" />');
+                $(".welcome-container").html('<iframe src=' + results.rows.item(0).iframe_url + ' id="homepage-content" />');
                 
                 //alert(len)
                 if(checkdefined(localStorage.menu) == 'yes')
@@ -1440,8 +1449,8 @@ function loadgamification() {
                   // alert(website_id)
                 $(document).ready(function () {
                 if (typeof $("#homepage-content")[0] !== "undefined") {
-                $('.main-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
-                $('.main-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="'+website_id+'" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation"></div></ul></div></div>');
+                $('.welcome-container').append('<a id="gamification-footer-menu" class="gamification-footer-menu show-menu" href="javascript:void(0);">Pages</a>');
+                $('.welcome-container').append('<div class="gamification-mobile-aside-wrapper show-menu" id="gamification-mobile-aside-wrapper"><div class="mobile-aside-container"><form class="mobile-aside-search-form"><div class="main-input-container"><button onclick="javascript:void(0);"><i class="fa fa-search"></i></button><input type="text" class="mobile_search_string" data-website="'+website_id+'" placeholder="Search"></div></form><ul class="mobile-aside-menu" id="gamificationMobileMenu"><div id="sitebuilderNavigation"></div></ul></div></div>');
                 
            
                 
@@ -3625,8 +3634,10 @@ function showcommoncontacts(obj,checkhide) {
     if(checkhide != 'yes')
     {
        $(".all_conts").html('&nbsp');
-    }
-    
+    }                                
+    //  alert(JSON.stringify(obj.eventUserFriends));
+     // alert(JSON.stringify(obj.receivedFriendsRequests));
+      //alert(JSON.stringify(obj));
     var ficon_class = '';
     var flink = '';
     var fteam = '';
@@ -3668,7 +3679,8 @@ function showcommoncontacts(obj,checkhide) {
 
         }
     });
-    }
+    } 
+      
     if(checkdefined(obj.eventUserFriends) == 'yes')
      {
     $.each(obj.eventUserFriends, function(key, val) {
@@ -3783,6 +3795,7 @@ function loadcontacts() {
             dataType: "json",
             method: "GET",
             success: function(obj) {
+                //alert(JSON.stringify(obj));
                 showcommoncontacts(obj);
             }
 
@@ -3885,9 +3898,9 @@ function loadyourcontacts() {
 function loadprofile() {
     //var db = openDatabase('OCEVENTS', '1.0', 'OCEVENTS', 2 * 1024 * 1024);
     //jQuery("head").append("<link href='https://oceventmanager.com/resources/gamification/css/appearance.css.php?eid="+localStorage.event_id+"' rel='stylesheet' type='text/css'>");
-    loadcommonthings();
+    //loadcommonthings();
     $(".user-profile-container").hide();
-        jQuery(".loading_agenda_items").show();
+    jQuery(".loading_agenda_items").show();
     importfooter('user-profile', 'profile');
     
     db.transaction(function(tx) {
@@ -4069,7 +4082,7 @@ function loadprofile() {
                     
                     
                     
-              }
+              } 
               $(".user-profile-container").show();
         jQuery(".loading_agenda_items").hide();
         });
