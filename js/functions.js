@@ -1338,10 +1338,14 @@ function logout() {
 
 }
 
-function changetoprofile()
+function changetoprofile(id)
 {
   $('.welcome-container').hide();
   //alert('hi')
+  if(id == 'yes')
+  {
+    $('.dropdown-btn').trigger('click');
+  }
   loadprofile();  
 }
 
