@@ -1341,7 +1341,7 @@ function logout() {
 function changetoprofile(id)
 {
   $('.welcome-container').hide();
-  //alert('hi')
+  //alert(id)
   if(id == 'yes')
   {
     $('.dropdown-btn').trigger('click');
